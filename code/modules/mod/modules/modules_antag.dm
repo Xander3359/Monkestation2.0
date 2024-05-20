@@ -1,5 +1,97 @@
 //Antag modules for MODsuits
 
+<<<<<<< HEAD
+=======
+///Armor Booster - Grants your suit more armor and speed in exchange for EVA protection. Also acts as a welding screen.
+/obj/item/mod/module/armor_booster
+	name = "MOD armor booster module"
+	desc = "A retrofitted series of retractable armor plates, allowing the suit to function as essentially power armor, \
+		giving the user incredible protection against conventional firearms, or everyday attacks in close-quarters. \
+		However, the additional plating cannot deploy alongside parts of the suit used for vacuum sealing, \
+		so this extra armor provides zero ability for extravehicular activity while deployed."
+	icon_state = "armor_booster"
+	module_type = MODULE_TOGGLE
+	active_power_cost = DEFAULT_CHARGE_DRAIN * 0.3
+	removable = FALSE
+	incompatible_modules = list(/obj/item/mod/module/armor_booster, /obj/item/mod/module/welding, /obj/item/mod/module/headprotector)
+	cooldown_time = 0.5 SECONDS
+	overlay_state_inactive = "module_armorbooster_off"
+	overlay_state_active = "module_armorbooster_on"
+	use_mod_colors = TRUE
+	/// Whether or not this module removes pressure protection.
+	var/remove_pressure_protection = TRUE
+	/// Speed added to the control unit.
+	var/speed_added = 0.5
+	/// Speed that we actually added.
+	var/actual_speed_added = 0
+	/// Armor values added to the suit parts.
+	var/datum/armor/armor_mod = /datum/armor/mod_module_armor_boost
+	/// List of parts of the suit that are spaceproofed, for giving them back the pressure protection.
+	var/list/spaceproofed = list()
+
+/obj/item/mod/module/armor_booster/no_speedbost
+	speed_added = 0
+
+/datum/armor/mod_module_armor_boost
+	melee = 25
+	bullet = 30
+	laser = 15
+	energy = 15
+
+/obj/item/mod/module/armor_booster/on_suit_activation()
+	var/obj/item/clothing/head_cover = mod.get_part_from_slot(ITEM_SLOT_HEAD) || mod.get_part_from_slot(ITEM_SLOT_MASK) || mod.get_part_from_slot(ITEM_SLOT_EYES)
+	if(istype(head_cover))
+		head_cover.flash_protect = FLASH_PROTECTION_WELDER
+
+/obj/item/mod/module/armor_booster/on_suit_deactivation(deleting = FALSE)
+	if(deleting)
+		return
+	var/obj/item/clothing/head_cover = mod.get_part_from_slot(ITEM_SLOT_HEAD) || mod.get_part_from_slot(ITEM_SLOT_MASK) || mod.get_part_from_slot(ITEM_SLOT_EYES)
+	if(istype(head_cover))
+		head_cover.flash_protect = initial(head_cover.flash_protect)
+
+/obj/item/mod/module/armor_booster/on_activation()
+	playsound(src, 'sound/mecha/mechmove03.ogg', 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
+	balloon_alert(mod.wearer, "armor boosted, EVA lost")
+	actual_speed_added = max(0, min(mod.slowdown_active, speed_added))
+	mod.slowdown -= actual_speed_added
+	mod.wearer.update_equipment_speed_mods()
+	var/obj/item/clothing/head_cover = mod.get_part_from_slot(ITEM_SLOT_HEAD) || mod.get_part_from_slot(ITEM_SLOT_MASK) || mod.get_part_from_slot(ITEM_SLOT_EYES)
+	if(istype(head_cover))
+		ADD_TRAIT(mod.wearer, TRAIT_HEAD_INJURY_BLOCKED, MOD_TRAIT)
+	for(var/obj/item/part as anything in mod.get_parts(all = TRUE))
+		part.set_armor(part.get_armor().add_other_armor(armor_mod))
+		if(!remove_pressure_protection || !isclothing(part))
+			continue
+		var/obj/item/clothing/clothing_part = part
+		if(clothing_part.clothing_flags & STOPSPRESSUREDAMAGE)
+			clothing_part.clothing_flags &= ~STOPSPRESSUREDAMAGE
+			spaceproofed[clothing_part] = TRUE
+
+/obj/item/mod/module/armor_booster/on_deactivation(display_message = TRUE, deleting = FALSE)
+	if(!deleting)
+		playsound(src, 'sound/mecha/mechmove03.ogg', 25, TRUE, SHORT_RANGE_SOUND_EXTRARANGE)
+		balloon_alert(mod.wearer, "armor retracts, EVA ready")
+	mod.slowdown += actual_speed_added
+	mod.wearer.update_equipment_speed_mods()
+	var/obj/item/clothing/head_cover = mod.get_part_from_slot(ITEM_SLOT_HEAD) || mod.get_part_from_slot(ITEM_SLOT_MASK) || mod.get_part_from_slot(ITEM_SLOT_EYES)
+	if(istype(head_cover))
+		REMOVE_TRAIT(mod.wearer, TRAIT_HEAD_INJURY_BLOCKED, MOD_TRAIT)
+	for(var/obj/item/part as anything in mod.get_parts(all = TRUE))
+		part.set_armor(part.get_armor().subtract_other_armor(armor_mod))
+		if(!remove_pressure_protection || !isclothing(part))
+			continue
+		var/obj/item/clothing/clothing_part = part
+		if(spaceproofed[clothing_part])
+			clothing_part.clothing_flags |= STOPSPRESSUREDAMAGE
+	spaceproofed = list()
+
+/obj/item/mod/module/armor_booster/generate_worn_overlay(mutable_appearance/standing)
+	overlay_state_inactive = "[initial(overlay_state_inactive)]-[mod.skin]"
+	overlay_state_active = "[initial(overlay_state_active)]-[mod.skin]"
+	return ..()
+
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 ///Energy Shield - Gives you a rechargeable energy shield that nullifies attacks.
 /obj/item/mod/module/energy_shield
 	name = "MOD energy shield module"
@@ -12,6 +104,7 @@
 	idle_power_cost = DEFAULT_CHARGE_DRAIN * 0.5
 	use_power_cost = DEFAULT_CHARGE_DRAIN * 2
 	incompatible_modules = list(/obj/item/mod/module/energy_shield)
+	required_slots = list(ITEM_SLOT_BACK)
 	/// Max charges of the shield.
 	var/max_charges = 3
 	/// The time it takes for the first charge to recover.
@@ -70,6 +163,10 @@
 	max_charges = 5
 	shield_icon_file = 'icons/effects/magic.dmi'
 	shield_icon = "mageshield"
+<<<<<<< HEAD
+=======
+	recharge_path = /obj/item/wizard_armour_charge
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 	required_slots = list()
 
 ///Magic Nullifier - Protects you from magic.
@@ -83,6 +180,7 @@
 	icon_state = "magic_nullifier"
 	removable = FALSE
 	incompatible_modules = list(/obj/item/mod/module/anti_magic)
+	required_slots = list(ITEM_SLOT_BACK)
 
 /obj/item/mod/module/anti_magic/on_suit_activation()
 	mod.wearer.add_traits(list(TRAIT_ANTIMAGIC, TRAIT_HOLY), MOD_TRAIT)
@@ -97,6 +195,7 @@
 		The field will neutralize all magic that comes into contact with the user. \
 		It will not protect the caster from social ridicule."
 	icon_state = "magic_neutralizer"
+	required_slots = list()
 
 /obj/item/mod/module/anti_magic/wizard/on_suit_activation()
 	mod.wearer.add_traits(list(TRAIT_ANTIMAGIC, TRAIT_ANTIMAGIC_NO_SELFBLOCK), MOD_TRAIT)
@@ -158,6 +257,7 @@
 	complexity = 1
 	idle_power_cost = DEFAULT_CHARGE_DRAIN * 0.1
 	incompatible_modules = list(/obj/item/mod/module/noslip)
+	required_slots = list(ITEM_SLOT_FEET)
 
 /obj/item/mod/module/noslip/on_suit_activation()
 	ADD_TRAIT(mod.wearer, TRAIT_NO_SLIP_WATER, MOD_TRAIT)
@@ -202,6 +302,7 @@
 	cooldown_time = 2.5 SECONDS
 	overlay_state_inactive = "module_flamethrower"
 	overlay_state_active = "module_flamethrower_on"
+	required_slots = list(ITEM_SLOT_OCLOTHING|ITEM_SLOT_ICLOTHING)
 
 /obj/item/mod/module/flamethrower/on_select_use(atom/target)
 	. = ..()
@@ -224,6 +325,7 @@
 	use_power_cost = DEFAULT_CHARGE_DRAIN * 5
 	incompatible_modules = list(/obj/item/mod/module/power_kick)
 	cooldown_time = 5 SECONDS
+	required_slots = list(ITEM_SLOT_FEET)
 	/// Damage on kick.
 	var/damage = 20
 	/// The wound bonus of the kick.
@@ -304,10 +406,20 @@
 		return_look()
 	possible_disguises = null
 
+<<<<<<< HEAD
 /obj/item/mod/module/chameleon/on_use()
 	. = ..()
 	if(!.)
 		return
+=======
+/obj/item/mod/module/chameleon/used()
+	if(mod.active || mod.activating)
+		balloon_alert(mod.wearer, "suit active!")
+		return FALSE
+	return ..()
+
+/obj/item/mod/module/chameleon/on_use()
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 	if(current_disguise)
 		return_look()
 		return
@@ -335,10 +447,9 @@
 	mod.name = "[mod.theme.name] [initial(mod.name)]"
 	mod.desc = "[initial(mod.desc)] [mod.theme.desc]"
 	mod.icon_state = "[mod.skin]-[initial(mod.icon_state)]"
-	var/list/mod_skin = mod.theme.skins[mod.skin]
+	var/list/mod_skin = mod.theme.variants[mod.skin]
 	mod.icon = mod_skin[MOD_ICON_OVERRIDE] || 'icons/obj/clothing/modsuit/mod_clothing.dmi'
 	mod.worn_icon = mod_skin[MOD_WORN_ICON_OVERRIDE] || 'icons/mob/clothing/modsuit/mod_clothing.dmi'
-	mod.alternate_worn_layer = mod_skin[CONTROL_LAYER]
 	mod.lefthand_file = initial(mod.lefthand_file)
 	mod.righthand_file = initial(mod.righthand_file)
 	mod.worn_icon_state = null
@@ -384,6 +495,7 @@ monkestation end */
 	complexity = 0
 	idle_power_cost = DEFAULT_CHARGE_DRAIN * 0.1
 	removable = FALSE
+	required_slots = list(ITEM_SLOT_BACK|ITEM_SLOT_BELT)
 	var/datum/proximity_monitor/advanced/demoraliser/demoralizer
 
 /obj/item/mod/module/demoralizer/on_suit_activation()
@@ -401,7 +513,11 @@ monkestation end */
 	complexity = 0
 	removable = FALSE
 	idle_power_cost = DEFAULT_CHARGE_DRAIN * 0
+<<<<<<< HEAD
 	incompatible_modules = list(/obj/item/mod/module/infiltrator, /obj/item/mod/module/welding/syndicate, /obj/item/mod/module/welding, /obj/item/mod/module/headprotector)
+=======
+	incompatible_modules = list(/obj/item/mod/module/infiltrator, /obj/item/mod/module/armor_booster, /obj/item/mod/module/welding, /obj/item/mod/module/headprotector)
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 	required_slots = list(ITEM_SLOT_FEET, ITEM_SLOT_HEAD, ITEM_SLOT_OCLOTHING)
 	/// List of traits added when the suit is activated
 	var/list/traits_to_add = list(TRAIT_SILENT_FOOTSTEPS, TRAIT_UNKNOWN, TRAIT_HEAD_INJURY_BLOCKED)
@@ -414,10 +530,16 @@ monkestation end */
 
 /obj/item/mod/module/infiltrator/on_suit_activation()
 	mod.wearer.add_traits(list(TRAIT_SILENT_FOOTSTEPS, TRAIT_UNKNOWN), MOD_TRAIT)
+<<<<<<< HEAD
 	RegisterSignal(mod.wearer, COMSIG_TRY_MODIFY_SPEECH, PROC_REF(on_speech_modification))
 	var/obj/item/organ/internal/tongue/user_tongue = mod.wearer.get_organ_slot(ORGAN_SLOT_TONGUE)
 	user_tongue.temp_say_mod = "states"
 	mod.helmet.flash_protect = FLASH_PROTECTION_WELDER
+=======
+	var/obj/item/clothing/head_cover = mod.get_part_from_slot(ITEM_SLOT_HEAD)
+	if(istype(head_cover))
+		head_cover.flash_protect = FLASH_PROTECTION_WELDER
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 
 /obj/item/mod/module/infiltrator/on_suit_deactivation(deleting = FALSE)
 	mod.wearer.remove_traits(list(TRAIT_SILENT_FOOTSTEPS, TRAIT_UNKNOWN), MOD_TRAIT)
@@ -426,14 +548,32 @@ monkestation end */
 	user_tongue.temp_say_mod = initial(user_tongue.temp_say_mod)
 	if(deleting)
 		return
-	mod.helmet.flash_protect = initial(mod.helmet.flash_protect)
+	var/obj/item/clothing/head_cover = mod.get_part_from_slot(ITEM_SLOT_HEAD)
+	if(istype(head_cover))
+		head_cover.flash_protect = initial(head_cover.flash_protect)
 
+<<<<<<< HEAD
 /obj/item/mod/module/infiltrator/proc/on_speech_modification(datum/source)
 	SIGNAL_HANDLER
 	if(!mod.active)
 		return
 	//Prevent speech modifications if the suit is active
 	return PREVENT_MODIFY_SPEECH
+=======
+///Medbeam - Medbeam but built into a modsuit
+/obj/item/mod/module/medbeam
+	name = "MOD medical beamgun module"
+	desc = "A wrist mounted variant of the medbeam gun, allowing the user to heal their allies without the risk of dropping it."
+	icon_state = "chronogun"
+	module_type = MODULE_ACTIVE
+	complexity = 1
+	active_power_cost = DEFAULT_CHARGE_DRAIN
+	device = /obj/item/gun/medbeam/mod
+	incompatible_modules = list(/obj/item/mod/module/medbeam)
+	removable = TRUE
+	cooldown_time = 0.5
+	required_slots = list(ITEM_SLOT_BACK)
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 
 /obj/item/mod/module/stealth/wraith
 	name = "MOD Wraith Cloaking Module"

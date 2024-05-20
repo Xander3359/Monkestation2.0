@@ -8,6 +8,7 @@
 	complexity = 2
 	use_power_cost = DEFAULT_CHARGE_DRAIN
 	incompatible_modules = list(/obj/item/mod/module/magnetic_harness)
+	required_slots = list(ITEM_SLOT_OCLOTHING)
 	/// Time before we activate the magnet.
 	var/magnet_delay = 0.8 SECONDS
 	/// The typecache of all guns we allow.
@@ -21,13 +22,19 @@
 		guns_typecache = typecacheof(list(/obj/item/gun/ballistic, /obj/item/gun/energy, /obj/item/gun/grenadelauncher, /obj/item/gun/chem, /obj/item/gun/syringe, /obj/item/gun/microfusion))
 //monkestation edit on previous line: adds microfusion guns
 /obj/item/mod/module/magnetic_harness/on_install()
-	already_allowed_guns = guns_typecache & mod.chestplate.allowed
-	mod.chestplate.allowed |= guns_typecache
+	var/obj/item/clothing/suit = mod.get_part_from_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(suit))
+		return
+	already_allowed_guns = guns_typecache & suit.allowed
+	suit.allowed |= guns_typecache
 
 /obj/item/mod/module/magnetic_harness/on_uninstall(deleting = FALSE)
 	if(deleting)
 		return
-	mod.chestplate.allowed -= (guns_typecache - already_allowed_guns)
+	var/obj/item/clothing/suit = mod.get_part_from_slot(ITEM_SLOT_OCLOTHING)
+	if(!istype(suit))
+		return
+	suit.allowed -= (guns_typecache - already_allowed_guns)
 
 /obj/item/mod/module/magnetic_harness/on_suit_activation()
 	RegisterSignal(mod.wearer, COMSIG_MOB_UNEQUIPPED_ITEM, PROC_REF(check_dropped_item))
@@ -65,6 +72,7 @@
 	cooldown_time = 5 SECONDS
 	overlay_state_inactive = "module_pepper"
 	overlay_state_use = "module_pepper_used"
+	required_slots = list(ITEM_SLOT_OCLOTHING)
 
 /obj/item/mod/module/pepper_shoulders/on_suit_activation()
 	RegisterSignal(mod.wearer, COMSIG_HUMAN_CHECK_SHIELDS, PROC_REF(on_check_shields))
@@ -73,9 +81,6 @@
 	UnregisterSignal(mod.wearer, COMSIG_HUMAN_CHECK_SHIELDS)
 
 /obj/item/mod/module/pepper_shoulders/on_use()
-	. = ..()
-	if(!.)
-		return
 	playsound(src, 'sound/effects/spray.ogg', 30, TRUE, -6)
 	var/datum/reagents/capsaicin_holder = new(10)
 	capsaicin_holder.add_reagent(/datum/reagent/consumable/condensedcapsaicin, 10)
@@ -92,7 +97,7 @@
 	if(!check_power(use_power_cost))
 		return
 	mod.wearer.visible_message(span_warning("[src] reacts to the attack with a smoke of pepper spray!"), span_notice("Your [src] releases a cloud of pepper spray!"))
-	on_use()
+	used()
 
 ///Holster - Instantly holsters any not huge gun.
 /obj/item/mod/module/holster
@@ -107,13 +112,11 @@
 	incompatible_modules = list(/obj/item/mod/module/holster)
 	cooldown_time = 0.5 SECONDS
 	allow_flags = MODULE_ALLOW_INACTIVE
+	required_slots = list(ITEM_SLOT_OCLOTHING|ITEM_SLOT_GLOVES|ITEM_SLOT_FEET)
 	/// Gun we have holstered.
 	var/obj/item/gun/holstered
 
 /obj/item/mod/module/holster/on_use()
-	. = ..()
-	if(!.)
-		return
 	if(!holstered)
 		var/obj/item/gun/holding = mod.wearer.get_active_held_item()
 		if(!holding)
@@ -155,19 +158,14 @@
 	use_power_cost = DEFAULT_CHARGE_DRAIN * 0.5
 	incompatible_modules = list(/obj/item/mod/module/megaphone)
 	cooldown_time = 0.5 SECONDS
+	required_slots = list(ITEM_SLOT_HEAD|ITEM_SLOT_EYES|ITEM_SLOT_MASK)
 	/// List of spans we add to the speaker.
 	var/list/voicespan = list(SPAN_COMMAND)
 
 /obj/item/mod/module/megaphone/on_activation()
-	. = ..()
-	if(!.)
-		return
 	RegisterSignal(mod.wearer, COMSIG_MOB_SAY, PROC_REF(handle_speech))
 
 /obj/item/mod/module/megaphone/on_deactivation(display_message = TRUE, deleting = FALSE)
-	. = ..()
-	if(!.)
-		return
 	UnregisterSignal(mod.wearer, COMSIG_MOB_SAY)
 
 /obj/item/mod/module/megaphone/proc/handle_speech(datum/source, list/speech_args)
@@ -190,6 +188,7 @@
 	use_power_cost = DEFAULT_CHARGE_DRAIN * 0.5
 	incompatible_modules = list(/obj/item/mod/module/criminalcapture)
 	cooldown_time = 0.5 SECONDS
+	required_slots = list(ITEM_SLOT_BACK|ITEM_SLOT_BELT)
 	/// Time to capture a prisoner.
 	var/capture_time = 2.5 SECONDS
 	/// Time to dematerialize a bodybag.
@@ -203,10 +202,7 @@
 	idle_power_cost = linked_bodybag ? (DEFAULT_CHARGE_DRAIN * 3) : 0
 	return ..()
 
-/obj/item/mod/module/criminalcapture/on_deactivation(display_message, deleting)
-	. = ..()
-	if(!.)
-		return
+/obj/item/mod/module/criminalcapture/on_deactivation(display_message = TRUE, deleting = FALSE)
 	if(!linked_bodybag)
 		return
 	packup()
@@ -274,9 +270,6 @@
 	dispense_type = /obj/item/grenade/mirage
 
 /obj/item/mod/module/dispenser/mirage/on_use()
-	. = ..()
-	if(!.)
-		return
 	var/obj/item/grenade/mirage/grenade = .
 	grenade.arm_grenade(mod.wearer)
 
@@ -311,6 +304,7 @@
 	active_power_cost = DEFAULT_CHARGE_DRAIN
 	incompatible_modules = list(/obj/item/mod/module/projectile_dampener)
 	cooldown_time = 1.5 SECONDS
+	required_slots = list(ITEM_SLOT_BACK|ITEM_SLOT_BELT)
 	/// Radius of the dampening field.
 	var/field_radius = 2
 	/// Damage multiplier on projectiles.
@@ -329,9 +323,6 @@
 	projectile_effect = image('icons/effects/fields.dmi', "projectile_dampen_effect")
 
 /obj/item/mod/module/projectile_dampener/on_activation()
-	. = ..()
-	if(!.)
-		return
 	if(istype(dampening_field))
 		QDEL_NULL(dampening_field)
 	dampening_field = new(mod.wearer, field_radius, TRUE, src)
@@ -368,12 +359,96 @@
 	use_power_cost = DEFAULT_CHARGE_DRAIN * 4
 	complexity = 2
 	incompatible_modules = list(/obj/item/mod/module/active_sonar)
+<<<<<<< HEAD
 	cooldown_time = 25 SECONDS
+=======
+	cooldown_time = 15 SECONDS
+	required_slots = list(ITEM_SLOT_HEAD|ITEM_SLOT_EYES|ITEM_SLOT_MASK)
+	/// Time between us displaying radial scans
+	var/scan_cooldown_time = 0.5 SECONDS
+	/// The current slice we're going to scan
+	var/scanned_slice = 1
+	/// How many slices we make 360
+	var/radar_slices = 8 // 45 degrees each
 
-/obj/item/mod/module/active_sonar/on_use()
+	/// A list of all creatures in range sorted by angle.
+	var/list/sorted_creatures = list()
+	/// A keyed list of all creatures
+	var/list/keyed_creatures = list()
+
+	/// Time between us displaying radial scans
+	COOLDOWN_DECLARE(scan_cooldown)
+
+/obj/item/mod/module/active_sonar/Initialize(mapload)
+	. = ..()
+	for(var/i in 1 to radar_slices)
+		sorted_creatures += list(list())
+
+/obj/item/mod/module/active_sonar/on_suit_activation()
+	RegisterSignal(mod.wearer, COMSIG_MOVABLE_MOVED, PROC_REF(sort_all_creatures))
+
+/obj/item/mod/module/active_sonar/on_suit_deactivation(deleting = FALSE)
+	UnregisterSignal(mod.wearer, COMSIG_MOVABLE_MOVED)
+
+/// Detects all living creatures within world.view, and returns the amount.
+/obj/item/mod/module/active_sonar/proc/detect_living_creatures()
+	var/creatures_detected = 0
+	for(var/mob/living/creature in range(world.view, mod.wearer))
+		if(creature == mod.wearer || creature.stat == DEAD)
+			continue
+		if(keyed_creatures[creature])
+			creatures_detected++
+			continue
+		sort_creature_angle(creature)
+		RegisterSignal(creature, COMSIG_MOVABLE_MOVED, PROC_REF(sort_creature_angle))
+		creatures_detected++
+	return creatures_detected
+
+/// Swaps around where a creature is, when they move or when they're first detected
+/obj/item/mod/module/active_sonar/proc/sort_creature_angle(mob/living/creature, atom/old_loc, movement_dir, forced)
+	SIGNAL_HANDLER
+	var/oldgroup = keyed_creatures[creature]
+	var/newgroup = round(get_angle(mod.wearer, creature) / (360 / radar_slices)) + 1
+	if(oldgroup)
+		if(creature.stat == DEAD || get_dist(get_turf(mod.wearer), get_turf(creature)) > world.view)
+			sorted_creatures[oldgroup] -= creature
+			keyed_creatures -= creature
+			UnregisterSignal(creature, COMSIG_MOVABLE_MOVED)
+			return
+
+		if(oldgroup == newgroup)
+			return
+
+		sorted_creatures[oldgroup] -= creature
+
+	sorted_creatures[newgroup] += creature
+	keyed_creatures[creature] = newgroup
+
+/// Swaps all creatures when mod.wearer moves
+/obj/item/mod/module/active_sonar/proc/sort_all_creatures(mob/living/wearer, atom/old_loc, movement_dir, forced)
+	SIGNAL_HANDLER
+
+	for(var/mob/living/creature as anything in keyed_creatures)
+		sort_creature_angle(creature) // Kinda spaghetti but it honestly seems like the shortest path to the same result
+
+/obj/item/mod/module/active_sonar/on_process(seconds_per_tick)
 	. = ..()
 	if(!.)
 		return
+	if(!COOLDOWN_FINISHED(src, cooldown_timer) || !COOLDOWN_FINISHED(src, scan_cooldown))
+		return
+	detect_living_creatures()
+	for(var/mob/living/creature as anything in sorted_creatures[scanned_slice])
+		new /obj/effect/temp_visual/sonar_ping(mod.wearer.loc, mod.wearer, creature, "sonar_ping_small", FALSE)
+	// Next slice!
+	scanned_slice++
+	// IT'S ENOUGH SLICES
+	if(scanned_slice > radar_slices)
+		scanned_slice = 1
+	COOLDOWN_START(src, scan_cooldown, scan_cooldown_time)
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
+
+/obj/item/mod/module/active_sonar/on_use()
 	balloon_alert(mod.wearer, "readying sonar...")
 	playsound(mod.wearer, 'sound/mecha/skyfall_power_up.ogg', vol = 20, vary = TRUE, extrarange = SHORT_RANGE_SOUND_EXTRARANGE)
 	if(!do_after(mod.wearer, 1.1 SECONDS, target = mod))
@@ -383,9 +458,126 @@
 		if(creature == mod.wearer || creature.stat == DEAD)
 			continue
 		new /obj/effect/temp_visual/sonar_ping(mod.wearer.loc, mod.wearer, creature)
+<<<<<<< HEAD
 		creatures_detected++
 	playsound(mod.wearer, 'sound/effects/ping_hit.ogg', vol = 75, vary = TRUE, extrarange = MEDIUM_RANGE_SOUND_EXTRARANGE) // Should be audible for the radius of the sonar
 	to_chat(mod.wearer, span_notice("You slam your fist into the ground, sending out a sonic wave that detects [creatures_detected] living beings nearby!"))
+=======
+
+#define SHOOTING_ASSISTANT_OFF "Currently Off"
+#define STORMTROOPER_MODE "Quick Fire Stormtrooper"
+#define SHARPSHOOTER_MODE "Slow Ricochet Sharpshooter"
+
+/**
+ * A module that enhances the user's ability with firearms, with a couple drawbacks:
+ * In 'Stormtrooper' mode, the user will be given faster firerate, but lower accuracy.
+ * In 'Sharpshooter' mode, the user will have better accuracy and ricochet to his shots, but slower movement speed.
+ * Both modes prevent the user from dual wielding guns.
+ */
+/obj/item/mod/module/shooting_assistant
+	name = "MOD shooting assistant module"
+	desc = "A botched prototype meant to boost the TGMC crayon eaters' ability with firearms. \
+		It has only two modes available in its configurations: \
+		'Quick Fire Stormtrooper' and 'Slow Ricochet Sharpshooter', \
+		both incompatible with dual wielding firearms."
+	icon_state = "shooting_assistant"
+	module_type = MODULE_PASSIVE
+	complexity = 3
+	incompatible_modules = list(/obj/item/mod/module/shooting_assistant)
+	required_slots = list(ITEM_SLOT_GLOVES)
+	var/selected_mode = SHOOTING_ASSISTANT_OFF
+	///Association list, the assoc values are the balloon alerts shown to the user when the mode is set.
+	var/static/list/available_modes = list(
+		SHOOTING_ASSISTANT_OFF = "assistant off",
+		STORMTROOPER_MODE = "stormtrooper mode",
+		SHARPSHOOTER_MODE = "sharpshooter mode",
+	)
+
+/obj/item/mod/module/shooting_assistant/get_configuration()
+	. = ..()
+	.["shooting_mode"] = add_ui_configuration("Mode", "list", selected_mode, assoc_to_keys(available_modes))
+
+/obj/item/mod/module/shooting_assistant/configure_edit(key, value)
+	switch(key)
+		if("shooting_mode")
+			set_shooting_mode(value)
+
+/obj/item/mod/module/shooting_assistant/proc/set_shooting_mode(new_mode)
+	if(new_mode == selected_mode || !mod.active)
+		return
+	if(new_mode != SHOOTING_ASSISTANT_OFF && !mod.get_charge())
+		balloon_alert(mod.wearer, "no charge!")
+		playsound(src, 'sound/machines/scanbuzz.ogg', 25, TRUE, SILENCED_SOUND_EXTRARANGE)
+		return
+
+	//Remove the effects of the previously selected mode
+	if(mod.active)
+		remove_mode_effects()
+
+	balloon_alert(mod.wearer, available_modes[new_mode])
+	selected_mode = new_mode
+
+	//Apply the effects of the new mode
+	if(mod.active)
+		apply_mode_effects()
+
+/obj/item/mod/module/shooting_assistant/proc/apply_mode_effects()
+	switch(selected_mode)
+		if(SHOOTING_ASSISTANT_OFF)
+			idle_power_cost = 0
+		if(STORMTROOPER_MODE)
+			idle_power_cost = DEFAULT_CHARGE_DRAIN * 0.4
+			mod.wearer.add_traits(list(TRAIT_NO_GUN_AKIMBO, TRAIT_DOUBLE_TAP), MOD_TRAIT)
+			RegisterSignal(mod.wearer, COMSIG_MOB_FIRED_GUN, PROC_REF(stormtrooper_fired_gun))
+		if(SHARPSHOOTER_MODE)
+			idle_power_cost = DEFAULT_CHARGE_DRAIN * 0.6
+			mod.wearer.add_traits(list(TRAIT_NO_GUN_AKIMBO, TRAIT_NICE_SHOT), MOD_TRAIT)
+			RegisterSignal(mod.wearer, COMSIG_MOB_FIRED_GUN, PROC_REF(sharpshooter_fired_gun))
+			RegisterSignal(mod.wearer, COMSIG_PROJECTILE_FIRER_BEFORE_FIRE, PROC_REF(apply_ricochet))
+			mod.wearer.add_movespeed_modifier(/datum/movespeed_modifier/shooting_assistant)
+
+/obj/item/mod/module/shooting_assistant/proc/remove_mode_effects()
+	switch(selected_mode)
+		if(STORMTROOPER_MODE)
+			UnregisterSignal(mod.wearer, COMSIG_MOB_FIRED_GUN)
+			mod.wearer.remove_traits(list(TRAIT_NO_GUN_AKIMBO, TRAIT_DOUBLE_TAP), MOD_TRAIT)
+		if(SHARPSHOOTER_MODE)
+			UnregisterSignal(mod.wearer, list(COMSIG_MOB_FIRED_GUN, COMSIG_PROJECTILE_FIRER_BEFORE_FIRE))
+			mod.wearer.remove_traits(list(TRAIT_NO_GUN_AKIMBO, TRAIT_NICE_SHOT), MOD_TRAIT)
+			mod.wearer.remove_movespeed_modifier(/datum/movespeed_modifier/shooting_assistant)
+
+/obj/item/mod/module/shooting_assistant/drain_power(amount)
+	. = ..()
+	if(!.)
+		set_shooting_mode(SHOOTING_ASSISTANT_OFF)
+
+/obj/item/mod/module/shooting_assistant/on_suit_activation()
+	apply_mode_effects()
+
+/obj/item/mod/module/shooting_assistant/on_suit_deactivation(deleting = FALSE)
+	remove_mode_effects()
+
+/obj/item/mod/module/shooting_assistant/proc/stormtrooper_fired_gun(mob/user, obj/item/gun/gun_fired, target, params, zone_override, list/bonus_spread_values)
+	SIGNAL_HANDLER
+	bonus_spread_values[MIN_BONUS_SPREAD_INDEX] += 15
+	bonus_spread_values[MAX_BONUS_SPREAD_INDEX] += 25
+
+/obj/item/mod/module/shooting_assistant/proc/sharpshooter_fired_gun(mob/user, obj/item/gun/gun_fired, target, params, zone_override, list/bonus_spread_values)
+	SIGNAL_HANDLER
+	bonus_spread_values[MIN_BONUS_SPREAD_INDEX] -= 20
+	bonus_spread_values[MAX_BONUS_SPREAD_INDEX] -= 10
+
+/obj/item/mod/module/shooting_assistant/proc/apply_ricochet(mob/user, obj/projectile/projectile, datum/fired_from, atom/clicked_atom)
+	SIGNAL_HANDLER
+	projectile.ricochets_max += 1
+	projectile.min_ricochets += 1
+	projectile.ricochet_incidence_leeway = 0 //allows the projectile to bounce at any angle.
+	ADD_TRAIT(projectile, TRAIT_ALWAYS_HIT_ZONE, MOD_TRAIT)
+
+#undef SHOOTING_ASSISTANT_OFF
+#undef STORMTROOPER_MODE
+#undef SHARPSHOOTER_MODE
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 
 /obj/item/mod/module/shove_blocker
 	name = "MOD bulwark module"
@@ -393,6 +585,7 @@
 	icon_state = "bulwark"
 	complexity = 3
 	incompatible_modules = list(/obj/item/mod/module/shove_blocker)
+	required_slots = list(ITEM_SLOT_OCLOTHING)
 
 /obj/item/mod/module/shove_blocker/on_suit_activation()
 	ADD_TRAIT(mod.wearer, TRAIT_SHOVE_RESIST, MOD_TRAIT)
@@ -411,7 +604,11 @@
 	desc = "Enhanced gauntlet grip pads that help with placing individuals in restraints more quickly. Doesn't look like they'll come off."
 	removable = FALSE
 	complexity = 0
+<<<<<<< HEAD
 	idle_power_cost = DEFAULT_CHARGE_DRAIN * 0.3
+=======
+	required_slots = list(ITEM_SLOT_GLOVES)
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 
 /obj/item/mod/module/quick_cuff/on_suit_activation()
 	ADD_TRAIT(mod.wearer, TRAIT_FAST_CUFFING, MOD_TRAIT)

@@ -43,6 +43,7 @@
 	var/list/pinned_to = list()
 	/// flags that let the module ability be used in odd circumstances
 	var/allow_flags = NONE
+<<<<<<< HEAD
 	/// The suit's supports_variations_flags, currently only for the chestplate and the helmet parts of the MODsuit.
 	var/suit_supports_variations_flags = NONE
 	/// Does this module have a separate head sprite? Useful for muzzled sprites
@@ -51,6 +52,10 @@
 	var/head_only_when_active = FALSE
 	/// Is the module's visuals head-only when inactive? Useful for visors and such, to avoid multiplying the amount of overlay with empty images
 	var/head_only_when_inactive = FALSE
+=======
+	/// A list of slots required in the suit to work. Formatted like list(x|y, z, ...) where either x or y are required and z is required.
+	var/list/required_slots = list()
+>>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 	/// Timer for the cooldown
 	COOLDOWN_DECLARE(cooldown_timer)
 
@@ -73,12 +78,39 @@
 
 /obj/item/mod/module/examine(mob/user)
 	. = ..()
+	if(length(required_slots))
+		var/list/slot_strings = list()
+		for(var/slot in required_slots)
+			var/list/slot_list = parse_slot_flags(slot)
+			slot_strings += (length(slot_list) == 1 ? "" : "one of ") + english_list(slot_list, and_text = " or ")
+		. += span_notice("Requires the MOD unit to have the following slots: [english_list(slot_strings)]")
 	if(HAS_TRAIT(user, TRAIT_DIAGNOSTIC_HUD))
 		. += span_notice("Complexity level: [complexity]")
 
+/// Looks through the MODsuit's parts to see if it has the parts required to support this module
+/obj/item/mod/module/proc/has_required_parts(list/parts, need_extended = FALSE)
+	if(!length(required_slots))
+		return TRUE
+	var/total_slot_flags = NONE
+	for(var/part_slot in parts)
+		if(need_extended)
+			var/datum/mod_part/part_datum = parts[part_slot]
+			if(part_datum.part_item.loc == mod)
+				continue
+		total_slot_flags |= text2num(part_slot)
+	var/list/needed_slots = required_slots.Copy()
+	for(var/needed_slot in needed_slots)
+		if(!(needed_slot & total_slot_flags))
+			break
+		needed_slots -= needed_slot
+	return !length(needed_slots)
 
 /// Called when the module is selected from the TGUI, radial or the action button
 /obj/item/mod/module/proc/on_select()
+	if(!mod.wearer)
+		if(ismob(mod.loc))
+			balloon_alert(mod.loc, "not equipped!")
+		return
 	if(((!mod.active || mod.activating) && !(allow_flags & MODULE_ALLOW_INACTIVE)) || module_type == MODULE_PASSIVE)
 		if(mod.wearer)
 			balloon_alert(mod.wearer, "not active!")
@@ -95,15 +127,15 @@
 		return
 	if(module_type != MODULE_USABLE)
 		if(active)
-			on_deactivation()
+			deactivate()
 		else
-			on_activation()
+			activate()
 	else
-		on_use()
+		used()
 	SEND_SIGNAL(mod, COMSIG_MOD_MODULE_SELECTED, src)
 
 /// Called when the module is activated
-/obj/item/mod/module/proc/on_activation()
+/obj/item/mod/module/proc/activate()
 	if(!COOLDOWN_FINISHED(src, cooldown_timer))
 		balloon_alert(mod.wearer, "on cooldown!")
 		return FALSE
@@ -117,7 +149,7 @@
 	if(SEND_SIGNAL(src, COMSIG_MODULE_TRIGGERED, mod.wearer) & MOD_ABORT_USE)
 		return FALSE
 	if(module_type == MODULE_ACTIVE)
-		if(mod.selected_module && !mod.selected_module.on_deactivation(display_message = FALSE))
+		if(mod.selected_module && !mod.selected_module.deactivate(display_message = FALSE))
 			return FALSE
 		mod.selected_module = src
 		if(device)
@@ -137,10 +169,11 @@
 	COOLDOWN_START(src, cooldown_timer, cooldown_time)
 	mod.wearer.update_clothing(mod.slot_flags)
 	SEND_SIGNAL(src, COMSIG_MODULE_ACTIVATED)
+	on_activation()
 	return TRUE
 
 /// Called when the module is deactivated
-/obj/item/mod/module/proc/on_deactivation(display_message = TRUE, deleting = FALSE)
+/obj/item/mod/module/proc/deactivate(display_message = TRUE, deleting = FALSE)
 	active = FALSE
 	if(module_type == MODULE_ACTIVE)
 		mod.selected_module = null
@@ -155,10 +188,11 @@
 			used_signal = null
 	mod.wearer.update_clothing(mod.slot_flags)
 	SEND_SIGNAL(src, COMSIG_MODULE_DEACTIVATED, mod.wearer)
+	on_deactivation(display_message = TRUE, deleting = FALSE)
 	return TRUE
 
 /// Called when the module is used
-/obj/item/mod/module/proc/on_use()
+/obj/item/mod/module/proc/used()
 	if(!COOLDOWN_FINISHED(src, cooldown_timer))
 		balloon_alert(mod.wearer, "on cooldown!")
 		return FALSE
@@ -175,6 +209,7 @@
 	addtimer(CALLBACK(mod.wearer, TYPE_PROC_REF(/mob, update_clothing), mod.slot_flags), cooldown_time+1) //need to run it a bit after the cooldown starts to avoid conflicts
 	mod.wearer.update_clothing(mod.slot_flags)
 	SEND_SIGNAL(src, COMSIG_MODULE_USED)
+	on_use()
 	return TRUE
 
 /// Called when an activated module without a device is used
@@ -182,7 +217,7 @@
 	if(!(allow_flags & MODULE_ALLOW_INCAPACITATED) && mod.wearer.incapacitated(IGNORE_GRAB))
 		return FALSE
 	mod.wearer.face_atom(target)
-	if(!on_use())
+	if(!used())
 		return FALSE
 	return TRUE
 
@@ -196,22 +231,34 @@
 /obj/item/mod/module/proc/on_process(seconds_per_tick)
 	if(active)
 		if(!drain_power(active_power_cost * seconds_per_tick))
-			on_deactivation()
+			deactivate()
 			return FALSE
 		on_active_process(seconds_per_tick)
 	else
 		drain_power(idle_power_cost * seconds_per_tick)
 	return TRUE
 
+/// Called from the module's activate()
+/obj/item/mod/module/proc/on_activation()
+	return
+
+/// Called from the module's deactivate()
+/obj/item/mod/module/proc/on_deactivation(display_message = TRUE, deleting = FALSE)
+	return
+
+/// Called from the module's used()
+/obj/item/mod/module/proc/on_use()
+	return
+
 /// Called on the MODsuit's process if it is an active module
 /obj/item/mod/module/proc/on_active_process(seconds_per_tick)
 	return
 
-/// Called from MODsuit's install() proc, so when the module is installed.
+/// Called from MODsuit's install() proc, so when the module is installed
 /obj/item/mod/module/proc/on_install()
 	return
 
-/// Called from MODsuit's uninstall() proc, so when the module is uninstalled.
+/// Called from MODsuit's uninstall() proc, so when the module is uninstalled
 /obj/item/mod/module/proc/on_uninstall(deleting = FALSE)
 	return
 
@@ -270,7 +317,7 @@
 	if(part.loc == mod.wearer)
 		return
 	if(part == device)
-		on_deactivation(display_message = FALSE)
+		deactivate(display_message = FALSE)
 
 /// Called when the device gets deleted on active modules
 /obj/item/mod/module/proc/on_device_deletion(datum/source)
@@ -334,7 +381,7 @@
 
 	if(user.get_active_held_item() != device)
 		return
-	on_deactivation()
+	deactivate()
 	return COMSIG_KB_ACTIVATED
 
 ///Anomaly Locked - Causes the module to not function without an anomaly.
