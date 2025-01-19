@@ -124,7 +124,7 @@ GLOBAL_LIST_INIT(antag_token_config, load_antag_token_config())
 			/datum/antagonist/ninja,
 			/datum/antagonist/blob,
 			/datum/antagonist/malf_ai,
-			/datum/antagonist/xenomorph,
+			/datum/antagonist/xeno,
 		)),
 		MEDIUM_THREAT = init_antag_list(list(
 			/datum/antagonist/heretic,
