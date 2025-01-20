@@ -123,16 +123,12 @@ GLOBAL_LIST_INIT(antag_token_config, load_antag_token_config())
 			/datum/antagonist/clock_cultist,
 			/datum/antagonist/ninja,
 			/datum/antagonist/blob,
-			/datum/antagonist/malf_ai,
-			/datum/antagonist/xeno,
 		)),
 		MEDIUM_THREAT = init_antag_list(list(
 			/datum/antagonist/heretic,
 			/datum/antagonist/bloodsucker,
 			/datum/antagonist/changeling,
-			/datum/antagonist/nightmare,
 			/datum/antagonist/cortical_borer/hivemind,
-			/datum/antagonist/changeling,
 		)),
 		LOW_THREAT = init_antag_list(list(
 			/datum/antagonist/florida_man,
