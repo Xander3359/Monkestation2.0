@@ -236,10 +236,16 @@
 			module.on_suit_activation()
 	else
 		for(var/obj/item/mod/module/module as anything in modules)
-			module.on_suit_deactivation()
-	update_speed()
-	if(!(locate(/obj/item/mod/module/chameleon) in modules)) // monkestation edit: janky bugfix for chameleon modules
-		update_icon_state()
+			if(!module.part_activated)
+				continue
+			module.on_part_deactivation()
+			module.part_activated = FALSE
+			if(!module.active || (module.allow_flags & MODULE_ALLOW_INACTIVE))
+				continue
+			module.deactivate(display_message = FALSE)
+	update_charge_alert()
+	update_appearance(UPDATE_ICON_STATE)
+	generate_suit_mask()
 	wearer.update_clothing(slot_flags)
 
 /// Quickly deploys all the suit parts and if successful, seals them and turns on the suit. Intended mostly for outfits.
