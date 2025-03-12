@@ -750,7 +750,7 @@
 	if(tgsStealthKey)
 		return tgsStealthKey
 
-	tgsStealthKey = generateStealthCkey()
+	//tgsStealthKey = generateStealthCkey()
 	GLOB.stealthminID[EXTERNAL_PM_USER] = tgsStealthKey
 	return tgsStealthKey
 
@@ -765,8 +765,8 @@
 		return null
 
 	var/searching_ckey = whom
-	if(whom[1] == "@")
-		searching_ckey = findTrueKey(whom)
+	//if(whom[1] == "@")
+	//	searching_ckey = findTrueKey(whom)
 
 	if(searching_ckey == EXTERNAL_PM_USER)
 		return EXTERNAL_PM_USER

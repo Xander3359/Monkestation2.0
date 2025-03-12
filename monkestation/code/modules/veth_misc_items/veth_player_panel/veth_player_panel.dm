@@ -68,15 +68,15 @@
 		if("checkPlayers")
 			usr.client.check_players() //logs/rightscheck inside the proc
 			return
-		if("checkAntags")
-			usr.client.check_antagonists() //logs/rightscheck inside the proc
-			return
+		//if("checkAntags")
+		//	usr.client.check_antagonists() //logs/rightscheck inside the proc
+		//	return
 		if("faxPanel")
 			usr.client.fax_panel() //logs/rightscheck inside the proc
 			return
-		if("gamePanel")
-			usr.client.game_panel() //logs/rightscheck inside the proc
-			return
+//		if("gamePanel")
+//			usr.client.game_panel() //logs/rightscheck inside the proc
+//			return
 		if("comboHUD")
 			usr.client.toggle_combo_hud() //logs/rightscheck inside the proc
 			return
@@ -116,8 +116,8 @@
 				"admin_token" = usr.client.holder.href_token
 			))
 			return
-		if("adminaiinteract") //loggin inside the proc
-			usr.client.toggle_AI_interact()
+		//if("adminaiinteract") //loggin inside the proc
+		//	usr.client.toggle_AI_interact()
 
 /datum/player_panel_veth/ui_interact(mob/user, datum/tgui/ui)
 
@@ -317,7 +317,7 @@ love, veth
 		if("ban")
 			if(!check_rights(R_BAN))
 				return
-			usr.client.ban_panel()
+			//usr.client.ban_panel()
 			SSblackbox.record_feedback("tally", "VUAP", 1, "Ban")
 			return
 		if("prison")
@@ -491,7 +491,7 @@ love, veth
 		if("giveDisease")
 			if(!check_rights(NONE))
 				return
-			usr.client.give_disease(selected_mob)
+			//usr.client.give_disease(selected_mob)
 			SSblackbox.record_feedback("tally", "VUAP", 1, "GiveDisease")
 			return
 		if("cureAllDiseases")

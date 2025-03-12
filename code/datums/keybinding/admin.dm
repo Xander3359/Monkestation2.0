@@ -18,13 +18,14 @@
 	full_name = "Aghost"
 	description = "Go ghost"
 	keybind_signal = COMSIG_KB_ADMIN_AGHOST_DOWN
-
+/*
 /datum/keybinding/admin/admin_ghost/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.admin_ghost()
 	return TRUE
+*/
 
 /datum/keybinding/admin/player_panel_new
 	hotkey_keys = list("F6")
@@ -46,13 +47,14 @@
 	full_name = "Toggle Buildmode Self"
 	description = "Toggles buildmode"
 	keybind_signal = COMSIG_KB_ADMIN_TOGGLEBUILDMODE_DOWN
-
+/*
 /datum/keybinding/admin/toggle_buildmode_self/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.togglebuildmodeself()
 	return TRUE
+*/
 
 /datum/keybinding/admin/stealthmode
 	hotkey_keys = list("CtrlF8")
@@ -61,12 +63,14 @@
 	description = "Enters stealth mode"
 	keybind_signal = COMSIG_KB_ADMIN_STEALTHMODETOGGLE_DOWN
 
+/*
 /datum/keybinding/admin/stealthmode/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.stealth()
 	return TRUE
+*/
 
 /datum/keybinding/admin/invisimin
 	hotkey_keys = list("F8")
@@ -75,12 +79,14 @@
 	description = "Toggles ghost-like invisibility (Don't abuse this)"
 	keybind_signal = COMSIG_KB_ADMIN_INVISIMINTOGGLE_DOWN
 
+/*
 /datum/keybinding/admin/invisimin/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.invisimin()
 	return TRUE
+*/
 
 /datum/keybinding/admin/deadsay
 	hotkey_keys = list("F10")
@@ -103,12 +109,14 @@
 	description = "Shed your admin powers"
 	keybind_signal = COMSIG_KB_ADMIN_DEADMIN_DOWN
 
+/*
 /datum/keybinding/admin/deadmin/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.deadmin()
 	return TRUE
+*/
 
 /datum/keybinding/admin/readmin
 	hotkey_keys = list("Unbound")
@@ -117,12 +125,14 @@
 	description = "Regain your admin powers"
 	keybind_signal = COMSIG_KB_ADMIN_READMIN_DOWN
 
+/*
 /datum/keybinding/admin/readmin/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.readmin()
 	return TRUE
+*/
 
 /datum/keybinding/admin/view_tags
 	hotkey_keys = list("F9")

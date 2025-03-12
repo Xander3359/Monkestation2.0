@@ -1,3 +1,12 @@
+/client/proc/add_admin_verbs()
+	control_freak = CONTROL_FREAK_SKIN | CONTROL_FREAK_MACROS
+	SSadmin_verbs.assosciate_admin(src)
+
+/client/proc/remove_admin_verbs()
+	control_freak = initial(control_freak)
+	SSadmin_verbs.deassosciate_admin(src)
+
+/*
 //admin verb groups - They can overlap if you so wish. Only one of each verb will exist in the verbs list regardless
 //the procs are cause you can't put the comments in the GLOB var define
 GLOBAL_LIST_INIT(admin_verbs_default, world.AVerbsDefault())
@@ -256,7 +265,7 @@ GLOBAL_PROTECT(admin_verbs_debug)
 	/client/proc/print_cards,
 	/client/proc/reload_cards,
 	/client/proc/reload_configuration,
-	/client/proc/restart_controller,
+	//client/proc/restart_controller,
 	/client/proc/run_empty_query,
 	/client/proc/SDQL2_query,
 	/client/proc/set_dynex_scale,
@@ -1132,3 +1141,4 @@ GLOBAL_PROTECT(admin_verbs_poll)
 		holder.library_manager = new()
 	holder.library_manager.ui_interact(usr)
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Library Management") // If you are copy-pasting this, ensure the 4th parameter is unique to the new proc!
+*/

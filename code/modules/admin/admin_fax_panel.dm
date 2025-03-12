@@ -97,9 +97,10 @@
 	switch(action)
 
 		if("follow")
+		/*
 			if(!isobserver(usr))
 				usr.client?.admin_ghost()
-
+		*/
 			usr.client?.admin_follow(action_fax)
 
 		if("preview") // see saved variant

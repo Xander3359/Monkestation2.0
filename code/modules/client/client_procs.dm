@@ -262,7 +262,7 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 		admin_datum.associate(src)
 		connecting_admin = TRUE
 	else if(GLOB.deadmins[ckey])
-		add_verb(src, /client/proc/readmin)
+		//add_verb(src, /client/proc/readmin)
 		connecting_admin = TRUE
 	if(CONFIG_GET(flag/autoadmin))
 		if(!GLOB.admin_datums[ckey])
@@ -1360,8 +1360,10 @@ GLOBAL_LIST_INIT(blacklisted_builds, list(
 /client/proc/admin_follow(atom/movable/target)
 	var/can_ghost = TRUE
 
+/*
 	if (!isobserver(mob))
 		can_ghost = admin_ghost()
+*/
 
 	if(!can_ghost)
 		return FALSE

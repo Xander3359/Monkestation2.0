@@ -774,8 +774,8 @@
 		var/z = text2num(href_list["Z"])
 
 		var/client/C = usr.client
-		if(!isobserver(usr))
-			C.admin_ghost()
+		//if(!isobserver(usr))
+		//	C.admin_ghost()
 		sleep(0.2 SECONDS)
 		C.jumptocoord(x,y,z)
 
@@ -1294,7 +1294,7 @@
 	else if(href_list["check_antagonist"])
 		if(!check_rights(R_ADMIN))
 			return
-		usr.client.check_antagonists()
+		//usr.client.check_antagonists()
 
 	else if(href_list["kick_all_from_lobby"])
 		if(!check_rights(R_ADMIN))

@@ -44,15 +44,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/statclick)
 	usr.client.debug_variables(target)
 	message_admins("Admin [key_name_admin(usr)] is debugging the [target] [class].")
 
-
-// Debug verbs.
-/client/proc/restart_controller(controller in list("Master", "Failsafe"))
-	set category = "Debug"
-	set name = "Restart Controller"
-	set desc = "Restart one of the various periodic loop controllers for the game (be careful!)"
-
-	if(!holder)
-		return
+ADMIN_VERB(restart_controller, R_DEBUG, "Restart Controller", "Restart one of the various periodic loop controllers for the game (be careful!)", ADMIN_CATEGORY_DEBUG, controller in list("Master", "Failsafe"))
 	switch(controller)
 		if("Master")
 			Recreate_MC()
@@ -61,7 +53,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/statclick)
 			new /datum/controller/failsafe()
 			SSblackbox.record_feedback("tally", "admin_verb", 1, "Restart Failsafe Controller")
 
-	message_admins("Admin [key_name_admin(usr)] has restarted the [controller] controller.")
+	message_admins("Admin [key_name_admin(user)] has restarted the [controller] controller.")
 
 /client/proc/debug_controller()
 	set category = "Debug"

@@ -210,9 +210,9 @@
 			return TRUE
 
 	switch(action)
-		if("lawchange_logs")
-			usr.client?.list_law_changes()
-			return FALSE
+		//if("lawchange_logs")
+		//	usr.client?.list_law_changes()
+		//	return FALSE
 
 		if("force_state_laws")
 			borgo.statelaws()
