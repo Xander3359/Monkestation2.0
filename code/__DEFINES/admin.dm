@@ -172,6 +172,10 @@ GLOBAL_VAR_INIT(ghost_role_flags, (~0))
 /// State when an interview has had no action on it yet
 #define INTERVIEW_PENDING "interview_pending"
 
+/// Used in logging uses of admin verbs (and sometimes some non-admin or debug verbs) to the blackbox
+/// Only pass it a string key, the verb being used.
+#define BLACKBOX_LOG_ADMIN_VERB(the_verb) SSblackbox.record_feedback("tally", "admin_verb", 1, the_verb)
+
 //Monke edit for port servers
 #define MRP2_PORT		3122
 #define MRP_PORT		3121

@@ -73,9 +73,6 @@ SUBSYSTEM_DEF(admin_verbs)
 		message_admins("PERMISSION ELEVATION: [key_name_admin(admin)] attempted to dynamically invoke admin verb '[verb_type]'.")
 		return
 
-/*
-
-
 	if(ismob(admin))
 		var/mob/mob = admin
 		admin = mob.client
@@ -101,7 +98,7 @@ SUBSYSTEM_DEF(admin_verbs)
 	verb_singleton.__avd_do_verb(arglist(verb_args))
 	usr = old_usr
 	SSblackbox.record_feedback("tally", "dynamic_admin_verb_invocation", 1, "[verb_type]")
-*/
+
 /**
  * Assosciates and/or resyncs an admin with their accessible admin verbs.
  */
@@ -130,6 +127,6 @@ SUBSYSTEM_DEF(admin_verbs)
 		return
 
 	UnregisterSignal(admin, COMSIG_CLIENT_MOB_LOGIN)
-	//for(var/datum/admin_verb/verb_type as anything in admin_verbs_by_type)
-		//admin_verbs_by_type[verb_type].unassign_from_client(admin)
+	for(var/datum/admin_verb/verb_type as anything in admin_verbs_by_type)
+		admin_verbs_by_type[verb_type].unassign_from_client(admin)
 	admin_visibility_flags -= list(admin.ckey)
