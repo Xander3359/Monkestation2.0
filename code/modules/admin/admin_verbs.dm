@@ -411,8 +411,8 @@ ADMIN_VERB(toggle_ai_interact, R_ADMIN, "Toggle Admin AI Interact", "Allows you 
 	if(user.mob && isAdminGhostAI(user.mob))
 		user.mob.has_unlimited_silicon_privilege = user.AI_Interact
 
-	log_admin("[key_name(user)] has [AI_Interact ? "activated" : "deactivated"] Admin AI Interact")
-	message_admins("[key_name_admin(user)] has [AI_Interact ? "activated" : "deactivated"] their AI interaction")
+	log_admin("[key_name(user)] has [user.AI_Interact ? "activated" : "deactivated"] Admin AI Interact")
+	message_admins("[key_name_admin(user)] has [user.AI_Interact ? "activated" : "deactivated"] their AI interaction")
 
 ADMIN_VERB(debug_statpanel, R_DEBUG, "Debug Stat Panel", "Toggles local debug of the stat panel", ADMIN_CATEGORY_DEBUG)
 	user.stat_panel.send_message("create_debug")
