@@ -125,14 +125,13 @@
 	description = "Regain your admin powers"
 	keybind_signal = COMSIG_KB_ADMIN_READMIN_DOWN
 
-/*
 /datum/keybinding/admin/readmin/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.readmin()
 	return TRUE
-*/
+
 
 /datum/keybinding/admin/view_tags
 	hotkey_keys = list("F9")
