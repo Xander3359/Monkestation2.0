@@ -1128,8 +1128,8 @@
 		var/mob/M = locate(href_list["borgpanel"])
 		if(!iscyborg(M))
 			to_chat(usr, "This can only be used on cyborgs", confidential = TRUE)
-		else
-			open_borgopanel(M)
+//		else
+//			open_borgopanel(M)
 
 	else if(href_list["initmind"])
 		if(!check_rights(R_ADMIN))
@@ -1735,7 +1735,7 @@
 	else if(href_list["show_tags"])
 		if(!check_rights(R_ADMIN))
 			return
-		return display_tags()
+		//return display_tags()
 
 	else if(href_list["mark_datum"])
 		if(!check_rights(R_ADMIN))

@@ -43,4 +43,3 @@ INITIALIZE_IMMEDIATE(/obj/effect/statclick)
 
 	usr.client.debug_variables(target)
 	message_admins("Admin [key_name_admin(usr)] is debugging the [target] [class].")
-

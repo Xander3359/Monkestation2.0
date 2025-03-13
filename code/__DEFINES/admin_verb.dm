@@ -55,3 +55,5 @@ _ADMIN_VERB(verb_path_name, verb_permissions, verb_name, verb_desc, verb_categor
 
 // Special categories that are seperated
 #define ADMIN_CATEGORY_DEBUG "Debug"
+#define ADMIN_CATEGORY_SERVER "Server"
+#define ADMIN_CATEGORY_OBJECT "Object"

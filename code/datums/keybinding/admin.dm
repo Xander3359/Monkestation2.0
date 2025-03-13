@@ -18,14 +18,13 @@
 	full_name = "Aghost"
 	description = "Go ghost"
 	keybind_signal = COMSIG_KB_ADMIN_AGHOST_DOWN
-/*
+
 /datum/keybinding/admin/admin_ghost/down(client/user)
 	. = ..()
 	if(.)
 		return
-	user.admin_ghost()
+	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/admin_ghost)
 	return TRUE
-*/
 
 /datum/keybinding/admin/player_panel_new
 	hotkey_keys = list("F6")
@@ -34,12 +33,14 @@
 	description = "Opens up the new TGUI player panel"
 	keybind_signal = COMSIG_KB_ADMIN_PLAYERPANELNEW_DOWN
 
+/* TODO CONVERT PANEL TO AVD
 /datum/keybinding/admin/player_panel_new/down(client/user)
 	. = ..()
 	if(.)
 		return
 	user.holder.player_panel_veth()
 	return TRUE
+*/
 
 /datum/keybinding/admin/toggle_buildmode_self
 	hotkey_keys = list("F7")
@@ -47,14 +48,13 @@
 	full_name = "Toggle Buildmode Self"
 	description = "Toggles buildmode"
 	keybind_signal = COMSIG_KB_ADMIN_TOGGLEBUILDMODE_DOWN
-/*
+
 /datum/keybinding/admin/toggle_buildmode_self/down(client/user)
 	. = ..()
 	if(.)
 		return
-	user.togglebuildmodeself()
+	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/build_mode_self)
 	return TRUE
-*/
 
 /datum/keybinding/admin/stealthmode
 	hotkey_keys = list("CtrlF8")
@@ -63,14 +63,12 @@
 	description = "Enters stealth mode"
 	keybind_signal = COMSIG_KB_ADMIN_STEALTHMODETOGGLE_DOWN
 
-/*
 /datum/keybinding/admin/stealthmode/down(client/user)
 	. = ..()
 	if(.)
 		return
-	user.stealth()
+	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/stealth)
 	return TRUE
-*/
 
 /datum/keybinding/admin/invisimin
 	hotkey_keys = list("F8")
@@ -79,14 +77,12 @@
 	description = "Toggles ghost-like invisibility (Don't abuse this)"
 	keybind_signal = COMSIG_KB_ADMIN_INVISIMINTOGGLE_DOWN
 
-/*
 /datum/keybinding/admin/invisimin/down(client/user)
 	. = ..()
 	if(.)
 		return
-	user.invisimin()
+	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/invisimin)
 	return TRUE
-*/
 
 /datum/keybinding/admin/deadsay
 	hotkey_keys = list("F10")
@@ -109,14 +105,12 @@
 	description = "Shed your admin powers"
 	keybind_signal = COMSIG_KB_ADMIN_DEADMIN_DOWN
 
-/*
 /datum/keybinding/admin/deadmin/down(client/user)
 	. = ..()
 	if(.)
 		return
-	user.deadmin()
+	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/deadmin)
 	return TRUE
-*/
 
 /datum/keybinding/admin/readmin
 	hotkey_keys = list("Unbound")
@@ -144,5 +138,5 @@
 	. = ..()
 	if(.)
 		return
-	user.holder?.display_tags()
+	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/display_tags)
 	return TRUE

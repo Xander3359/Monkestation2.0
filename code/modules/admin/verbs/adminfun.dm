@@ -1,57 +1,43 @@
-// Admin Tab - Fun Verbs
-
-/client/proc/cmd_admin_explosion(atom/O as obj|mob|turf in world)
-	set category = "Admin.Fun"
-	set name = "Explosion"
-
-	if(!check_rights(R_ADMIN))
-		return
-
-	var/devastation = input("Range of total devastation. -1 to none", text("Input"))  as num|null
+ADMIN_VERB(admin_explosion, R_ADMIN|R_FUN, "Explosion", ADMIN_VERB_NO_DESCRIPTION, ADMIN_CATEGORY_HIDDEN, atom/orignator as obj|mob|turf)
+	var/devastation = input(user, "Range of total devastation. -1 to none", "Input")  as num | null
 	if(devastation == null)
 		return
-	var/heavy = input("Range of heavy impact. -1 to none", text("Input"))  as num|null
+	var/heavy = input(user, "Range of heavy impact. -1 to none", text("Input"))  as num | null
 	if(heavy == null)
 		return
-	var/light = input("Range of light impact. -1 to none", text("Input"))  as num|null
+	var/light = input(user, "Range of light impact. -1 to none", text("Input"))  as num | null
 	if(light == null)
 		return
-	var/flash = input("Range of flash. -1 to none", text("Input"))  as num|null
+	var/flash = input(user, "Range of flash. -1 to none", text("Input"))  as num | null
 	if(flash == null)
 		return
-	var/flames = input("Range of flames. -1 to none", text("Input"))  as num|null
+	var/flames = input(user, "Range of flames. -1 to none", text("Input"))  as num | null
 	if(flames == null)
 		return
 
 	if ((devastation != -1) || (heavy != -1) || (light != -1) || (flash != -1) || (flames != -1))
 		if ((devastation > 20) || (heavy > 20) || (light > 20) || (flames > 20))
-			if (tgui_alert(usr, "Are you sure you want to do this? It will laaag.", "Confirmation", list("Yes", "No")) == "No")
+			if (tgui_alert(user, "Are you sure you want to do this? It will laaag.", "Confirmation", list("Yes", "No")) == "No")
 				return
 
-		explosion(O, devastation, heavy, light, flames, flash, explosion_cause = mob)
-		log_admin("[key_name(usr)] created an explosion ([devastation],[heavy],[light],[flames]) at [AREACOORD(O)]")
-		message_admins("[key_name_admin(usr)] created an explosion ([devastation],[heavy],[light],[flames]) at [AREACOORD(O)]")
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "Explosion") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+		explosion(orignator, devastation, heavy, light, flames, flash, explosion_cause = user.mob)
+		log_admin("[key_name(user)] created an explosion ([devastation],[heavy],[light],[flames]) at [AREACOORD(orignator)]")
+		message_admins("[key_name_admin(user)] created an explosion ([devastation],[heavy],[light],[flames]) at [AREACOORD(orignator)]")
+		BLACKBOX_LOG_ADMIN_VERB("Explosion")
 
-/client/proc/cmd_admin_emp(atom/O as obj|mob|turf in world)
-	set category = "Admin.Fun"
-	set name = "EM Pulse"
-
-	if(!check_rights(R_ADMIN))
-		return
-
-	var/heavy = input("Range of heavy pulse.", text("Input"))  as num|null
+ADMIN_VERB(admin_emp, R_ADMIN | R_FUN, "EM Pulse", ADMIN_VERB_NO_DESCRIPTION, ADMIN_CATEGORY_HIDDEN, atom/orignator as obj | mob | turf)
+	var/heavy = input(user, "Range of heavy pulse.", "Input")  as num | null
 	if(heavy == null)
 		return
-	var/light = input("Range of light pulse.", text("Input"))  as num|null
+	var/light = input(user, "Range of light pulse.", text("Input"))  as num | null
 	if(light == null)
 		return
 
 	if (heavy || light)
-		empulse(O, heavy, light)
-		log_admin("[key_name(usr)] created an EM Pulse ([heavy],[light]) at [AREACOORD(O)]")
-		message_admins("[key_name_admin(usr)] created an EM Pulse ([heavy],[light]) at [AREACOORD(O)]")
-		SSblackbox.record_feedback("tally", "admin_verb", 1, "EM Pulse") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+		empulse(orignator, heavy, light)
+		log_admin("[key_name(user)] created an EM Pulse ([heavy],[light]) at [AREACOORD(orignator)]")
+		message_admins("[key_name_admin(user)] created an EM Pulse ([heavy],[light]) at [AREACOORD(orignator)]")
+		BLACKBOX_LOG_ADMIN_VERB("EM Pulse")
 
 /client/proc/cmd_admin_gib(mob/victim in GLOB.mob_list)
 	set category = "Admin.Fun"

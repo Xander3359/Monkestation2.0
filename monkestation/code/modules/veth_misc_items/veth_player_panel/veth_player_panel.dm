@@ -72,7 +72,7 @@
 		//	usr.client.check_antagonists() //logs/rightscheck inside the proc
 		//	return
 		if("faxPanel")
-			usr.client.fax_panel() //logs/rightscheck inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/fax_panel) //logs/rightscheck inside the proc TODO double check args
 			return
 //		if("gamePanel")
 //			usr.client.game_panel() //logs/rightscheck inside the proc
@@ -94,7 +94,7 @@
 			usr.client.holder.vuap_open()
 			return
 		if("createCommandReport")
-			usr.client.cmd_admin_create_centcom_report() //logs/rightscheck inside the proc
+			//usr.client.cmd_admin_create_centcom_report() //logs/rightscheck inside the proc
 			return
 		if("logs")
 			usr.client.holder.Topic(null, list(
