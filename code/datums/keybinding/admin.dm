@@ -138,5 +138,5 @@
 	. = ..()
 	if(.)
 		return
-	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/display_tags)
+	//SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/display_tags)
 	return TRUE
