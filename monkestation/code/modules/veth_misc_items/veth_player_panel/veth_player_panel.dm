@@ -78,7 +78,7 @@
 //			usr.client.game_panel() //logs/rightscheck inside the proc
 //			return
 		if("comboHUD")
-			usr.client.toggle_combo_hud() //logs/rightscheck inside the proc
+			//usr.client.toggle_combo_hud() //logs/rightscheck inside the proc
 			return
 		if("adminVOX")
 			usr.client.AdminVOX() //logs/rightscheck inside the proc
@@ -611,7 +611,7 @@ love, veth
 /datum/vuap_personal/ui_state(mob/user)
 	return GLOB.admin_state
 
-/datum/admins/proc/vuap_open()
+/datum/admins/proc/vuap_open() // TODO convert to AVD
 	if (!check_rights(NONE))
 		message_admins("[key_name(src)] attempted to use VUAP without sufficient rights.")
 		return

@@ -1,3 +1,10 @@
+/client/CanProcCall(procname)
+	if(findtext(procname, "__avd_") == 1)
+		message_admins("[key_name_admin(usr)] attempted to directly call admin verb '[procname]'.")
+		log_admin("[key_name(usr)] attempted to directly call admin verb '[procname]'.")
+		return FALSE
+	return ..()
+
 /**
  * This is the only macro you should use to define admin verbs.
  * It will define the verb and the verb holder for you.
@@ -31,6 +38,16 @@
 
 #define ADMIN_VERB(verb_path_name, verb_permissions, verb_name, verb_desc, verb_category, verb_args...) \
 _ADMIN_VERB(verb_path_name, verb_permissions, verb_name, verb_desc, verb_category, FALSE, ##verb_args)
+
+#define ADMIN_VERB_ONLY_CONTEXT_MENU(verb_path_name, verb_permissions, verb_name, verb_args...) \
+_ADMIN_VERB(verb_path_name, verb_permissions, verb_name, ADMIN_VERB_NO_DESCRIPTION, ADMIN_CATEGORY_HIDDEN, TRUE, ##verb_args)
+
+#define ADMIN_VERB_AND_CONTEXT_MENU(verb_path_name, verb_permissions, verb_name, verb_desc, verb_category, verb_args...) \
+_ADMIN_VERB(verb_path_name, verb_permissions, verb_name, verb_desc, verb_category, TRUE, ##verb_args)
+
+/// Used to define a special check to determine if the admin verb should exist at all. Useful for verbs such as play sound which require configuration.
+//#define ADMIN_VERB_CUSTOM_EXIST_CHECK(verb_path_name) \
+//datum/admin_verb/##verb_path_name/__avd_check_should_exist()
 
 // These are put here to prevent the "procedure override precedes definition" error.
 /*

@@ -777,7 +777,7 @@
 		//if(!isobserver(usr))
 		//	C.admin_ghost()
 		sleep(0.2 SECONDS)
-		C.jumptocoord(x,y,z)
+		//C.jumptocoord(x,y,z)
 
 	else if(href_list["adminchecklaws"])
 		if(!check_rights(R_ADMIN))
@@ -986,7 +986,7 @@
 			to_chat(usr, "This can only be used on instances of type /mob/living/carbon/human", confidential = TRUE)
 			return
 
-		usr.client.smite(H)
+		//usr.client.smite(H)
 
 	else if(href_list["CentComReply"])
 		if(!check_rights(R_ADMIN))
@@ -1020,7 +1020,7 @@
 			return
 
 		var/mob/M = locate(href_list["jumpto"])
-		usr.client.jumptomob(M)
+		//usr.client.jumptomob(M)
 
 	else if(href_list["getmob"])
 		if(!check_rights(R_ADMIN))
@@ -1029,14 +1029,14 @@
 		if(tgui_alert(usr, "Confirm?", "Message", list("Yes", "No")) != "Yes")
 			return
 		var/mob/M = locate(href_list["getmob"])
-		usr.client.Getmob(M)
+		//usr.client.Getmob(M)
 
 	else if(href_list["sendmob"])
 		if(!check_rights(R_ADMIN))
 			return
 
 		var/mob/M = locate(href_list["sendmob"])
-		usr.client.sendmob(M)
+		//usr.client.sendmob(M)
 
 	else if(href_list["narrateto"])
 		if(!check_rights(R_ADMIN))
@@ -1098,8 +1098,8 @@
 				return
 			else
 				D.traitor_panel()
-		else
-			show_traitor_panel(M)
+		//else
+		//	show_traitor_panel(M)
 
 	else if(href_list["skill"])
 		if(!check_rights(R_ADMIN))
@@ -1109,17 +1109,17 @@
 			tgui_alert(usr,"The game hasn't started yet!")
 			return
 
-		var/target = locate(href_list["skill"])
-		var/datum/mind/target_mind
-		if(ismob(target))
-			var/mob/target_mob = target
-			target_mind = target_mob.mind
-		else if (istype(target, /datum/mind))
-			target_mind = target
-		else
-			to_chat(usr, "This can only be used on instances of type /mob and /mind", confidential = TRUE)
-			return
-		show_skill_panel(target_mind)
+		//var/target = locate(href_list["skill"])
+		//var/datum/mind/target_mind
+		//if(ismob(target))
+			//var/mob/target_mob = target
+			//target_mind = target_mob.mind
+		//else if (istype(target, /datum/mind))
+			//target_mind = target
+		//else
+			//to_chat(usr, "This can only be used on instances of type /mob and /mind", confidential = TRUE)
+			//return
+		//show_skill_panel(target_mind)
 
 	else if(href_list["borgpanel"])
 		if(!check_rights(R_ADMIN))
@@ -1365,7 +1365,7 @@
 					log_admin("[key_name(usr)] turned a Lag Switch measure at index ([switch_index]) [LAZYACCESS(SSlag_switch.measures, switch_index) ? "ON" : "OFF"]")
 					message_admins("[key_name_admin(usr)] turned a Lag Switch measure [LAZYACCESS(SSlag_switch.measures, switch_index) ? "ON" : "OFF"]")
 
-		src.show_lag_switch_panel()
+		//src.show_lag_switch_panel()
 
 	else if(href_list["change_lag_switch_option"])
 		if(!check_rights(R_ADMIN))
@@ -1394,7 +1394,7 @@
 					log_admin("[key_name(usr)] set the Lag Switch slowmode cooldown to [new_num] seconds.")
 					message_admins("[key_name_admin(usr)] set the Lag Switch slowmode cooldown to [new_num] seconds.")
 
-		src.show_lag_switch_panel()
+		//src.show_lag_switch_panel()
 
 	else if(href_list["viewruntime"])
 		var/datum/error_viewer/error_viewer = locate(href_list["viewruntime"])
