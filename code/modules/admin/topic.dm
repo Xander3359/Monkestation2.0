@@ -137,8 +137,7 @@
 		to_chat(usr, "[shuttle_console] was [shuttle_console.admin_controlled ? "locked" : "unlocked"].", confidential = TRUE)
 
 	else if(href_list["delay_round_end"])
-		// Permissions are checked in delay_round_end
-		delay_round_end()
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/delay_round_end)
 
 	else if(href_list["undelay_round_end"])
 		if(!check_rights(R_SERVER))
@@ -711,19 +710,10 @@
 		our_mob.AIize(our_mob.client, move)
 
 	else if(href_list["makerobot"])
-		if(!check_rights(R_SPAWN))
-			return
-
-		var/mob/our_mob = locate(href_list["makerobot"])
-		if(!istype(our_mob))
-			return
-		if(iscyborg(our_mob))
-			to_chat(usr, "That's already a cyborg.", confidential = TRUE)
-			return
-
-		usr.client.cmd_admin_robotize(our_mob)
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/cmd_admin_robotize, locate(href_list["makerobot"]))
 
 	else if(href_list["adminplayeropts"])
+		//return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/show_player_panel, locate(href_list["adminplayeropts"]))
 		var/mob/M = locate(href_list["adminplayeropts"])
 		usr.client.VUAP_selected_mob = M
 		usr.client.selectedPlayerCkey = M.ckey
@@ -742,6 +732,7 @@
 			return
 
 		to_chat(usr, span_notice("Jumping to [target_ckey]'s new mob: [target_mob]!"))
+		//return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/show_player_panel, target_mob)
 		usr.client.VUAP_selected_mob = target_mob
 		usr.client.selectedPlayerCkey = target_mob.ckey
 		usr.client.holder.vuap_open()
@@ -971,15 +962,7 @@
 		give_admin_popup(target, owner, message)
 
 	else if(href_list["adminsmite"])
-		if(!check_rights(R_ADMIN|R_FUN))
-			return
-
-		var/mob/living/carbon/human/H = locate(href_list["adminsmite"]) in GLOB.mob_list
-		if(!H || !istype(H))
-			to_chat(usr, "This can only be used on instances of type /mob/living/carbon/human", confidential = TRUE)
-			return
-
-		//usr.client.smite(H)
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/admin_smite, locate(href_list["adminsmite"]))
 
 	else if(href_list["CentComReply"])
 		if(!check_rights(R_ADMIN))
@@ -1008,6 +991,7 @@
 		var/obj/item/station_charter/charter = locate(href_list["reject_custom_name"])
 		if(istype(charter))
 			charter.reject_proposed(usr)
+
 	else if(href_list["jumpto"])
 		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/jump_to_mob, locate(href_list["jumpto"]))
 
@@ -1018,18 +1002,10 @@
 		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/send_mob, locate(href_list["sendmob"]))
 
 	else if(href_list["narrateto"])
-		if(!check_rights(R_ADMIN))
-			return
-
-		var/mob/M = locate(href_list["narrateto"])
-		usr.client.cmd_admin_direct_narrate(M)
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/cmd_admin_direct_narrate, locate(href_list["narrateto"]))
 
 	else if(href_list["subtlemessage"])
-		if(!check_rights(R_ADMIN))
-			return
-
-		var/mob/M = locate(href_list["subtlemessage"])
-		usr.client.cmd_admin_subtle_message(M)
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/cmd_admin_subtle_message, locate(href_list["subtlemessage"]))
 
 	else if(href_list["playsoundto"])
 		if(!check_rights(R_SOUND))
@@ -1101,14 +1077,7 @@
 		SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/show_skill_panel, target_mind)
 
 	else if(href_list["borgpanel"])
-		if(!check_rights(R_ADMIN))
-			return
-
-		var/mob/M = locate(href_list["borgpanel"])
-		if(!iscyborg(M))
-			to_chat(usr, "This can only be used on cyborgs", confidential = TRUE)
-		else
-			return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/borg_panel, locate(href_list["borgpanel"]))
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/borg_panel, locate(href_list["borgpanel"]))
 
 	else if(href_list["initmind"])
 		if(!check_rights(R_ADMIN))
@@ -1271,9 +1240,7 @@
 		return
 
 	else if(href_list["check_antagonist"])
-		if(!check_rights(R_ADMIN))
-			return
-		//usr.client.check_antagonists()
+		SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/check_antagonists)
 
 	else if(href_list["kick_all_from_lobby"])
 		if(!check_rights(R_ADMIN))
@@ -1344,7 +1311,7 @@
 					log_admin("[key_name(usr)] turned a Lag Switch measure at index ([switch_index]) [LAZYACCESS(SSlag_switch.measures, switch_index) ? "ON" : "OFF"]")
 					message_admins("[key_name_admin(usr)] turned a Lag Switch measure [LAZYACCESS(SSlag_switch.measures, switch_index) ? "ON" : "OFF"]")
 
-		//src.show_lag_switch_panel()
+		SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/lag_switch_panel)
 
 	else if(href_list["change_lag_switch_option"])
 		if(!check_rights(R_ADMIN))
@@ -1373,7 +1340,7 @@
 					log_admin("[key_name(usr)] set the Lag Switch slowmode cooldown to [new_num] seconds.")
 					message_admins("[key_name_admin(usr)] set the Lag Switch slowmode cooldown to [new_num] seconds.")
 
-		//src.show_lag_switch_panel()
+		SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/lag_switch_panel)
 
 	else if(href_list["viewruntime"])
 		var/datum/error_viewer/error_viewer = locate(href_list["viewruntime"])
@@ -1491,13 +1458,7 @@
 		toggle_id_ctf(usr, CTF_GHOST_CTF_GAME_ID)
 
 	else if(href_list["rebootworld"])
-		if(!check_rights(R_ADMIN))
-			return
-		var/confirm = tgui_alert(usr,"Are you sure you want to reboot the server?", "Confirm Reboot", list("Yes", "No"))
-		if(confirm == "No")
-			return
-		if(confirm == "Yes")
-			restart()
+		SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/restart)
 
 	else if(href_list["check_teams"])
 		if(!check_rights(R_ADMIN))
@@ -1712,9 +1673,7 @@
 		return remove_tagged_datum(datum_to_remove)
 
 	else if(href_list["show_tags"])
-		if(!check_rights(R_ADMIN))
-			return
-		//return display_tags()
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/display_tags)
 
 	else if(href_list["mark_datum"])
 		if(!check_rights(R_ADMIN))
@@ -1760,6 +1719,10 @@
 			return
 
 		web_sound(usr, link_url)
+
+	else if(href_list["debug_z_levels"])
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/debug_z_levels)
+
 //monkestation edit start
 	else if(href_list["approve_antag_token"])
 		if(!check_rights(R_ADMIN))
