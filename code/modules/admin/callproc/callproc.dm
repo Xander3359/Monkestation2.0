@@ -237,7 +237,7 @@ GLOBAL_PROTECT(LastAdminCalledProc)
 #else
 	return (GLOB.AdminProcCaller && GLOB.AdminProcCaller == usr?.client?.ckey) || (GLOB.AdminProcCallHandler && usr == GLOB.AdminProcCallHandler)
 #endif
-/*
+
 ADMIN_VERB_ONLY_CONTEXT_MENU(call_proc_datum, R_DEBUG, "Atom ProcCall", datum/thing as null | area | mob | obj | turf)
 	var/procname = input(user, "Proc name, eg: fake_blood","Proc:", null) as text | null
 	if(!procname)
@@ -262,7 +262,7 @@ ADMIN_VERB_ONLY_CONTEXT_MENU(call_proc_datum, R_DEBUG, "Atom ProcCall", datum/th
 	. = user.get_callproc_returnval(returnval, procname)
 	if(.)
 		to_chat(user, ., confidential = TRUE)
-*/
+
 /client/proc/get_callproc_args()
 	var/argnum = input("Number of arguments","Number:",0) as num|null
 	if(isnull(argnum))

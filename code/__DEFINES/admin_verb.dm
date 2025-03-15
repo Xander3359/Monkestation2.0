@@ -46,8 +46,11 @@ _ADMIN_VERB(verb_path_name, verb_permissions, verb_name, ADMIN_VERB_NO_DESCRIPTI
 _ADMIN_VERB(verb_path_name, verb_permissions, verb_name, verb_desc, verb_category, TRUE, ##verb_args)
 
 /// Used to define a special check to determine if the admin verb should exist at all. Useful for verbs such as play sound which require configuration.
-//#define ADMIN_VERB_CUSTOM_EXIST_CHECK(verb_path_name) \
-//datum/admin_verb/##verb_path_name/__avd_check_should_exist()
+#define ADMIN_VERB_CUSTOM_EXIST_CHECK(verb_path_name) \
+/datum/admin_verb/##verb_path_name/__avd_check_should_exist()
+
+/// Used to define the visibility flag of the verb. If the admin does not have this flag enabled they will not see the verb.
+#define ADMIN_VERB_VISIBILITY(verb_path_name, verb_visibility) /datum/admin_verb/##verb_path_name/visibility_flag = ##verb_visibility
 
 // These are put here to prevent the "procedure override precedes definition" error.
 /*
@@ -58,6 +61,16 @@ _ADMIN_VERB(verb_path_name, verb_permissions, verb_name, verb_desc, verb_categor
 	CRASH("__avd_do_verb not defined. use the macro")
 /datum/admin_verb/proc/__avd_check_should_exist()
 	return TRUE
+
+/*
+ * This is an example of how to use the above macro:
+ * ```
+ * ADMIN_VERB(name_of_verb, R_ADMIN, "Verb Name", "Verb Desc", "Verb Category", mob/target in world)
+ *     to_chat(user, "Hello!")
+ * ```
+ * Note the implied `client/user` argument that is injected into the verb.
+ * Also note that byond is shit and you cannot multi-line the macro call.
+ */
 
 /// Use this to mark your verb as not having a description. Should ONLY be used if you are also hiding the verb!
 #define ADMIN_VERB_NO_DESCRIPTION ""
@@ -74,3 +87,7 @@ _ADMIN_VERB(verb_path_name, verb_permissions, verb_name, verb_desc, verb_categor
 #define ADMIN_CATEGORY_DEBUG "Debug"
 #define ADMIN_CATEGORY_SERVER "Server"
 #define ADMIN_CATEGORY_OBJECT "Object"
+#define ADMIN_CATEGORY_MAPPING "Mapping"
+
+// Visibility flags
+#define ADMIN_VERB_VISIBLITY_FLAG_MAPPING_DEBUG "Map-Debug"
