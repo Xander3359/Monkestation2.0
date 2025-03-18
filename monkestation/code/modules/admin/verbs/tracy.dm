@@ -1,4 +1,4 @@
-/client/proc/tracy_next_round()
+/client/proc/tracy_next_round() //TODO convert to AVD
 	set name = "Toggle Tracy Next Round"
 	set desc = "Toggle running the byond-tracy profiler next round"
 	set category = "Debug"
@@ -18,7 +18,7 @@
 	to_chat(src, span_danger("byond-tracy is not supported on OpenDream, sorry!"), avoid_highlighting = TRUE, type = MESSAGE_TYPE_DEBUG, confidential = TRUE)
 #endif
 
-/client/proc/start_tracy()
+/client/proc/start_tracy() //TODO convert to AVD
 	set name = "Run Tracy Now"
 	set desc = "Start running the byond-tracy profiler immediately."
 	set category = "Debug"

@@ -10,7 +10,7 @@
 		CHECK_TICK
 	return lighting
 
-/client/proc/export_lighting_info()
+/client/proc/export_lighting_info() //TODO convert to AVD
 	set name = "Export Lighting Info"
 	set desc = "Exports a JSON file containing info about the lighting level of all floor turfs on a given Z-level."
 	set category = "Mapping"

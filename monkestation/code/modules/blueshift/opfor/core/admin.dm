@@ -1,4 +1,4 @@
-/client/proc/request_more_opfor()
+/client/proc/request_more_opfor() //TODO convert to AVD
 	set category = "Admin.Fun"
 	set name = "Request OPFOR"
 	set desc = "Request players sign up for opfor if they have antag on."
