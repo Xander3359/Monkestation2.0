@@ -1,4 +1,4 @@
-/client/proc/delete_all_glowshrooms()
+/client/proc/delete_all_glowshrooms() //TODO convert to AVD
 	set category = "Admin.Game"
 	set name = "Delete All Glowshrooms"
 	set desc = "Deletes all glowshrooms in the world. Use this instead of SDQL, as this prevents them from spreading mid-deletion."
@@ -37,7 +37,7 @@
 	message_admins("Cleared a total of [glowshrooms_deleted] glowshrooms.")
 	log_admin("Cleared a total of [glowshrooms_deleted] glowshrooms.")
 
-/client/proc/toggle_glowshroom_spread()
+/client/proc/toggle_glowshroom_spread() //TODO convert to AVD
 	set category = "Admin.Game"
 	set name = "Toggle Glowshroom Spreading"
 	set desc = "Toggles whether glowshrooms can spread or not. You don't need to use this if you're using the Delete All Glowshrooms verb, as that handles that on its own."

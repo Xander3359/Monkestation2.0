@@ -1,7 +1,7 @@
 /datum/verbs/menu/Admin/Generate_list(client/C)
 	if (C.holder)
 		. = ..()
-
+//TODO double check this.
 /*
 /datum/verbs/menu/Admin/verb/playerpanel()
 	set name = "Player Panel"

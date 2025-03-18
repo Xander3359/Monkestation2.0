@@ -142,7 +142,7 @@ GLOBAL_LIST_INIT(cassette_reviews, list())
 #undef ADMIN_OPEN_REVIEW
 
 // Handles UI to manage cassettes.
-/client/proc/review_cassettes() //Creates a verb for admins to open up the ui
+/client/proc/review_cassettes() //Creates a verb for admins to open up the ui TODO convert to AVD
 	set name = "Review Cassettes"
 	set desc = "Review this rounds cassettes."
 	set category = "Admin.Game"

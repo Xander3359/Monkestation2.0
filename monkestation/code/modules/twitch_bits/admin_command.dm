@@ -1,4 +1,4 @@
-/client/proc/summon_twitch_event()
+/client/proc/summon_twitch_event() //TODO convert to AVD
 	set category = "Admin.Fun"
 	set name = "Summon Twitch Event"
 	set desc = "Starts a twitch event with the given ID."

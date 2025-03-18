@@ -26,7 +26,7 @@ SUBSYSTEM_DEF(memory_stats)
 	return result
 #endif
 
-/client/proc/server_memory_stats()
+/client/proc/server_memory_stats() //TODO convert to AVD
 	set name = "Server Memory Stats"
 	set category = "Debug"
 	set desc = "Print various statistics about the server's current memory usage (does not work on OpenDream)"

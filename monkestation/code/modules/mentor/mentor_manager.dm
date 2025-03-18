@@ -3,7 +3,7 @@
 
 /// Verb for opening the requests manager panel
 /*
-/client/proc/mentor_requests()
+/client/proc/mentor_requests() //TODO convert to AVD or merge with admins system
 	set name = "Mentor Manager"
 	set desc = "Open the mentor manager panel to view all requests during this round"
 	set category = "Mentor"

@@ -1,7 +1,7 @@
 /datum/player_panel_veth/ //required for tgui component
 	var/title = "Veth's Ultimate Player Panel"
 
-/datum/admins/proc/player_panel_veth() //proc for verb in game tab
+/datum/admins/proc/player_panel_veth() //proc for verb in game tab TODO convert to AVD
 
 	set name = "Player Panel Veth"
 	set category = "Admin.Game"

@@ -1,4 +1,4 @@
-/client/proc/check_players()
+/client/proc/check_players() //TODO convert to AVD
 	set name = "Check Players"
 	set category = "Admin.Game"
 	if(!check_rights(NONE)) // Rights check for admin access

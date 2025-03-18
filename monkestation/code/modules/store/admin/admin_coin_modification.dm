@@ -1,4 +1,4 @@
-/client/proc/adjust_players_metacoins()
+/client/proc/adjust_players_metacoins() //TODO convert to AVD or merge with admins system
 	set category = "Admin.Fun"
 	set name = "Adjust Metacoins"
 	set desc = "You can modifiy a targets metacoin balance by adding or subtracting."
@@ -18,7 +18,7 @@
 
 	chosen_client.prefs.adjust_metacoins(chosen_client.ckey, adjustment_amount, "Admin [ckey] adjusted coins", FALSE, FALSE)
 
-/client/proc/mass_add_metacoins()
+/client/proc/mass_add_metacoins() //TODO convert to AVD
 	set category = "Admin.Fun"
 	set name = "Mass Add Coins"
 	set desc = "You give everyone some metacoins"

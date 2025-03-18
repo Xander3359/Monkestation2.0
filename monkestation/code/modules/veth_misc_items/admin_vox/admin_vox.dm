@@ -1,4 +1,4 @@
-/client/proc/AdminVOX()
+/client/proc/AdminVOX() //TODO convert to AVD
 	set name = "VOX"
 	set category = "Admin"
 	set desc = "Allows unrestricted use of the AI VOX announcement system."

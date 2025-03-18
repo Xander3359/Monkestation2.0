@@ -1,5 +1,5 @@
 /*
-/client/proc/cmd_mentor_say(msg as text)
+/client/proc/cmd_mentor_say(msg as text) //TODO convert to AVD or merge with admins system
 	set category = "Mentor"
 	set name = "Mentorsay"
 

@@ -1,4 +1,4 @@
-/client/proc/run_particle_weather()
+/client/proc/run_particle_weather() //TODO convert to AVD
 	set category = "Admin.Events"
 	set name = "Run Particle Weather"
 	set desc = "Triggers a particle weather"

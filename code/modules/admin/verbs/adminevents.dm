@@ -225,7 +225,7 @@ ADMIN_VERB(toggle_nuke, R_DEBUG|R_ADMIN, "Toggle Nuke", "Arm or disarm a nuke.",
 	message_admins("[ADMIN_LOOKUPFLW(user)] [nuke.timing ? "activated" : "deactivated"] a nuke at [ADMIN_VERBOSEJMP(nuke)].")
 	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Nuke", "[nuke.timing]")) //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-//MONKESTATION EDIT START
+//MONKESTATION EDIT START TODO Convert to AVD
 /client/proc/toggle_junior_op()
 	set category = "Admin.Events"
 	set name = "Toggle Junior OP Spawning"

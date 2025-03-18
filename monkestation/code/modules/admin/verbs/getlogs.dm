@@ -1,7 +1,7 @@
 GLOBAL_LIST(debug_logfile_names)
 GLOBAL_PROTECT(debug_logfile_names)
 
-/client/proc/getserverlogs_debug()
+/client/proc/getserverlogs_debug() //TODO convert to AVD
 	set name = "Get Server Logs (Debug)"
 	set desc = "View/retrieve debug-related logfiles."
 	set category = "Debug"
@@ -12,7 +12,7 @@ GLOBAL_PROTECT(debug_logfile_names)
 		return
 	browseserverlogs(whitelist = GLOB.debug_logfile_names, allow_folder = FALSE)
 
-/client/proc/getcurrentlogs_debug()
+/client/proc/getcurrentlogs_debug() //TODO convert to AVD
 	set name = "Get Current Logs (Debug)"
 	set desc = "View/retrieve debug-related logfiles for the current round."
 	set category = "Debug"

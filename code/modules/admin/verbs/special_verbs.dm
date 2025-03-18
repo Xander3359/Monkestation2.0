@@ -35,7 +35,7 @@
 	log_admin("[src] re-adminned themselves.")
 	BLACKBOX_LOG_ADMIN_VERB("Readmin")
 
-/*
+/* TODO double check this
 /client/proc/admin_2fa_verify()
 	set name = "Verify Admin"
 	set category = "Admin"

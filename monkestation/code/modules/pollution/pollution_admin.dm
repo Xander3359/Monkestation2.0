@@ -1,4 +1,4 @@
-/client/proc/spawn_pollution()
+/client/proc/spawn_pollution() //TODO convert to AVD
 	set category = "Admin.Fun"
 	set name = "Spawn Pollution"
 	set desc = "Spawns an amount of chosen pollutant at your current location."

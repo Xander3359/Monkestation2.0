@@ -1,4 +1,4 @@
-/datum/admins/proc/kick_player_by_ckey()
+/datum/admins/proc/kick_player_by_ckey() //TODO convert to AVD
 	set name = "Kick Player (by ckey)"
 	set category = "Admin"
 

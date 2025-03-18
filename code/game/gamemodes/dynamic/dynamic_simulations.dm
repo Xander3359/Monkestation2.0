@@ -68,7 +68,7 @@
 	/// Optional, force this threat level instead of picking randomly through the lorentz distribution
 	var/forced_threat_level
 
-/client/proc/run_dynamic_simulations()
+/client/proc/run_dynamic_simulations() //TODO Convert to AVD
 	set name = "Run Dynamic Simulations"
 	set category = "Debug"
 

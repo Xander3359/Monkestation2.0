@@ -1,4 +1,4 @@
-/client/proc/adjust_players_antag_tokens()
+/client/proc/adjust_players_antag_tokens() // TODO convert to AVD
 	set category = "Admin.Fun"
 
 	set name = "Adjust Antag Tokens"

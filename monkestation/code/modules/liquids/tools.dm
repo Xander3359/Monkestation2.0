@@ -1,4 +1,4 @@
-/client/proc/spawn_liquid()
+/client/proc/spawn_liquid() //TODO convert to AVD
 	set category = "Admin.Fun"
 	set name = "Spawn Liquid"
 	set desc = "Spawns an amount of chosen liquid at your current location."
@@ -30,7 +30,7 @@
 	message_admins("[ADMIN_LOOKUPFLW(usr)] spawned liquid at [epicenter.loc] ([choice] - [volume]).")
 	log_admin("[key_name(usr)] spawned liquid at [epicenter.loc] ([choice] - [volume]).")
 
-/client/proc/remove_liquid()
+/client/proc/remove_liquid() //TODO convert to AVD
 	set name = "Remove Liquids"
 	set category = "Admin.Fun"
 	set desc = "Fixes air in specified radius."

@@ -507,7 +507,7 @@ ADMIN_VERB(force_event, R_FUN, "Trigger Event", "Forces an event to occur.", ADM
 /datum/admins/proc/forceEvent(mob/user)
 	SSgamemode.event_panel(user)
 
-/client/proc/forceGamemode()
+/client/proc/forceGamemode() //TODO convert to AVD
 	set name = "Open Gamemode Panel"
 	set category = "Admin.Events"
 	if(!holder ||!check_rights(R_FUN))

@@ -109,7 +109,7 @@ GLOBAL_VAR_INIT(looc_allowed, TRUE)
 		GLOB.looc_allowed = !GLOB.looc_allowed
 	to_chat(world, "<span class='oocplain bold'>LOOC channel has been globally [GLOB.looc_allowed ? "enabled" : "disabled"].</span>")
 
-/datum/admins/proc/togglelooc()
+/datum/admins/proc/togglelooc() //TODO convert to AVD
 	set category = "Server"
 	set name = "Toggle LOOC"
 	if(!check_rights(R_ADMIN))

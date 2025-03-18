@@ -1,4 +1,4 @@
-/client/proc/adjust_players_event_tokens()
+/client/proc/adjust_players_event_tokens() //TODO convert to AVD
 	set category = "Admin.Fun"
 
 	set name = "Adjust Event Tokens"
