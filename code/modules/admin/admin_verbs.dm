@@ -587,17 +587,7 @@ ADMIN_VERB(create_mob_worm, R_FUN, "Create Mob Worm", "Attach a linked list of m
 
 	/client/proc/review_cassettes, /*monkestation addition Opens the Cassette Review menu*/
 
-
-	/datum/admins/proc/togglelooc, /*MONKESTATION EDIT; toggles looc on/off for everyone*/
-	/datum/admins/proc/toggledeadchat, /*MONKESTATION EDIT; toggles deadchat on/off for everyone*/
-	/datum/admins/proc/kick_player_by_ckey, //MONKESTATION ADDITION - kick a player by their ckey
-	// monkestation verbs start
-	/client/proc/spawn_pollution,
 	/client/proc/view_player_camera,
-	/client/proc/log_viewer_new,
-	/client/proc/request_more_opfor,
-	/client/proc/view_opfors,
-	/client/proc/check_players,
 	/client/proc/AdminVOX,
 	/client/proc/delete_all_glowshrooms,
 	/client/proc/toggle_glowshroom_spread,

@@ -66,7 +66,7 @@
 			SSblackbox.record_feedback("tally", "VUAP", 1, "OldPP")
 			return
 		if("checkPlayers")
-			usr.client.check_players() //logs/rightscheck inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/check_players) //logs/rightscheck inside the proc
 			return
 		//if("checkAntags")
 		//	usr.client.check_antagonists() //logs/rightscheck inside the proc
@@ -87,7 +87,7 @@
 			usr.client.generate_code() //logs/rightscheck inside the proc
 			return
 		if("viewOpfors")
-			usr.client.view_opfors() //logs/rightscheck inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/view_opfors)  //logs/rightscheck inside the proc
 			return
 		if("openAdditionalPanel") //logs/rightscheck inside the proc
 			usr.client.selectedPlayerCkey = params["selectedPlayerCkey"]
