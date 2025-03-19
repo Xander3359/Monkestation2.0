@@ -371,7 +371,6 @@ ADMIN_VERB(give_disease, R_FUN, "Give Disease", ADMIN_VERB_NO_DESCRIPTION, ADMIN
 	//MONKE EDIT END
 	BLACKBOX_LOG_ADMIN_VERB("Give Disease")
 
-/*
 ADMIN_VERB_AND_CONTEXT_MENU(object_say, R_FUN, "OSay", ADMIN_VERB_NO_DESCRIPTION, ADMIN_CATEGORY_HIDDEN, obj/speaker in world)
 	var/message = tgui_input_text(user, "What do you want the message to be?", "Make Sound", encode = FALSE)
 	if(!message)
@@ -380,7 +379,6 @@ ADMIN_VERB_AND_CONTEXT_MENU(object_say, R_FUN, "OSay", ADMIN_VERB_NO_DESCRIPTION
 	log_admin("[key_name(user)] made [speaker] at [AREACOORD(speaker)] say \"[message]\"")
 	message_admins(span_adminnotice("[key_name_admin(user)] made [speaker] at [AREACOORD(speaker)]. say \"[message]\""))
 	BLACKBOX_LOG_ADMIN_VERB("Object Say")
-*/
 
 ADMIN_VERB(build_mode_self, R_BUILD, "Toggle Build Mode Self", "Toggle build mode for yourself.", ADMIN_CATEGORY_EVENTS)
 	togglebuildmode(user.mob) // why is this a global proc???

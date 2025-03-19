@@ -11,7 +11,7 @@
 		asked++
 	message_admins("[ADMIN_LOOKUP(usr)] has requested more OPFOR players! (Asked: [asked] players)")
 
-/client/proc/view_opfors()
+/client/proc/view_opfors() //TODO convert to AVD
 	set name = "View OPFORs"
 	set category = "Admin.Game"
 	if(holder)
