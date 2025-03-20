@@ -225,20 +225,12 @@ ADMIN_VERB(toggle_nuke, R_DEBUG|R_ADMIN, "Toggle Nuke", "Arm or disarm a nuke.",
 	message_admins("[ADMIN_LOOKUPFLW(user)] [nuke.timing ? "activated" : "deactivated"] a nuke at [ADMIN_VERBOSEJMP(nuke)].")
 	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Nuke", "[nuke.timing]")) //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-//MONKESTATION EDIT START TODO Convert to AVD
-/client/proc/toggle_junior_op()
-	set category = "Admin.Events"
-	set name = "Toggle Junior OP Spawning"
-	set popup_menu = FALSE
-	if(!check_rights(R_DEBUG))
-		return
+//MONKESTATION EDIT START
+ADMIN_VERB(toggle_junior_op, R_DEBUG, "Toggle Junior OPs", "Toggles nuke disk's ability to spawn Junior OPs.", ADMIN_CATEGORY_EVENTS)
 	for(var/obj/item/disk/nuclear/disky in GLOB.nuke_disk_list)
-		if(disky.can_trigger_junior_operative)
-			disky.can_trigger_junior_operative = FALSE
-		else
-			disky.can_trigger_junior_operative = TRUE
-		log_admin("[key_name(usr)] toggled [disky.can_trigger_junior_operative ? "on" : "off"] junior lone operative spawning on a nuke disk at [AREACOORD(disky)].")
-		message_admins("[ADMIN_LOOKUPFLW(usr)] toggled [disky.can_trigger_junior_operative ? "on" : "off"] junior lone operative spawning on a nuke disk at [AREACOORD(disky)].")
+		disky.can_trigger_junior_operative = !disky.can_trigger_junior_operative
+		log_admin("[key_name(user)] toggled [disky.can_trigger_junior_operative ? "on" : "off"] junior lone operative spawning on a nuke disk at [AREACOORD(disky)].")
+		message_admins("[ADMIN_LOOKUPFLW(user)] toggled [disky.can_trigger_junior_operative ? "on" : "off"] junior lone operative spawning on a nuke disk at [AREACOORD(disky)].")
 		SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Junior OP Spawning", "[disky.can_trigger_junior_operative]]")) //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 //MONKESTATION EDIT STOP
 
@@ -382,22 +374,16 @@ ADMIN_VERB(delay_command_report, R_FUN, "Delay Command Report", "Prevents the ro
 	log_admin("[key_name(usr)] removed mob ability [ability_name] from mob [marked_mob].")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Mob Ability") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-
 //MONKESTATION EDIT START
-/client/proc/toggle_crew_cc_comms() //TODO Add this to AVD
-	set category = "Admin.Events"
-	set name = "Toggle Crew CC Comms"
-	set popup_menu = FALSE
-	if(!check_rights(R_DEBUG))
-		return
-	var/toggle = tgui_alert(src, "Toggle Crew CC Comms", "Toggle", list("On", "Off"))
+ADMIN_VERB(toggle_crew_cc_comms, R_DEBUG, "Toggle Crew CC Comms", "Toggles crew Central Command Communications.", ADMIN_CATEGORY_EVENTS)
+	var/toggle = tgui_alert(user, "Toggle Crew CC Comms", "Toggle", list("On", "Off"))
 	for(var/obj/item/encryptionkey/headset_cent/crew/key in GLOB.crew_cc_keys)
 		if(toggle == "On")
 			key.toggle_on()
 		if(toggle == "Off")
 			key.toggle_off()
-	log_admin("[key_name(usr)] toggled crew CC comms [toggle].")
-	message_admins("[ADMIN_LOOKUPFLW(usr)] toggled crew CC comms [toggle].")
+	log_admin("[key_name(user)] toggled crew CC comms [toggle].")
+	message_admins("[ADMIN_LOOKUPFLW(user)] toggled crew CC comms [toggle].")
 	SSblackbox.record_feedback("nested tally", "admin_toggle", 1, list("Toggle Crew CC Comms", "[toggle]]")) //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 //MONKESTATION EDIT STOP
 

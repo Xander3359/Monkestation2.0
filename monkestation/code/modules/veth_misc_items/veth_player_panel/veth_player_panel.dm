@@ -62,29 +62,29 @@
 			ui.send_update()
 			return
 		if("oldPP")
-			usr.client.holder.player_panel_new()
-			SSblackbox.record_feedback("tally", "VUAP", 1, "OldPP")
+			//usr.client.holder.player_panel_new()
+			//SSblackbox.record_feedback("tally", "VUAP", 1, "OldPP")
 			return
 		if("checkPlayers")
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/check_players) //logs/rightscheck inside the proc
 			return
-		//if("checkAntags")
-		//	usr.client.check_antagonists() //logs/rightscheck inside the proc
-		//	return
+		if("checkAntags")
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/check_antagonists) //logs/rightscheck inside the proc
+			return
 		if("faxPanel")
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/fax_panel) //logs/rightscheck inside the proc TODO double check args
 			return
-//		if("gamePanel")
-//			usr.client.game_panel() //logs/rightscheck inside the proc
-//			return
+		if("gamePanel")
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/game_panel) //logs/rightscheck inside the proc
+			return
 		if("comboHUD")
-			//usr.client.toggle_combo_hud() //logs/rightscheck inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/combo_hud) //logs/rightscheck inside the proc
 			return
 		if("adminVOX")
-			usr.client.AdminVOX() //logs/rightscheck inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/AdminVOX)  //logs/rightscheck inside the proc
 			return
 		if("generateCode")
-			usr.client.generate_code() //logs/rightscheck inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/generate_code) //logs/rightscheck inside the proc
 			return
 		if("viewOpfors")
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/view_opfors)  //logs/rightscheck inside the proc
@@ -94,7 +94,7 @@
 			usr.client.holder.vuap_open()
 			return
 		if("createCommandReport")
-			//usr.client.cmd_admin_create_centcom_report() //logs/rightscheck inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/create_command_report) //logs/rightscheck inside the proc
 			return
 		if("logs")
 			usr.client.holder.Topic(null, list(
@@ -116,8 +116,8 @@
 				"admin_token" = usr.client.holder.href_token
 			))
 			return
-		//if("adminaiinteract") //loggin inside the proc
-		//	usr.client.toggle_AI_interact()
+		if("adminaiinteract") //loggin inside the proc
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/toggle_ai_interact)
 
 /datum/player_panel_veth/ui_interact(mob/user, datum/tgui/ui)
 
@@ -491,7 +491,7 @@ love, veth
 		if("giveDisease")
 			if(!check_rights(NONE))
 				return
-			//usr.client.give_disease(selected_mob)
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/give_disease, selected_mob)
 			SSblackbox.record_feedback("tally", "VUAP", 1, "GiveDisease")
 			return
 		if("cureAllDiseases")
