@@ -306,25 +306,25 @@ ADMIN_VERB(add_mob_ability, R_ADMIN, "Add Mob Ability", "Adds an ability to a ma
 
 	var/datum/action/cooldown/mob_cooldown/add_ability
 
-	var/make_sequence = tgui_alert(usr, "Would you like this action to be a sequence of multiple abilities?", "Sequence Ability", list("Yes", "No"))
+	var/make_sequence = tgui_alert(user, "Would you like this action to be a sequence of multiple abilities?", "Sequence Ability", list("Yes", "No"))
 	if(make_sequence == "Yes")
 		add_ability = new /datum/action/cooldown/mob_cooldown(marked_mob)
 		add_ability.sequence_actions = list()
 		while(!isnull(ability_type))
-			var/ability_delay = tgui_input_number(usr, "Enter the delay in seconds before the next ability in the sequence is used", "Ability Delay", 2)
+			var/ability_delay = tgui_input_number(user, "Enter the delay in seconds before the next ability in the sequence is used", "Ability Delay", 2)
 			if(isnull(ability_delay) || ability_delay < 0)
 				ability_delay = 0
 			add_ability.sequence_actions[ability_type] = ability_delay * 1 SECONDS
-			ability_type = tgui_input_list(usr, "Choose a new sequence ability", "Sequence Ability", all_mob_actions)
-		var/ability_cooldown = tgui_input_number(usr, "Enter the sequence abilities cooldown in seconds", "Ability Cooldown", 2)
+			ability_type = tgui_input_list(user, "Choose a new sequence ability", "Sequence Ability", all_mob_actions)
+		var/ability_cooldown = tgui_input_number(user, "Enter the sequence abilities cooldown in seconds", "Ability Cooldown", 2)
 		if(isnull(ability_cooldown) || ability_cooldown < 0)
 			ability_cooldown = 2
 		add_ability.cooldown_time = ability_cooldown * 1 SECONDS
-		var/ability_melee_cooldown = tgui_input_number(usr, "Enter the abilities melee cooldown in seconds", "Melee Cooldown", 2)
+		var/ability_melee_cooldown = tgui_input_number(user, "Enter the abilities melee cooldown in seconds", "Melee Cooldown", 2)
 		if(isnull(ability_melee_cooldown) || ability_melee_cooldown < 0)
 			ability_melee_cooldown = 2
 		add_ability.melee_cooldown_time = ability_melee_cooldown * 1 SECONDS
-		add_ability.name = tgui_input_text(usr, "Choose ability name", "Ability name", "Generic Ability")
+		add_ability.name = tgui_input_text(user, "Choose ability name", "Ability name", "Generic Ability")
 		add_ability.create_sequence_actions()
 	else
 		add_ability = new ability_type(marked_mob)
@@ -333,22 +333,22 @@ ADMIN_VERB(add_mob_ability, R_ADMIN, "Add Mob Ability", "Adds an ability to a ma
 		return
 	add_ability.Grant(marked_mob)
 
-	message_admins("[key_name_admin(usr)] added mob ability [ability_type] to mob [marked_mob].")
-	log_admin("[key_name(usr)] added mob ability [ability_type] to mob [marked_mob].")
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Add Mob Ability") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	message_admins("[key_name_admin(user)] added mob ability [ability_type] to mob [marked_mob].")
+	log_admin("[key_name(user)] added mob ability [ability_type] to mob [marked_mob].")
+	BLACKBOX_LOG_ADMIN_VERB("Add Mob Ability")
 
 ADMIN_VERB(remove_mob_ability, R_ADMIN, "Remove Mob Ability", "Removes an ability from marked mob.", ADMIN_CATEGORY_EVENTS)
-	if(!isliving(holder.marked_datum))
+	if(!isliving(user.holder.marked_datum))
 		to_chat(user, span_warning("Error: Please mark a /mob/living type mob to remove actions from it."))
 		return
 
-	var/mob/living/marked_mob = holder.marked_datum
+	var/mob/living/marked_mob = user.holder.marked_datum
 
 	var/list/all_mob_actions = list()
 	for(var/datum/action/cooldown/mob_cooldown/ability in marked_mob.actions)
 		all_mob_actions.Add(ability)
 
-	var/datum/action/cooldown/mob_cooldown/ability = tgui_input_list(usr, "Remove an ability", "Ability", all_mob_actions)
+	var/datum/action/cooldown/mob_cooldown/ability = tgui_input_list(user, "Remove an ability", "Ability", all_mob_actions)
 
 	if(!ability)
 		return
@@ -356,9 +356,9 @@ ADMIN_VERB(remove_mob_ability, R_ADMIN, "Remove Mob Ability", "Removes an abilit
 	var/ability_name = ability.name
 	QDEL_NULL(ability)
 
-	message_admins("[key_name_admin(usr)] removed ability [ability_name] from mob [marked_mob].")
-	log_admin("[key_name(usr)] removed mob ability [ability_name] from mob [marked_mob].")
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "Remove Mob Ability") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
+	message_admins("[key_name_admin(user)] removed ability [ability_name] from mob [marked_mob].")
+	log_admin("[key_name(user)] removed mob ability [ability_name] from mob [marked_mob].")
+	BLACKBOX_LOG_ADMIN_VERB("Remove Mob Ability")
 
 //MONKESTATION EDIT START
 ADMIN_VERB(toggle_crew_cc_comms, R_DEBUG, "Toggle Crew CC Comms", "Toggles crew Central Command Communications.", ADMIN_CATEGORY_EVENTS)
