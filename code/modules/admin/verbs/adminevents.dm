@@ -290,23 +290,16 @@ ADMIN_VERB(delay_command_report, R_FUN, "Delay Command Report", "Prevents the ro
 	SScommunications.block_command_report = !SScommunications.block_command_report
 	message_admins("[key_name_admin(user)] has [(SScommunications.block_command_report ? "delayed" : "sent")] the roundstart command report.")
 
-/client/proc/add_mob_ability() //TODO Add this to AVD
-	set category = "Admin.Events"
-	set name = "Add Mob Ability"
-	set desc = "Adds an ability to a marked mob."
-
-	if(!holder)
+ADMIN_VERB(add_mob_ability, R_ADMIN, "Add Mob Ability", "Adds an ability to a marked mob.", ADMIN_CATEGORY_EVENTS)
+	if(!isliving(user.holder.marked_datum))
+		to_chat(user, span_warning("Error: Please mark a /mob/living type mob to add actions to it."))
 		return
 
-	if(!isliving(holder.marked_datum))
-		to_chat(usr, span_warning("Error: Please mark a mob to add actions to it."))
-		return
-
-	var/mob/living/marked_mob = holder.marked_datum
+	var/mob/living/marked_mob = user.holder.marked_datum
 
 	var/list/all_mob_actions = sort_list(subtypesof(/datum/action/cooldown/mob_cooldown), GLOBAL_PROC_REF(cmp_typepaths_asc))
 
-	var/ability_type = tgui_input_list(usr, "Choose an ability", "Ability", all_mob_actions)
+	var/ability_type = tgui_input_list(user, "Choose an ability", "Ability", all_mob_actions)
 
 	if(!ability_type)
 		return
@@ -344,16 +337,9 @@ ADMIN_VERB(delay_command_report, R_FUN, "Delay Command Report", "Prevents the ro
 	log_admin("[key_name(usr)] added mob ability [ability_type] to mob [marked_mob].")
 	SSblackbox.record_feedback("tally", "admin_verb", 1, "Add Mob Ability") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 
-/client/proc/remove_mob_ability() //TODO Add this to AVD
-	set category = "Admin.Events"
-	set name = "Remove Mob Ability"
-	set desc = "Removes an ability from marked mob."
-
-	if(!holder)
-		return
-
+ADMIN_VERB(remove_mob_ability, R_ADMIN, "Remove Mob Ability", "Removes an ability from marked mob.", ADMIN_CATEGORY_EVENTS)
 	if(!isliving(holder.marked_datum))
-		to_chat(usr, span_warning("Error: Please mark a mob to remove actions from it."))
+		to_chat(user, span_warning("Error: Please mark a /mob/living type mob to remove actions from it."))
 		return
 
 	var/mob/living/marked_mob = holder.marked_datum

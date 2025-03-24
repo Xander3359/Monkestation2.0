@@ -148,12 +148,12 @@ ADMIN_VERB(review_cassettes, R_FUN, "Review Cassettes", "Review this rounds cass
 /datum/review_cassettes
 	var/client/holder //client of whoever is using this datum
 
-/datum/review_cassettes/New(client/user)//user should be a client if called by AVD
-	ui_interact(user.mob)//datum has a tgui component, here we open the window
+/datum/review_cassettes/New(user)
+	holder = user
+	ui_interact(holder.mob)//datum has a tgui component, here we open the window
 
 /datum/review_cassettes/ui_status(mob/user, datum/ui_state/state) // Is this even required anymore?
 	return (user.client == holder) ? UI_INTERACTIVE : UI_CLOSE
-
 
 /datum/review_cassettes/ui_close()// Don't leave orphaned datums laying around. Hopefully this handles timeouts?
 	qdel(src)
@@ -210,5 +210,3 @@ ADMIN_VERB(review_cassettes, R_FUN, "Review Cassettes", "Review this rounds cass
 		var/datum/cassette_review/cassette = GLOB.cassette_reviews[tape_id]
 		cassette.ui_interact(ui.user)
 		return
-
-

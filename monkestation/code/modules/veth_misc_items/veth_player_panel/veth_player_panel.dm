@@ -489,8 +489,6 @@ love, veth
 			to_chat(usr, "Adminhealed  [selected_mob.ckey].", confidential = TRUE)
 			return
 		if("giveDisease")
-			if(!check_rights(NONE))
-				return
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/give_disease, selected_mob)
 			SSblackbox.record_feedback("tally", "VUAP", 1, "GiveDisease")
 			return
@@ -502,7 +500,7 @@ love, veth
 			SSblackbox.record_feedback("tally", "VUAP", 1, "CureAllDiseases")
 			return
 		if("diseasePanel") //rights check inside the proc
-			usr.client.diseases_panel(selected_mob)
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/diseases_panel)
 			SSblackbox.record_feedback("tally", "VUAP", 1, "DiseasePanel")
 			return
 		if("modifytraits")
