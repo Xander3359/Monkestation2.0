@@ -33,14 +33,14 @@
 	description = "Opens up the new TGUI player panel"
 	keybind_signal = COMSIG_KB_ADMIN_PLAYERPANELNEW_DOWN
 
-/* TODO CONVERT PANEL TO AVD
+
 /datum/keybinding/admin/player_panel_new/down(client/user)
 	. = ..()
 	if(.)
 		return
-	user.holder.player_panel_veth()
+	SSadmin_verbs.dynamic_invoke_verb(user, /datum/admin_verb/player_panel_veth)
 	return TRUE
-*/
+
 
 /datum/keybinding/admin/toggle_buildmode_self
 	hotkey_keys = list("F7")

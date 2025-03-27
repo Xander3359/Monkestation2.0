@@ -717,7 +717,7 @@
 		var/mob/M = locate(href_list["adminplayeropts"])
 		usr.client.VUAP_selected_mob = M
 		usr.client.selectedPlayerCkey = M.ckey
-		usr.client.holder.vuap_open()
+		SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/vuap_personal)
 
 	else if(href_list["ppbyckey"])
 		var/target_ckey = href_list["ppbyckey"]
@@ -735,7 +735,7 @@
 		//return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/show_player_panel, target_mob)
 		usr.client.VUAP_selected_mob = target_mob
 		usr.client.selectedPlayerCkey = target_mob.ckey
-		usr.client.holder.vuap_open()
+		SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/vuap_personal)
 
 	else if(href_list["adminopendemo"])
 		usr.client << link("http://viewer.monkestation.com/?roundid=[GLOB.round_id]&password=[CONFIG_GET(string/replay_password)]#[world.time]") //opens current round at current time
