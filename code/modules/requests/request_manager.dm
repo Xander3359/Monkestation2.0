@@ -171,9 +171,8 @@ GLOBAL_DATUM_INIT(requests, /datum/request_manager, new)
 	switch(action)
 		if ("pp")
 			//SSadmin_verbs.dynamic_invoke_verb(ui.user, /datum/admin_verb/show_player_panel, request.owner?.mob)
-			usr.client.VUAP_selected_mob = request.owner?.mob
 			usr.client.selectedPlayerCkey = request.owner?.mob.ckey
-			usr.client.holder.vuap_open()
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/vuap_personal)
 			return TRUE
 
 		if ("vv")

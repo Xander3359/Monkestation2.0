@@ -1336,12 +1336,7 @@
 		regenerate_icons()
 
 	if(href_list[VV_HK_PLAYER_PANEL])
-		//return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/show_player_panel, src)
-		if(!check_rights(NONE))
-			return
-		usr.client.VUAP_selected_mob = src
-		usr.client.selectedPlayerCkey = src.ckey
-		usr.client.holder.vuap_open()
+		return SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/vuap_personal, src)
 
 	if(href_list[VV_HK_GODMODE])
 		if(!check_rights(R_ADMIN))

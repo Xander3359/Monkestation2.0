@@ -1,19 +1,30 @@
 /datum/player_panel_veth/ //required for tgui component
 	var/title = "Veth's Ultimate Player Panel"
-
-/datum/admins/proc/player_panel_veth() //proc for verb in game tab TODO convert to AVD
-
-	set name = "Player Panel Veth"
-	set category = "Admin.Game"
-	set desc = "Updated Player Panel with TGUI. Currently in testing."
-
-	if (!check_rights(NONE))
-		message_admins("[key_name(src)] attempted to use VUAP without sufficient rights.")
-		return
-	var/datum/player_panel_veth/tgui = new(usr)
-	tgui.ui_interact(usr)
+GLOB.alive_mob_list
+ADMIN_VERB(player_panel_veth, R_ADMIN, "Player Panel Veth", "Updated Player Panel with TGUI. Currently in testing.", ADMIN_CATEGORY_GAME)
+	var/datum/player_panel_veth/tgui = new(user.mob)
+	tgui.ui_interact(user.mob)
 	to_chat(src, span_interface("VUAP has been opened!"), confidential = TRUE)
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "VUAP")
+	BLACKBOX_LOG_ADMIN_VERB("VUAP")
+
+ADMIN_VERB_AND_CONTEXT_MENU(vuap_personal, R_ADMIN, "Player Options Panel", "Player options panel for a mob.", ADMIN_CATEGORY_GAME, mob/target in GLOB.player_list)
+	var/client/targetclient = target.client
+	if(!length(targetclient.ckey) || targetclient.ckey[1] == "@")
+		var/mob/player = target
+		var/datum/mind/player_mind = get_mind(player, include_last = TRUE)
+		var/player_mind_ckey = ckey(player_mind.key)
+		user.selectedPlayerCkey = player_mind_ckey
+		user.VUAP_selected_mob = target
+		var/datum/vuap_personal/tgui = new(user.mob)
+		tgui.ui_interact(user.mob)
+		tgui_alert(usr, "WARNING! This mob has no associated Mind! Most actions will not work. Last ckey to control this mob is [player_mind_ckey].", "No Mind!")
+
+	else
+		user.selectedPlayerCkey = target.ckey
+		user.VUAP_selected_mob = target
+		var/datum/vuap_personal/tgui = new(user.mob)
+		tgui.ui_interact(user.mob)
+	BLACKBOX_LOG_ADMIN_VERB("VUAP_personal")
 
 /datum/player_panel_veth/ui_data(mob/user)
 	var/list/players = list()
@@ -61,10 +72,6 @@
 		if("refresh")
 			ui.send_update()
 			return
-		if("oldPP")
-			//usr.client.holder.player_panel_new()
-			//SSblackbox.record_feedback("tally", "VUAP", 1, "OldPP")
-			return
 		if("checkPlayers")
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/check_players) //logs/rightscheck inside the proc
 			return
@@ -90,8 +97,8 @@
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/view_opfors)  //logs/rightscheck inside the proc
 			return
 		if("openAdditionalPanel") //logs/rightscheck inside the proc
-			usr.client.selectedPlayerCkey = params["selectedPlayerCkey"]
-			usr.client.holder.vuap_open()
+			var/mob/target = selected_mob
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/vuap_personal, target)
 			return
 		if("createCommandReport")
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/create_command_report) //logs/rightscheck inside the proc
@@ -137,24 +144,6 @@
 	var/selectedPlayerCkey = ""
 	///this is used to hold the mob of the selected player in case the ckey can't be found (this enables pp'ing soulless mobs)
 	var/VUAP_selected_mob = null
-
-/datum/admins/proc/vuap_open_context(mob/r_clicked_mob in GLOB.mob_list) //this is the proc for the right click menu
-	set category = null
-	set name = "Open New Player Panel"
-	if(!check_rights(NONE))
-		return
-	if(!length(r_clicked_mob.ckey) || r_clicked_mob.ckey[1] == "@")
-		var/mob/player = r_clicked_mob
-		var/datum/mind/player_mind = get_mind(player, include_last = TRUE)
-		var/player_mind_ckey = ckey(player_mind.key)
-		usr.client.VUAP_selected_mob = r_clicked_mob
-		usr.client.holder.vuap_open()
-		tgui_alert(usr, "WARNING! This mob has no associated Mind! Most actions will not work. Last ckey to control this mob is [player_mind_ckey].", "No Mind!")
-
-	else
-		usr.client.selectedPlayerCkey = r_clicked_mob.ckey
-		usr.client.holder.vuap_open()
-	SSblackbox.record_feedback("tally", "admin_verb", 1, "VUAP")
 
 /datum/vuap_personal
 
@@ -489,8 +478,6 @@ love, veth
 			to_chat(usr, "Adminhealed  [selected_mob.ckey].", confidential = TRUE)
 			return
 		if("giveDisease")
-			if(!check_rights(NONE))
-				return
 			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/give_disease, selected_mob)
 			SSblackbox.record_feedback("tally", "VUAP", 1, "GiveDisease")
 			return
@@ -502,7 +489,7 @@ love, veth
 			SSblackbox.record_feedback("tally", "VUAP", 1, "CureAllDiseases")
 			return
 		if("diseasePanel") //rights check inside the proc
-			usr.client.diseases_panel(selected_mob)
+			SSadmin_verbs.dynamic_invoke_verb(usr, /datum/admin_verb/diseases_panel)
 			SSblackbox.record_feedback("tally", "VUAP", 1, "DiseasePanel")
 			return
 		if("modifytraits")
@@ -610,13 +597,5 @@ love, veth
 
 /datum/vuap_personal/ui_state(mob/user)
 	return GLOB.admin_state
-
-/datum/admins/proc/vuap_open() // TODO convert to AVD
-	if (!check_rights(NONE))
-		message_admins("[key_name(src)] attempted to use VUAP without sufficient rights.")
-		return
-	var/datum/vuap_personal/tgui = new(usr)
-	tgui.ui_interact(usr)
-	SSblackbox.record_feedback("tally", "VUAP", 1, "VUAP_open")
 
 
