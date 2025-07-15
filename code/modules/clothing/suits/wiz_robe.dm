@@ -233,18 +233,15 @@
 		to_chat(usr, span_warning("The robe's internal magic supply is still recharging!"))
 		return
 
-	usr.say("Rise, my creation! Off your page into this realm!", forced = "stickman summoning")
-	playsound(loc, 'sound/magic/summon_magic.ogg', 50, TRUE, TRUE)
-	var/mob/living/M = new /mob/living/basic/stickman(get_turf(usr))
-	M.faction += list("[REF(usr)]")
-	robe_charge = FALSE
-	sleep(30 SECONDS)
-	robe_charge = TRUE
-	to_chat(usr, span_notice("The robe hums, its internal magic supply restored."))
+	conjure_stickmen(user)
 
-// The actual code for this is handled in the shielded component, see [/datum/component/shielded/proc/check_recharge_rune]
-/obj/item/wizard_armour_charge
-	name = "battlemage shield charges"
-	desc = "A powerful rune that will increase the number of hits a suit of battlemage armour can take before failing.."
-	icon = 'icons/effects/anomalies.dmi'
-	icon_state = "flux"
+/obj/item/clothing/suit/wizrobe/paper/proc/conjure_stickmen(mob/living/carbon/human/summoner)
+	summoner.force_say()
+	summoner.say("Rise, my creation! Off your page into this realm!", forced = "stickman summoning")
+	playsound(src, 'sound/effects/magic/summon_magic.ogg', 50, TRUE, TRUE)
+
+	var/mob/living/stickman = new /mob/living/basic/stickman/lesser(get_turf(summoner))
+
+	stickman.faction |= summoner.faction - FACTION_NEUTRAL //These bad boys shouldn't inherit the neutral faction from the crew
+
+	COOLDOWN_START(src, summoning_cooldown, 3 SECONDS)

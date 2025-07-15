@@ -112,8 +112,6 @@
 	var/charge_recovery = 1
 	/// Whether or not this shield can lose multiple charges.
 	var/lose_multiple_charges = FALSE
-	/// The item path to recharge this shielkd.
-	var/recharge_path = null
 	/// The icon file of the shield.
 	var/shield_icon_file = 'icons/effects/effects.dmi'
 	/// The icon_state of the shield.
@@ -125,10 +123,18 @@
 	. = ..()
 	charges = max_charges
 
-/obj/item/mod/module/energy_shield/on_suit_activation()
-	mod.AddComponent(/datum/component/shielded, max_charges = max_charges, recharge_start_delay = recharge_start_delay, charge_increment_delay = charge_increment_delay, \
-	charge_recovery = charge_recovery, lose_multiple_charges = lose_multiple_charges, recharge_path = recharge_path, starting_charges = charges, shield_icon_file = shield_icon_file, shield_icon = shield_icon)
-	RegisterSignal(mod.wearer, COMSIG_HUMAN_CHECK_SHIELDS, PROC_REF(shield_reaction))
+/obj/item/mod/module/energy_shield/on_part_activation()
+	mod.AddComponent(\
+		/datum/component/shielded, \
+		max_charges = max_charges, \
+		recharge_start_delay = recharge_start_delay, \
+		charge_increment_delay = charge_increment_delay, \
+		charge_recovery = charge_recovery, \
+		lose_multiple_charges = lose_multiple_charges, \
+		starting_charges = charges, \
+		shield_icon_file = shield_icon_file, \
+		shield_icon = shield_icon)
+	RegisterSignal(mod.wearer, COMSIG_LIVING_CHECK_BLOCK, PROC_REF(shield_reaction))
 
 /obj/item/mod/module/energy_shield/on_suit_deactivation(deleting = FALSE)
 	var/datum/component/shielded/shield = mod.GetComponent(/datum/component/shielded)
@@ -149,14 +155,12 @@
 		This shield can perfectly nullify attacks ranging from high-caliber rifles to magic missiles, \
 		though can also be drained by more mundane attacks. It will not protect the caster from social ridicule."
 	icon_state = "battlemage_shield"
-	idle_power_cost = DEFAULT_CHARGE_DRAIN * 0 //magic
-	use_power_cost = DEFAULT_CHARGE_DRAIN * 0 //magic too
-	max_charges = 25 //monkestation edit: from 15 to 25
-	recharge_start_delay = 1 MINUTES //monkestation edit: from 0 SECONDS to 1 MINUTES
-	charge_recovery = 25 //monkestation edit: from 8 to 25
+	idle_power_cost = 0 //magic
+	use_energy_cost = 0 //magic too
+	max_charges = 5
 	shield_icon_file = 'icons/effects/magic.dmi'
 	shield_icon = "mageshield"
-	recharge_path = /obj/item/wizard_armour_charge
+	required_slots = list()
 
 ///Magic Nullifier - Protects you from magic.
 /obj/item/mod/module/anti_magic
