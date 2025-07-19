@@ -8,6 +8,8 @@
 	category = /datum/uplink_category/suits
 	surplus = 40
 
+//---- SUITS
+
 /datum/uplink_item/suits/infiltrator_bundle
 	name = "Infiltrator MODsuit"
 	desc = "Developed by the Roseus Galactic Actors Guild in conjunction with the Gorlex Marauders to produce a functional suit for urban operations, \
@@ -33,7 +35,6 @@
 	item = /obj/item/storage/box/syndie_kit/space
 	cost = 4
 
-
 /datum/uplink_item/suits/modsuit
 	name = "Syndicate MODsuit"
 	desc = "The feared MODsuit of a Syndicate agent. Features armoring and a set of inbuilt modules."
@@ -45,32 +46,31 @@
 	name = "MODsuit Thermal Visor Module"
 	desc = "A visor for a MODsuit. Lets you see living beings through walls."
 	item = /obj/item/mod/module/visor/thermal
-	cost = 3
-
-/datum/uplink_item/suits/night
-	name = "MODsuit Night Visor Module"
-	desc = "A visor for a MODsuit. Lets you see clearer in the dark."
-	item = /obj/item/mod/module/visor/night
 	cost = 2
 
 /datum/uplink_item/suits/chameleon
 	name = "MODsuit Chameleon Module"
 	desc = "A MODsuit module that lets the suit disguise itself as other objects."
 	item = /obj/item/mod/module/chameleon
-	cost = 2
+	cost = 1
 
 /datum/uplink_item/suits/plate_compression
 	name = "MODsuit Plate Compression Module"
 	desc = "A MODsuit module that lets the suit compress into a smaller size. Not compatible with storage modules or the Infiltrator MODsuit."
 	item = /obj/item/mod/module/plate_compression
-	cost = 2
-
+	cost = 1
 
 /datum/uplink_item/suits/noslip
 	name = "MODsuit Anti-Slip Module"
 	desc = "A MODsuit module preventing the user from slipping on water."
 	item = /obj/item/mod/module/noslip
-	cost = 2
+	cost = 1
+
+/datum/uplink_item/suits/shock_absorber
+	name = "MODsuit Shock-Absorber Module"
+	desc = "A MODsuit module preventing the user from getting knocked down by batons."
+	item = /obj/item/mod/module/shock_absorber
+	cost = 1
 
 /datum/uplink_item/suits/modsuit/elite_traitor
 	name = "Elite Syndicate MODsuit"

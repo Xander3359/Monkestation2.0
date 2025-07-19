@@ -8,7 +8,7 @@
 		immunity against extremities such as spot and arc welding, solar eclipses, and handheld flashlights."
 	icon_state = "welding"
 	complexity = 1
-	incompatible_modules = list(/obj/item/mod/module/welding, /obj/item/mod/module/armor_booster)
+	incompatible_modules = list(/obj/item/mod/module/welding)
 	overlay_state_inactive = "module_welding"
 
 /obj/item/mod/module/welding/on_suit_activation()
@@ -18,6 +18,30 @@
 	if(deleting)
 		return
 	mod.helmet.flash_protect = initial(mod.helmet.flash_protect)
+
+/obj/item/mod/module/welding/syndicate
+	complexity = 0
+	removable = FALSE
+	incompatible_modules = list(/obj/item/mod/module/welding, /obj/item/mod/module/welding/syndicate, /obj/item/mod/module/stealth/wraith)
+	overlay_state_inactive = "module_armorbooster_on"
+	use_mod_colors = TRUE
+	mask_worn_overlay = TRUE
+
+/obj/item/mod/module/welding/syndicate/generate_worn_overlay(obj/item/source, mutable_appearance/standing)
+	overlay_state_inactive = "[initial(overlay_state_inactive)]-[mod.skin]"
+	return ..()
+
+/obj/item/mod/module/welding/syndicate
+	complexity = 0
+	removable = FALSE
+	incompatible_modules = list(/obj/item/mod/module/welding, /obj/item/mod/module/welding/syndicate, /obj/item/mod/module/stealth/wraith)
+	overlay_state_inactive = "module_armorbooster_on"
+	use_mod_colors = TRUE
+	mask_worn_overlay = TRUE
+
+/obj/item/mod/module/welding/syndicate/generate_worn_overlay(obj/item/source, mutable_appearance/standing)
+	overlay_state_inactive = "[initial(overlay_state_inactive)]-[mod.skin]"
+	return ..()
 
 ///T-Ray Scan - Scans the terrain for undertile objects.
 /obj/item/mod/module/t_ray
@@ -202,7 +226,26 @@
 	if(!.)
 		return
 	rcd_scan(src, fade_time = 10 SECONDS)
-	drain_power(use_power_cost)
+	drain_power(use_energy_cost)
+
+///Safety-First Head Protection - Protects your brain matter from sudden impacts.
+/obj/item/mod/module/headprotector
+	name = "MOD safety-first head protection module"
+	desc = "A series of dampening plates are installed along the back and upper areas of \
+		the helmet. These plates absorb abrupt kinetic shocks delivered to the skull. \
+		The bulk of this module prevents it from being installed in any suit that is capable \
+		of combat armor adjustments. However, the rudimentry nature of the module makes it \
+		relatively easy to install into most other suits."
+	icon_state = "welding"
+	complexity = 1
+	incompatible_modules = list(/obj/item/mod/module/welding/syndicate, /obj/item/mod/module/infiltrator)
+	required_slots = list(ITEM_SLOT_HEAD)
+
+/obj/item/mod/module/headprotector/on_part_activation()
+	ADD_TRAIT(mod.wearer, TRAIT_HEAD_INJURY_BLOCKED, REF(src))
+
+/obj/item/mod/module/headprotector/on_part_deactivation(deleting = FALSE)
+	REMOVE_TRAIT(mod.wearer, TRAIT_HEAD_INJURY_BLOCKED, REF(src))
 
 ///Mister - Sprays water over an area.
 /obj/item/mod/module/mister

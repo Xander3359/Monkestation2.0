@@ -236,7 +236,6 @@
 		/obj/item/mod/module/quick_cuff,
 	)
 	default_pins = list(
-		/obj/item/mod/module/armor_booster,
 		/obj/item/mod/module/jetpack,
 	)
 
@@ -255,7 +254,6 @@
 		/obj/item/mod/module/quick_cuff,
 	)
 	default_pins = list(
-		/obj/item/mod/module/armor_booster,
 		/obj/item/mod/module/jetpack/advanced,
 		/obj/item/mod/module/jump_jet,
 	)
@@ -275,7 +273,6 @@
 		/obj/item/mod/module/quick_cuff,
 	)
 	default_pins = list(
-		/obj/item/mod/module/armor_booster,
 		/obj/item/mod/module/jetpack/advanced,
 		/obj/item/mod/module/jump_jet,
 	)
@@ -307,7 +304,6 @@
 		/obj/item/mod/module/quick_cuff,
 	)
 	default_pins = list(
-		/obj/item/mod/module/armor_booster,
 		/obj/item/mod/module/jetpack/advanced,
 		/obj/item/mod/module/jump_jet,
 	)
@@ -325,7 +321,6 @@
 		/obj/item/mod/module/quick_cuff,
 	)
 	default_pins = list(
-		/obj/item/mod/module/armor_booster,
 		/obj/item/mod/module/jetpack/advanced,
 		/obj/item/mod/module/jump_jet,
 		/obj/item/mod/module/flamethrower,
@@ -336,6 +331,7 @@
 	starting_frequency = MODLINK_FREQ_SYNDICATE
 	applied_cell = /obj/item/stock_parts/cell/super
 	applied_modules = list(
+		/obj/item/mod/module/shock_absorber,
 		/obj/item/mod/module/emp_shield,
 		/obj/item/mod/module/magnetic_harness,
 		/obj/item/mod/module/quick_carry,
@@ -424,7 +420,6 @@
 		/obj/item/mod/module/flashlight,
 	)
 	default_pins = list(
-		/obj/item/mod/module/armor_booster,
 		/obj/item/mod/module/jetpack/advanced,
 		/obj/item/mod/module/jump_jet,
 	)
@@ -509,7 +504,6 @@
 		/obj/item/mod/module/flashlight/darkness,
 		/obj/item/mod/module/dna_lock,
 		/obj/item/mod/module/quick_cuff,
-		/obj/item/mod/module/visor/night,
 		/obj/item/mod/module/shove_blocker,
 		/obj/item/mod/module/noslip,
 	)

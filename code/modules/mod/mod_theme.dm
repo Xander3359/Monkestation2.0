@@ -639,9 +639,8 @@
 	atom_flags = PREVENT_CONTENTS_EXPLOSION_1
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	complexity_max = DEFAULT_MAX_COMPLEXITY + 5
-	slowdown_inactive = 1.75
-	slowdown_active = 1.25
-	inbuilt_modules = list(/obj/item/mod/module/reagent_scanner/advanced)
+	slowdown_deployed = 1.25
+	inbuilt_modules = list(/obj/item/mod/module/reagent_scanner/advanced, /obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/analyzer,
 		/obj/item/dnainjector,
@@ -699,9 +698,9 @@
 		a few years out of date, leading to an overall lower capacity for modules."
 	default_skin = "security"
 	armor_type = /datum/armor/mod_theme_security
-	complexity_max = DEFAULT_MAX_COMPLEXITY - 2 // monkestation edit DEFAULT_MAX_COMPLEXITY - 3 -> DEFAULT_MAX_COMPLEXITY - 2
-	slowdown_inactive = 1
-	slowdown_active = 0.5
+	complexity_max = DEFAULT_MAX_COMPLEXITY - 2
+	slowdown_deployed = 0.5
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -740,15 +739,15 @@
 	)
 
 /datum/armor/mod_theme_security
-	melee = 15
+	melee = 35
 	bullet = 15
-	laser = 15
-	energy = 15
+	laser = 30
+	energy = 40
 	bomb = 25
 	bio = 100
-	fire = 75
+	fire = 100
 	acid = 75
-	wound = 15
+	wound = 20
 
 /datum/mod_theme/safeguard
 	name = "safeguard"
@@ -763,8 +762,8 @@
 	armor_type = /datum/armor/mod_theme_safeguard
 	resistance_flags = FIRE_PROOF
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
-	slowdown_inactive = 0.75
-	slowdown_active = 0.25
+	inbuilt_modules = list(/obj/item/mod/module/shove_blocker/locked, /obj/item/mod/module/hearing_protection)
+	slowdown_deployed = 0.25
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -801,15 +800,15 @@
 	)
 
 /datum/armor/mod_theme_safeguard
-	melee = 15
-	bullet = 15
-	laser = 15
-	energy = 15
+	melee = 45
+	bullet = 25
+	laser = 30
+	energy = 40
 	bomb = 40
 	bio = 100
 	fire = 100
-	acid = 95
-	wound = 15
+	acid = 100
+	wound = 25
 
 /datum/mod_theme/magnate
 	name = "magnate"
@@ -830,8 +829,8 @@
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	siemens_coefficient = 0
 	complexity_max = DEFAULT_MAX_COMPLEXITY + 5
-	slowdown_inactive = 0.75
-	slowdown_active = 0.25
+	slowdown_deployed = 0.25
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -868,10 +867,10 @@
 	)
 
 /datum/armor/mod_theme_magnate
-	melee = 20
-	bullet = 15
-	laser = 15
-	energy = 15
+	melee = 40
+	bullet = 50
+	laser = 50
+	energy = 60
 	bomb = 50
 	bio = 100
 	fire = 100
@@ -950,12 +949,14 @@
 	default_skin = "syndicate"
 	armor_type = /datum/armor/mod_theme_syndicate
 	atom_flags = PREVENT_CONTENTS_EXPLOSION_1
+	complexity_max = DEFAULT_MAX_COMPLEXITY + 5
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	siemens_coefficient = 0
 	slowdown_inactive = 1
 	slowdown_active = 0.5
 	ui_theme = "syndicate"
-	inbuilt_modules = list(/obj/item/mod/module/armor_booster)
+	resistance_flags = FIRE_PROOF
+	inbuilt_modules = list(/obj/item/mod/module/welding/syndicate, /obj/item/mod/module/night, /obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1019,10 +1020,10 @@
 	)
 
 /datum/armor/mod_theme_syndicate
-	melee = 15
-	bullet = 20
-	laser = 15
-	energy = 15
+	melee = 40
+	bullet = 50
+	laser = 30
+	energy = 30
 	bomb = 35
 	bio = 100
 	fire = 50
@@ -1043,12 +1044,12 @@
 	resistance_flags = FIRE_PROOF|ACID_PROOF
 	atom_flags = PREVENT_CONTENTS_EXPLOSION_1
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
-	complexity_max = DEFAULT_MAX_COMPLEXITY + 3
+	complexity_max = DEFAULT_MAX_COMPLEXITY + 4
 	siemens_coefficient = 0
 	slowdown_inactive = 1
 	slowdown_active = 0.5
 	ui_theme = "syndicate"
-	inbuilt_modules = list(/obj/item/mod/module/armor_booster)
+	inbuilt_modules = list(/obj/item/mod/module/welding/syndicate, /obj/item/mod/module/night, /obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1087,10 +1088,10 @@
 	)
 
 /datum/armor/mod_theme_elite
-	melee = 35
-	bullet = 30
-	laser = 35
-	energy = 35
+	melee = 60
+	bullet = 60
+	laser = 50
+	energy = 50
 	bomb = 55
 	bio = 100
 	fire = 100
@@ -1117,7 +1118,7 @@
 	slowdown_active = 0
 	ui_theme = "syndicate"
 	slot_flags = ITEM_SLOT_BELT
-	inbuilt_modules = list(/obj/item/mod/module/infiltrator, /obj/item/mod/module/storage/belt, /obj/item/mod/module/demoralizer)
+	inbuilt_modules = list(/obj/item/mod/module/infiltrator, /obj/item/mod/module/storage/belt, /obj/item/mod/module/demoralizer, /obj/item/mod/module/hearing_protection, /obj/item/mod/module/night)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1180,9 +1181,8 @@
 	resistance_flags = FIRE_PROOF|ACID_PROOF
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	charge_drain = DEFAULT_CHARGE_DRAIN * 2
-	slowdown_inactive = 0.0
-	slowdown_active = -0.5
-	inbuilt_modules = list(/obj/item/mod/module/quick_carry/advanced, /obj/item/mod/module/organ_thrower)
+	slowdown_deployed = -0.5
+	inbuilt_modules = list(/obj/item/mod/module/quick_carry/advanced, /obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1263,7 +1263,7 @@
 	complexity_max = DEFAULT_MAX_COMPLEXITY
 	slowdown_deployed = 0
 	ui_theme = "wizard"
-	inbuilt_modules = list(/obj/item/mod/module/anti_magic/wizard)
+	inbuilt_modules = list(/obj/item/mod/module/anti_magic/wizard, /obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/teleportation_scroll,
 		/obj/item/highfrequencyblade/wizard,
@@ -1324,7 +1324,7 @@
 	slowdown_inactive = 0.5
 	slowdown_active = 0
 	ui_theme = "hackerman"
-	inbuilt_modules = list(/obj/item/mod/module/welding/camera_vision, /obj/item/mod/module/hacker, /obj/item/mod/module/weapon_recall, /obj/item/mod/module/adrenaline_boost, /obj/item/mod/module/energy_net)
+	inbuilt_modules = list(/obj/item/mod/module/welding/camera_vision, /obj/item/mod/module/hacker, /obj/item/mod/module/weapon_recall, /obj/item/mod/module/adrenaline_boost, /obj/item/mod/module/energy_net, /obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/gun,
 		/obj/item/ammo_box,
@@ -1450,7 +1450,7 @@
 	slowdown_active = 0.5
 	slowdown_inactive = 1
 	ui_theme = "ntos_terminal"
-	inbuilt_modules = list(/obj/item/mod/module/armor_booster)
+	inbuilt_modules = list(/obj/item/mod/module/welding/syndicate, /obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1494,9 +1494,10 @@
 	)
 
 /datum/armor/mod_theme_glitch
-	melee = 15
-	bullet = 20
-	laser = 35
+	melee = 40
+	bullet = 50
+	laser = 50
+	energy = 15
 	bomb = 65
 	bio = 100
 	fire = 100
@@ -1517,8 +1518,8 @@
 	resistance_flags = FIRE_PROOF
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	siemens_coefficient = 0
-	slowdown_inactive = 0.5
-	slowdown_active = 0
+	slowdown_deployed = 0
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1600,7 +1601,7 @@
 	armor_type = /datum/armor/mod_theme_elite
 	resistance_flags = FIRE_PROOF|ACID_PROOF
 	complexity_max = DEFAULT_MAX_COMPLEXITY + 5
-	inbuilt_modules = list(/obj/item/mod/module/armor_booster/no_speedbost)
+	inbuilt_modules = list(/obj/item/mod/module/welding/syndicate)
 
 /datum/mod_theme/apocryphal
 	name = "apocryphal"
@@ -1618,6 +1619,7 @@
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	siemens_coefficient = 0
 	complexity_max = DEFAULT_MAX_COMPLEXITY + 10
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1680,8 +1682,8 @@
 	atom_flags = PREVENT_CONTENTS_EXPLOSION_1
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	siemens_coefficient = 0
-	slowdown_inactive = 0.5
-	slowdown_active = 0
+	slowdown_deployed = 0
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/ammo_box,
 		/obj/item/ammo_casing,
@@ -1740,8 +1742,8 @@
 	resistance_flags = FIRE_PROOF|ACID_PROOF
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	complexity_max = DEFAULT_MAX_COMPLEXITY - 10
-	slowdown_inactive = 0
-	slowdown_active = 0
+	slowdown_deployed = 0
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/restraints/handcuffs,
 	)
@@ -1797,9 +1799,9 @@
 	max_heat_protection_temperature = FIRE_SUIT_MAX_TEMP_PROTECT
 	complexity_max = 50
 	siemens_coefficient = 0
-	slowdown_inactive = 0.5
-	slowdown_active = 0
-	activation_step_time = 0.4 SECONDS
+	slowdown_deployed = 0
+	activation_step_time = MOD_ACTIVATION_STEP_TIME * 0.2
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/gun,
 	)
@@ -1857,9 +1859,9 @@
 	complexity_max = 1000
 	charge_drain = DEFAULT_CHARGE_DRAIN * 0
 	siemens_coefficient = 0
-	slowdown_inactive = 0
-	slowdown_active = 0
-	activation_step_time = 0.1 SECONDS
+	slowdown_deployed = 0
+	activation_step_time = MOD_ACTIVATION_STEP_TIME * 0.01
+	inbuilt_modules = list(/obj/item/mod/module/hearing_protection)
 	allowed_suit_storage = list(
 		/obj/item/gun,
 	)
