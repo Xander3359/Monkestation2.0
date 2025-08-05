@@ -43,7 +43,7 @@
 	while((length(smashes) + num_drained) < how_many_can_we_make && location_sanity < 100)
 		var/turf/chosen_location = get_safe_random_station_turf_equal_weight()
 
-		// We don't want them close to each other - at least 1 tile of seperation
+		// We don't want them close to each other - at least 1 tile of separation
 		var/list/nearby_things = range(1, chosen_location)
 		var/obj/effect/heretic_influence/what_if_i_have_one = locate() in nearby_things
 		var/obj/effect/visible_heretic_influence/what_if_i_had_one_but_its_used = locate() in nearby_things
@@ -84,9 +84,8 @@
 
 /obj/effect/visible_heretic_influence/Initialize(mapload)
 	. = ..()
-	// monke edit: make influences only show up after a minute or so, and disappear after about 10 minutes
-	addtimer(CALLBACK(src, PROC_REF(show_presence)), 1 MINUTES)
-	QDEL_IN(src, 10 MINUTES)
+	addtimer(CALLBACK(src, PROC_REF(show_presence)), 15 SECONDS)
+	AddComponent(/datum/component/fishing_spot, GLOB.preset_fish_sources[/datum/fish_source/dimensional_rift])
 
 	var/image/silicon_image = image('icons/effects/eldritch.dmi', src, null, OBJ_LAYER)
 	silicon_image.override = TRUE
@@ -112,17 +111,11 @@
 	var/mob/living/carbon/human/human_user = user
 	var/obj/item/bodypart/their_poor_arm = human_user.get_active_hand()
 	if(prob(25))
-		// monke edit: TRAIT_NODISMEMBER means you just get your arm fucked the hell up instead
-		// while in theory it should atomize your arm anyways, a dismemberment fail and then qdeling the still-attached limb causes Weird Things to happen.
-		if(HAS_TRAIT(human_user, TRAIT_NODISMEMBER))
-			to_chat(human_user, span_userdanger("An otherwordly presence lashes out and violently mangles your [their_poor_arm.name] as you try to touch the hole in the very fabric of reality!"))
-			their_poor_arm.receive_damage(brute = 50, wound_bonus = 100) // guaranteed to wound
-		else
-			to_chat(human_user, span_userdanger("An otherwordly presence tears and atomizes your [their_poor_arm.name] as you try to touch the hole in the very fabric of reality!"))
-			their_poor_arm.dismember()
-			qdel(their_poor_arm)
+		to_chat(human_user, span_userdanger("An otherwordly presence tears and atomizes your [their_poor_arm.name] as you try to touch the hole in the very fabric of reality!"))
+		their_poor_arm.dismember()
+		their_poor_arm.forceMove(src) // stored for later fishage
 	else
-		to_chat(human_user,span_danger("You pull your hand away from the hole as the eldritch energy flails, trying to latch onto existance itself!"))
+		to_chat(human_user,span_danger("You pull your hand away from the hole as the eldritch energy flails, trying to latch onto existence itself!"))
 	return TRUE
 
 /obj/effect/visible_heretic_influence/attack_tk(mob/user)
@@ -137,15 +130,20 @@
 
 	var/mob/living/carbon/human/human_user = user
 
+	// You see, these tendrils are psychic. That's why you can't see them. Definitely not laziness. Just psychic. The character can feel but not see them.
+	// Because they're psychic. Yeah.
+	if(human_user.can_block_magic(MAGIC_RESISTANCE_MIND))
+		visible_message(span_danger("Psychic endrils lash out from [src], batting ineffectively at [user]'s head."))
+		return
+
 	// A very elaborate way to suicide
-	to_chat(human_user, span_userdanger("Eldritch energy lashes out, piercing your fragile mind, tearing it to pieces!"))
-	human_user.ghostize()
+	visible_message(span_userdanger("Psychic tendrils lash out from [src], psychically grabbing onto [user]'s psychically sensitive mind and tearing [user.p_their()] head off!"))
 	var/obj/item/bodypart/head/head = locate() in human_user.bodyparts
 	if(head)
 		head.dismember()
-		qdel(head)
+		head.forceMove(src) // stored for later fishage
 	else
-		human_user.gib()
+		human_user.gib(DROP_ALL_REMAINS)
 	human_user.investigate_log("has died from using telekinesis on a heretic influence.", INVESTIGATE_DEATHS)
 	var/datum/effect_system/reagents_explosion/explosion = new()
 	explosion.set_up(1, get_turf(human_user), TRUE, 0)
@@ -154,7 +152,7 @@
 /obj/effect/visible_heretic_influence/examine(mob/living/user)
 	. = ..()
 	. += span_hypnophrase(pick_list(HERETIC_INFLUENCE_FILE, "examine"))
-	if(IS_HERETIC(user) || !ishuman(user) || IS_MONSTERHUNTER(user))
+	if(IS_HERETIC(user) || !ishuman(user))
 		return
 
 	. += span_userdanger("Your mind burns as you stare at the tear!")
@@ -172,6 +170,8 @@
 	var/being_drained = FALSE
 	/// The icon state applied to the image created for this influence.
 	var/real_icon_state = "reality_smash"
+	/// Proximity monitor that gives any nearby heretics x-ray vision
+	var/datum/proximity_monitor/influence_monitor/monitor
 
 /obj/effect/heretic_influence/Initialize(mapload)
 	. = ..()
@@ -183,12 +183,15 @@
 
 	AddElement(/datum/element/block_turf_fingerprints)
 	AddComponent(/datum/component/redirect_attack_hand_from_turf, interact_check = CALLBACK(src, PROC_REF(verify_user_can_see)))
+	AddComponent(/datum/component/fishing_spot, GLOB.preset_fish_sources[/datum/fish_source/dimensional_rift])
+	monitor = new(src, 7)
 
 /obj/effect/heretic_influence/proc/verify_user_can_see(mob/user)
 	return (user.mind in GLOB.reality_smash_track.tracked_heretics)
 
 /obj/effect/heretic_influence/Destroy()
 	GLOB.reality_smash_track.smashes -= src
+	QDEL_NULL(monitor)
 	return ..()
 
 /obj/effect/heretic_influence/attack_hand_secondary(mob/user, list/modifiers)
@@ -202,7 +205,7 @@
 
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
-/obj/effect/heretic_influence/attackby(obj/item/weapon, mob/user, params)
+/obj/effect/heretic_influence/attackby(obj/item/weapon, mob/user, list/modifiers, list/attack_modifiers)
 	. = ..()
 	if(.)
 		return
@@ -216,7 +219,7 @@
 		return FALSE
 	if(!codex.book_open)
 		codex.attack_self(user) // open booke
-	INVOKE_ASYNC(src, PROC_REF(drain_influence), user, 2)
+	INVOKE_ASYNC(src, PROC_REF(drain_influence), user, 2, codex.drain_speed)
 	return TRUE
 
 /**
@@ -225,21 +228,29 @@
  *
  * If successful, the influence is drained and deleted.
  */
-/obj/effect/heretic_influence/proc/drain_influence(mob/living/user, knowledge_to_gain)
+/obj/effect/heretic_influence/proc/drain_influence(mob/living/user, knowledge_to_gain, drain_speed = HERETIC_RIFT_DEFAULT_DRAIN_SPEED)
 
 	being_drained = TRUE
 	loc.balloon_alert(user, "draining influence...")
 
-	if(!do_after(user, 10 SECONDS, src))
+	// Only gives you the dripping eye effect if you have faster drain speed than default
+	var/mutable_appearance/draining_overlay = mutable_appearance('icons/mob/effects/heretic_aura.dmi', "heretic_eye_dripping")
+	if(drain_speed < HERETIC_RIFT_DEFAULT_DRAIN_SPEED)
+		draining_overlay.pixel_y = 16
+		user.add_overlay(draining_overlay)
+
+	if(!do_after(user, drain_speed, src, hidden = TRUE))
 		being_drained = FALSE
 		loc.balloon_alert(user, "interrupted!")
+		user.cut_overlay(draining_overlay)
 		return
 
 	// We don't need to set being_drained back since we delete after anyways
 	loc.balloon_alert(user, "influence drained")
+	user.cut_overlay(draining_overlay)
 
-	var/datum/antagonist/heretic/heretic_datum = IS_HERETIC(user)
-	heretic_datum.knowledge_points += knowledge_to_gain
+	var/datum/antagonist/heretic/heretic_datum = GET_HERETIC(user)
+	heretic_datum.adjust_knowledge_points(knowledge_to_gain)
 
 	// Aaand now we delete it
 	after_drain(user)
@@ -264,9 +275,25 @@
 /obj/effect/heretic_influence/proc/generate_name()
 	name = "\improper" + pick_list(HERETIC_INFLUENCE_FILE, "prefix") + " " + pick_list(HERETIC_INFLUENCE_FILE, "postfix")
 
+#undef NUM_INFLUENCES_PER_HERETIC
+
 /// Hud used for heretics to see influences
 /datum/atom_hud/alternate_appearance/basic/has_antagonist/heretic
 	antag_datum_type = /datum/antagonist/heretic
 	add_ghost_version = TRUE
 
-#undef NUM_INFLUENCES_PER_HERETIC
+/datum/proximity_monitor/influence_monitor
+	/// Cooldown before we can give another heretic xray
+	COOLDOWN_DECLARE(xray_cooldown)
+
+/datum/proximity_monitor/influence_monitor/on_entered(atom/source, atom/movable/arrived, turf/old_loc)
+	. = ..()
+	if(!isliving(arrived))
+		return
+	if(!COOLDOWN_FINISHED(src, xray_cooldown))
+		return
+	var/mob/living/arrived_living = arrived
+	if(!IS_HERETIC(arrived_living))
+		return
+	arrived_living.apply_status_effect(/datum/status_effect/temporary_xray/eldritch)
+	COOLDOWN_START(src, xray_cooldown, 3 MINUTES)

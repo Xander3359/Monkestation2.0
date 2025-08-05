@@ -451,7 +451,7 @@
 		ScrapeAway()
 		return
 	if(prob(70))
-		new /obj/effect/temp_visual/glowing_rune(src)
+		new /obj/effect/glowing_rune(src)
 	return ..()
 
 /turf/closed/wall/metal_foam_base

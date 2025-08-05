@@ -16,7 +16,7 @@
 
 /turf/open/floor/iron/rust_heretic_act()
 	if(prob(70))
-		new /obj/effect/temp_visual/glowing_rune(src)
+		new /obj/effect/glowing_rune(src)
 	ChangeTurf(/turf/open/floor/plating/rust)
 
 /turf/open/floor/iron/update_icon_state()

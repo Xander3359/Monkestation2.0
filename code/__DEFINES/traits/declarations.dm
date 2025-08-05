@@ -680,6 +680,9 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Cannot be turned into a funny skeleton by the plasma river
 /* #define TRAIT_NO_PLASMA_TRANSFORM "no_plasma_transform" */
 
+/// Mind trait that allows you to see blessed tiles.
+#define TRAIT_SEE_BLESSED_TILES "sees_blessed_tiles"
+
 /// Weather immunities, also protect mobs inside them.
 #define TRAIT_LAVA_IMMUNE "lava_immune" //Used by lava turfs and The Floor Is Lava.
 #define TRAIT_ASHSTORM_IMMUNE "ashstorm_immune"
@@ -808,10 +811,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NO_STRIP "no_strip"
 /// Disallows this item from being pricetagged with a barcode
 #define TRAIT_NO_BARCODES "no_barcode"
-/// Allows heretics to cast their spells.
-#define TRAIT_ALLOW_HERETIC_CASTING "allow_heretic_casting"
-/// Designates a heart as a living heart for a heretic.
-#define TRAIT_LIVING_HEART "living_heart"
 /// Prevents the same person from being chosen multiple times for kidnapping objective
 #define TRAIT_HAS_BEEN_KIDNAPPED "has_been_kidnapped"
 /// An item still plays its hitsound even if it has 0 force, instead of the tap
@@ -828,6 +827,22 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_NO_WORN_ICON "no_worn_icon"
 /// Items with this trait will not appear when examined.
 #define TRAIT_EXAMINE_SKIP "examine_skip"
+
+//---- Heretic Traits
+/// Hides the heretic overlay that outs them as the heretic
+#define TRAIT_HERETIC_AURA_HIDDEN "heretic_aura_hidden"
+/// This rod was infused by a heretic, making it awesome and improving influence gain
+#define TRAIT_ROD_MANSUS_INFUSED "rod_infused"
+/// Allows heretics to cast their spells.
+#define TRAIT_ALLOW_HERETIC_CASTING "allow_heretic_casting"
+/// Designates a heart as a living heart for a heretic.
+#define TRAIT_LIVING_HEART "living_heart"
+/// Trait given to all participants in a heretic arena
+#define TRAIT_ELDRITCH_ARENA_PARTICIPANT "eldritch_arena_participant"
+/// Trait given to heretic summons, making them immune to heretic spells
+#define TRAIT_HERETIC_SUMMON "heretic_summon"
+/// Lock heretic grasp no longer goes on cooldown when opening things
+#define TRAIT_LOCK_GRASP_UPGRADED "lock_grasp_upgraded"
 
 //quirk traits
 #define TRAIT_ALCOHOL_TOLERANCE "alcohol_tolerance"
@@ -1249,9 +1264,6 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 /// Trait which means whatever has this is dancing by a dance machine
 /* #define TRAIT_DISCO_DANCER "disco_dancer" */
 
-/// Trait given to anything linked to, not necessarily allied to, the mansus
-/* #define TRAIT_MANSUS_TOUCHED "mansus_touched" */
-
 /// Appiled when wizard buy (/datum/spellbook_entry/perks/spalls_lottery) perk.
 /// Give 50/25% chance not spend a spellbook charge on 1/2 cost spell.
 /// Appiled it wizard can't refund any spells.
@@ -1301,6 +1313,14 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 
 /// Trait applied to objects and mobs that can attack a boulder and break it down. (See /obj/item/boulder/manual_process())
 #define TRAIT_BOULDER_BREAKER "boulder_breaker"
+
+/// Trait given to anything linked to, not necessarily allied to, the mansus
+#define TRAIT_MANSUS_TOUCHED "mansus_touched"
+
+// These traits are used in IS_X() as an OR, and is utilized for pseudoantags (such as deathmatch or domains) so they don't need to actually get antag status.
+// To specifically and only get the antag datum, GET_X() exists now.
+#define TRAIT_ACT_AS_CULTIST "act_as_cultist"
+#define TRAIT_ACT_AS_HERETIC "act_as_heretic"
 
 /// Prevents the affected object from opening a loot window via alt click. See atom/AltClick()
 #define TRAIT_ALT_CLICK_BLOCKER "no_alt_click"

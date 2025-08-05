@@ -9,9 +9,9 @@
 	ranged_mousepointer = 'icons/effects/mouse_pointers/throw_target.dmi'
 
 	school = SCHOOL_FORBIDDEN
-	cooldown_time = 35 SECONDS
+	cooldown_time = 15 SECONDS
 
-	invocation = "FL'MS O'ET'RN'ITY."
+	invocation = "FL'MS O' 'T'RN'TY."
 	invocation_type = INVOCATION_WHISPER
 	spell_requirements = NONE
 
@@ -25,7 +25,7 @@
 
 /datum/action/cooldown/spell/pointed/blood_siphon/cast(mob/living/cast_on)
 	. = ..()
-	playsound(owner, 'sound/magic/demon_attack1.ogg', 75, TRUE)
+	playsound(owner, 'sound/effects/magic/demon_attack1.ogg', 75, TRUE)
 	if(cast_on.can_block_magic())
 		owner.balloon_alert(owner, "spell blocked!")
 		cast_on.visible_message(
@@ -64,8 +64,5 @@
 				continue
 			iter_wound.remove_wound()
 			iter_wound.apply_wound(target_bodypart)
-
-	owner.log_message("used [name] on [key_name(cast_on)]", LOG_ATTACK)
-	cast_on.log_message("was hit by [key_name(owner)] with [name]", LOG_VICTIM, log_globally = FALSE)
 
 	return TRUE

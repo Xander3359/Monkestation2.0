@@ -60,13 +60,15 @@
 		human_target.health = new_max_health
 
 	on_made_callback?.Invoke(human_target)
-	human_target.add_traits(list(TRAIT_FAKEDEATH, TRAIT_NO_SLAB_INVOKE), TRAIT_STATUS_EFFECT(id)) // monkestation edit: TRAIT_NO_SLAB_INVOKE
-	human_target.become_husk(MAGIC_TRAIT)
+	ADD_TRAIT(human_target, TRAIT_FAKEDEATH, TRAIT_STATUS_EFFECT(id))
+	ADD_TRAIT(human_target, TRAIT_HERETIC_SUMMON, TRAIT_STATUS_EFFECT(id))
+	human_target.become_husk(TRAIT_STATUS_EFFECT(id))
 	human_target.faction |= FACTION_HERETIC
 
 	if(human_target.mind)
 		var/datum/antagonist/heretic_monster/heretic_monster = human_target.mind.add_antag_datum(/datum/antagonist/heretic_monster)
 		heretic_monster.set_owner(master_mind)
+		human_target.mind.remove_antag_datum(/datum/antagonist/cult)
 
 	return TRUE
 
@@ -88,8 +90,9 @@
 		human_target.setMaxHealth(initial(human_target.maxHealth))
 
 	on_lost_callback?.Invoke(human_target)
-	human_target.remove_traits(list(TRAIT_FAKEDEATH, TRAIT_NO_SLAB_INVOKE), TRAIT_STATUS_EFFECT(id)) // monkestation edit: TRAIT_NO_SLAB_INVOKE
-	human_target.cure_husk(MAGIC_TRAIT)
+	REMOVE_TRAIT(human_target, TRAIT_FAKEDEATH, TRAIT_STATUS_EFFECT(id))
+	REMOVE_TRAIT(human_target, TRAIT_HERETIC_SUMMON, TRAIT_STATUS_EFFECT(id))
+	human_target.cure_husk(TRAIT_STATUS_EFFECT(id))
 	human_target.faction -= FACTION_HERETIC
 	human_target.mind?.remove_antag_datum(/datum/antagonist/heretic_monster)
 

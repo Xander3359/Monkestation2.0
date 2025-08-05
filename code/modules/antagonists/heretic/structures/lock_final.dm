@@ -1,14 +1,13 @@
-/obj/structure/knock_tear
+/obj/structure/lock_tear
 	name = "???"
-	desc = "It stares back. Theres no reason to remain. Run."
+	desc = "It stares back. There's no reason to remain. Run."
 	max_integrity = INFINITY
 	resistance_flags = INDESTRUCTIBLE | LAVA_PROOF | FIRE_PROOF | UNACIDABLE | ACID_PROOF
 	icon = 'icons/obj/anomaly.dmi'
 	icon_state = "bhole3"
 	color = COLOR_VOID_PURPLE
 	light_color = COLOR_VOID_PURPLE
-	light_inner_range = 20
-	light_outer_range = 30
+	light_range = 20
 	anchored = TRUE
 	density = FALSE
 	layer = HIGH_PIPE_LAYER //0.01 above sigil layer used by heretic runes
@@ -21,11 +20,11 @@
 	var/static/list/monster_types
 	/// A static list of heretic summons which we should not create
 	var/static/list/monster_types_blacklist = list(
+		/mob/living/basic/heretic_summon/armsy,
 		/mob/living/basic/heretic_summon/star_gazer,
-		/mob/living/basic/heretic_summon/armsy
 	)
 
-/obj/structure/knock_tear/Initialize(mapload, datum/mind/ascendant_mind)
+/obj/structure/lock_tear/Initialize(mapload, datum/mind/ascendant_mind)
 	. = ..()
 	transform *= 3
 	if(isnull(monster_types))
@@ -37,44 +36,37 @@
 	INVOKE_ASYNC(src, PROC_REF(poll_ghosts))
 
 /// Ask ghosts if they want to make some noise
-/obj/structure/knock_tear/proc/poll_ghosts()
-	var/list/candidates = SSpolling.poll_ghost_candidates(
-		"Would you like to be a random eldritch monster attacking the crew?",
-		check_jobban = ROLE_SENTIENCE,
-		poll_time = 10 SECONDS,
-		ignore_category = POLL_IGNORE_HERETIC_MONSTER,
-		alert_pic = src,
-		role_name_text = "eldritch monster"
-	)
+/obj/structure/lock_tear/proc/poll_ghosts()
+	var/list/candidates = SSpolling.poll_ghost_candidates("Would you like to be a random [span_notice("eldritch monster")] attacking the crew?", check_jobban = ROLE_SENTIENCE, role = ROLE_SENTIENCE, poll_time = 10 SECONDS, ignore_category = POLL_IGNORE_HERETIC_MONSTER, alert_pic = src, role_name_text = "eldritch monster")
 	while(LAZYLEN(candidates))
 		var/mob/dead/observer/candidate = pick_n_take(candidates)
 		ghost_to_monster(candidate, should_ask = FALSE)
 	gathering_candidates = FALSE
 
 /// Destroy the rift if you kill the heretic
-/obj/structure/knock_tear/proc/end_madness(datum/former_master)
+/obj/structure/lock_tear/proc/end_madness(datum/former_master)
 	SIGNAL_HANDLER
 	var/turf/our_turf = get_turf(src)
-	playsound(our_turf, 'sound/magic/castsummon.ogg', vol = 100, vary = TRUE)
+	playsound(our_turf, 'sound/effects/magic/castsummon.ogg', vol = 100, vary = TRUE)
 	visible_message(span_boldwarning("The rip in space spasms and disappears!"))
 	UnregisterSignal(former_master, list(COMSIG_LIVING_DEATH, COMSIG_QDELETING)) // Just in case they die THEN delete
 	new /obj/effect/temp_visual/destabilising_tear(our_turf)
 	qdel(src)
 
-/obj/structure/knock_tear/attack_ghost(mob/user)
+/obj/structure/lock_tear/attack_ghost(mob/user)
 	. = ..()
 	if(. || gathering_candidates)
 		return
 	ghost_to_monster(user)
 
-/obj/structure/knock_tear/examine(mob/user)
+/obj/structure/lock_tear/examine(mob/user)
 	. = ..()
 	if (!isobserver(user) || gathering_candidates)
 		return
 	. += span_notice("You can use this to enter the world as a foul monster.")
 
 /// Turn a ghost into an 'orrible beast
-/obj/structure/knock_tear/proc/ghost_to_monster(mob/dead/observer/user, should_ask = TRUE)
+/obj/structure/lock_tear/proc/ghost_to_monster(mob/dead/observer/user, should_ask = TRUE)
 	if(should_ask)
 		var/ask = tgui_alert(user, "Become a monster?", "Ascended Rift", list("Yes", "No"))
 		if(ask != "Yes" || QDELETED(src) || QDELETED(user))
@@ -83,6 +75,7 @@
 	var/mob/living/monster = new monster_type(loc)
 	monster.PossessByPlayer(user.key)
 	monster.set_name()
+	ADD_TRAIT(monster, TRAIT_HERETIC_SUMMON, INNATE_TRAIT)
 	var/datum/antagonist/heretic_monster/woohoo_free_antag = new(src)
 	monster.mind.add_antag_datum(woohoo_free_antag)
 	if(ascendee)
@@ -94,10 +87,10 @@
 	kill_all_your_friends.completed = TRUE
 	woohoo_free_antag.objectives += kill_all_your_friends
 
-/obj/structure/knock_tear/move_crushed(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
+/obj/structure/lock_tear/move_crushed(atom/movable/pusher, force = MOVE_FORCE_DEFAULT, direction)
 	return FALSE
 
-/obj/structure/knock_tear/Destroy(force)
+/obj/structure/lock_tear/Destroy(force)
 	if(ascendee)
 		ascendee = null
 	return ..()
@@ -108,8 +101,7 @@
 	icon_state = "bhole3"
 	color = COLOR_VOID_PURPLE
 	light_color = COLOR_VOID_PURPLE
-	light_inner_range = 15
-	light_outer_range = 25
+	light_range = 20
 	layer = HIGH_PIPE_LAYER
 	duration = 1 SECONDS
 

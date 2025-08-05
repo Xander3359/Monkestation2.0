@@ -70,7 +70,6 @@
 #define CONTRACT_UPLINK_PAGE_CONTRACTS "CONTRACTS"
 #define CONTRACT_UPLINK_PAGE_HUB "HUB"
 
-
 // Heretic path defines.
 #define PATH_START "Start Path"
 #define PATH_SIDE "Side Path"
@@ -80,13 +79,55 @@
 #define PATH_VOID "Void Path"
 #define PATH_BLADE "Blade Path"
 #define PATH_COSMIC "Cosmic Path"
-#define PATH_KNOCK "Knock Path"
+#define PATH_LOCK "Lock Path"
 #define PATH_MOON "Moon Path"
+
+//Heretic knowledge tree defines
+#define HKT_NEXT "next"
+#define HKT_BAN "ban"
+#define HKT_DEPTH "depth"
+#define HKT_PURCHASED_DEPTH "purchased_depth"
+#define HKT_ROUTE "route"
+#define HKT_UI_BGR "ui_bgr"
+#define HKT_COST "cost"
+/// Only present for already researched knowledge.
+#define HKT_INSTANCE "instance"
+#define HKT_CATEGORY "category"
+/// unique identifier most commonly used for identifying what knowledge is researchable
+#define HKT_ID "id"
+
+#define BGR_SIDE "node_side"
 
 /// Defines are used in /proc/has_living_heart() to report if the heretic has no heart period, no living heart, or has a living heart.
 #define HERETIC_NO_HEART_ORGAN -1
 #define HERETIC_NO_LIVING_HEART 0
 #define HERETIC_HAS_LIVING_HEART 1
+
+#define HERETIC_DRAFT_TIER_MAX 5
+
+/// The default drain speed for heretic rift's, anything below this will be considered a fast drain, and be very noticeable and cause a overlay
+#define HERETIC_RIFT_DEFAULT_DRAIN_SPEED 10 SECONDS
+
+/// Sources of knowledge purchased for heretics, used for positioning in the UI
+#define HERETIC_KNOWLEDGE_TREE "tree"
+#define HERETIC_KNOWLEDGE_SHOP "shop"
+#define HERETIC_KNOWLEDGE_DRAFT "draft"
+#define HERETIC_KNOWLEDGE_START "start"
+
+/// defines for the depths of the heretic knowledge tree nodes
+#define HKT_DEPTH_START 2
+#define HKT_DEPTH_TIER_1 3
+#define HKT_DEPTH_DRAFT_1 4
+#define HKT_DEPTH_TIER_2 5
+#define HKT_DEPTH_DRAFT_2 6
+#define HKT_DEPTH_ROBES 7
+#define HKT_DEPTH_TIER_3 8
+#define HKT_DEPTH_DRAFT_3 9
+#define HKT_DEPTH_ARMOR 10
+#define HKT_DEPTH_TIER_4 11
+#define HKT_DEPTH_DRAFT_4 12
+#define HKT_DEPTH_ASCENSION 13
+
 
 /// A define used in ritual priority for heretics.
 #define MAX_KNOWLEDGE_PRIORITY 100
@@ -217,16 +258,20 @@ GLOBAL_LIST_INIT(ai_employers, list(
 //Tells whether or not someone is a space ninja
 #define IS_SPACE_NINJA(mob) (mob?.mind?.has_antag_datum(/datum/antagonist/ninja))
 
+/**
+ * Heretic checks
+ */
+
 /// Checks if the given mob is a heretic.
-#define IS_HERETIC(mob) (mob.mind?.has_antag_datum(/datum/antagonist/heretic))
-/// Check if the given mob is a heretic monster.
-#define IS_HERETIC_MONSTER(mob) (mob.mind?.has_antag_datum(/datum/antagonist/heretic_monster))
+#define IS_HERETIC(mob) (mob.mind?.has_antag_datum(/datum/antagonist/heretic) || HAS_TRAIT(mob, TRAIT_ACT_AS_HERETIC))
+/// Checks if the given mob is a heretic and is guaranteed to return the datum if possible - will cause issues with above trait
+#define GET_HERETIC(mob) (mob.mind?.has_antag_datum(/datum/antagonist/heretic))
+
 /// Check if the given mob is a  lunatic
 #define IS_LUNATIC(mob) (mob.mind?.has_antag_datum(/datum/antagonist/lunatic))
 /// Checks if the given mob is either a heretic, heretic monster or a lunatic.
-#define IS_HERETIC_OR_MONSTER(mob) (IS_HERETIC(mob) || IS_HERETIC_MONSTER(mob) || IS_LUNATIC(mob))
-
-/// Checks if the given mob is in the mansus realm
+#define IS_HERETIC_OR_MONSTER(mob) (IS_HERETIC(mob) || HAS_TRAIT(mob, TRAIT_HERETIC_SUMMON) || IS_LUNATIC(mob))
+/// CHecks if the given mob is in the mansus realm
 #define IS_IN_MANSUS(mob) (istype(get_area(mob), /area/centcom/heretic_sacrifice))
 
 /// Checks if the given mob is a wizard
