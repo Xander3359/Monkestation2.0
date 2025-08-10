@@ -293,7 +293,7 @@ MAPPING_DIRECTIONAL_HELPERS(/obj/machinery/atm, 30)
 /obj/item/stack/monkecoin/get_item_credit_value()
 	return (amount*value)
 
-/obj/item/stack/monkecoin/merge(obj/item/stack/S)
+/obj/item/stack/monkecoin/merge(obj/item/stack/S, limit)
 	. = ..()
 	update_desc()
 

@@ -159,8 +159,8 @@
 
 	for(var/result in result_atoms)
 		var/atom/result_item = new result(loc)
-		if(isitem(result_item))
-			ADD_TRAIT(result_item, TRAIT_CONTRABAND, INNATE_TRAIT)
+		//if(isitem(result_item)) // Consider porting https://github.com/tgstation/tgstation/pull/84003
+		//	ADD_TRAIT(result_item, TRAIT_CONTRABAND, INNATE_TRAIT)
 	return TRUE
 
 /**
@@ -650,6 +650,6 @@
 /datum/heretic_knowledge/ultimate/cleanup_atoms(list/selected_atoms)
 	for(var/mob/living/carbon/human/sacrifice in selected_atoms)
 		selected_atoms -= sacrifice
-		sacrifice.gib(DROP_ALL_REMAINS)
+		sacrifice.gib() // Gib refactor https://github.com/tgstation/tgstation/pull/78754
 
 	return ..()

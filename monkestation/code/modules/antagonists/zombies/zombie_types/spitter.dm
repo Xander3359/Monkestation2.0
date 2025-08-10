@@ -52,22 +52,22 @@
 // We do this in InterceptClickOn() instead of Activate()
 // because we use the click parameters for aiming the projectile
 // (or something like that)
-/datum/action/cooldown/zombie/spit/InterceptClickOn(mob/living/user, params, atom/target)
+/datum/action/cooldown/zombie/spit/InterceptClickOn(mob/living/clicker, params, atom/target)
 	. = ..()
 	if(!.)
-		unset_click_ability(user, refund_cooldown = FALSE)
+		unset_click_ability(clicker, refund_cooldown = FALSE)
 		return FALSE
 
 	var/modifiers = params2list(params)
-	user.visible_message(
-		span_danger("[user] spits!"),
+	clicker.visible_message(
+		span_danger("[clicker] spits!"),
 		span_alert("You spit."),
 	)
-	var/obj/projectile/neurotoxin/zombie/spit = new(user.loc)
-	spit.preparePixelProjectile(target, user, modifiers)
-	spit.firer = user
+	var/obj/projectile/neurotoxin/zombie/spit = new(clicker.loc)
+	spit.preparePixelProjectile(target, clicker, modifiers)
+	spit.firer = clicker
 	spit.fire()
-	user.newtonian_move(get_dir(target, user))
+	clicker.newtonian_move(get_dir(target, clicker))
 	return TRUE
 
 // Has to return TRUE, otherwise is skipped.

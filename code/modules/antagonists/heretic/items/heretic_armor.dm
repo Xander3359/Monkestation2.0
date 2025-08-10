@@ -1181,7 +1181,7 @@
 	. = ..()
 	create_storage(storage_type = /datum/storage/pockets/void_cloak)
 	make_visible()
-	ADD_TRAIT(src, TRAIT_CONTRABAND_BLOCKER, INNATE_TRAIT)
+	//ADD_TRAIT(src, TRAIT_CONTRABAND_BLOCKER, INNATE_TRAIT)
 
 /obj/item/clothing/suit/hooded/cultrobes/void/on_hood_up(obj/item/clothing/head/hooded/hood)
 	hood_up = TRUE

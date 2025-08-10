@@ -385,8 +385,14 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_GUNFLIP "gunflip"
 /// Increases chance of getting special traumas, makes them harder to cure
 #define TRAIT_SPECIAL_TRAUMA_BOOST "special_trauma_boost"
-/// Doubles the duration and cooldown of a flip
-/* #define TRAIT_SLOW_FLIP "slow_flip" */
+
+//---- Brain trauma resists
+/// Unable to gain any brain trauma whatsoever
+#define TRAIT_BRAIN_TRAUMA_IMMUNITY "brain_trauma_immunity"
+
+/// Prevents death from having too much brain damage
+//#define TRAIT_BRAIN_DAMAGE_NODEATH "brain_damage_nodeath" //XANTODO _traits
+
 #define TRAIT_SPACEWALK "spacewalk"
 /// Sanity trait to keep track of when we're in hyperspace and add the appropriate element if we werent
 #define TRAIT_HYPERSPACED "hyperspaced"
@@ -672,7 +678,7 @@ Remember to update _globalvars/traits.dm if you're adding/removing/renaming trai
 #define TRAIT_MOVE_FLYING "move_flying"
 #define TRAIT_MOVE_VENTCRAWLING "move_ventcrawling"
 #define TRAIT_MOVE_FLOATING "move_floating"
-/* #define TRAIT_MOVE_PHASING "move_phasing" */
+#define TRAIT_MOVE_PHASING "move_phasing"
 /*#define TRAIT_MOVE_UPSIDE_DOWN "move_upside_down*/
 /// Disables the floating animation. See above.
 #define TRAIT_NO_FLOATING_ANIM "no-floating-animation"

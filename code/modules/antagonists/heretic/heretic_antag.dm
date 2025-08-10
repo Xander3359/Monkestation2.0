@@ -564,6 +564,7 @@
 		var/datum/heretic_knowledge/living_heart/heart_knowledge = get_knowledge(/datum/heretic_knowledge/living_heart)
 		heart_knowledge.on_research(source, src)
 
+/* //HERETICTODO Consider porting the cult v heretic interactions
 /// Signal proc for [COMSIG_LIVING_CULT_SACRIFICED] to reward cultists for sacrificing a heretic
 /datum/antagonist/heretic/proc/on_cult_sacrificed(mob/living/source, list/invokers)
 	SIGNAL_HANDLER
@@ -617,6 +618,7 @@
 				to_chat(mind.current, span_cult_large(span_warning("Arcane and forbidden knowledge floods your forges and archives. The cult has learned how to create the ")) + span_cult_large(span_hypnophrase("[result]!")))
 
 	return SILENCE_SACRIFICE_MESSAGE|DUST_SACRIFICE
+*/
 
 /**
  * Creates an animation of the item slowly lifting up from the floor with a colored outline, then slowly drifting back down.
