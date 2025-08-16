@@ -103,20 +103,16 @@
 	icon_state = "jetpack"
 	module_type = MODULE_TOGGLE
 	complexity = 3
-	active_power_cost = DEFAULT_CHARGE_DRAIN * 0.05
-	use_energy_cost = DEFAULT_CHARGE_DRAIN
+	active_power_cost = DEFAULT_CHARGE_DRAIN * 0.5
+	use_power_cost = DEFAULT_CHARGE_DRAIN
 	incompatible_modules = list(/obj/item/mod/module/jetpack)
+	cooldown_time = 0.5 SECONDS
 	overlay_state_inactive = "module_jetpack"
 	overlay_state_active = "module_jetpack_on"
-	required_slots = list(ITEM_SLOT_BACK)
-	/// Do we have stabilizers? If yes the user won't move from inertia.
+	/// Do we give the wearer a speed buff.
+	var/full_speed = FALSE
 	var/stabilize = TRUE
-	/// Callback to see if we can thrust the user.
 	var/thrust_callback
-	/// How much force this module can apply per tick
-	var/drift_force = 1.5 NEWTONS
-	/// How much force this module's stabilizier can put out
-	var/stabilizer_force = 1.2 NEWTONS
 
 /obj/item/mod/module/jetpack/Initialize(mapload)
 	. = ..()
@@ -139,21 +135,24 @@
 	AddComponent( \
 		/datum/component/jetpack, \
 		src.stabilize, \
-		drift_force, \
-		stabilizer_force, \
 		COMSIG_MODULE_TRIGGERED, \
 		COMSIG_MODULE_DEACTIVATED, \
 		MOD_ABORT_USE, \
 		thrust_callback, \
-		thrust_callback, \
-		/datum/effect_system/trail_follow/ion/grav_allowed, \
+		/datum/effect_system/trail_follow/ion/grav_allowed \
 	)
 
-	if (!isnull(mod) && !isnull(mod.wearer) && mod.wearer.get_item_by_slot(slot_flags) == src)
-		if (!stabilize)
-			ADD_TRAIT(mod.wearer, TRAIT_NOGRAV_ALWAYS_DRIFT, REF(src))
-		else
-			REMOVE_TRAIT(mod.wearer, TRAIT_NOGRAV_ALWAYS_DRIFT, REF(src))
+/obj/item/mod/module/jetpack/on_activation()
+	. = ..()
+	if(!.)
+		return
+	if(full_speed)
+		mod.wearer.add_movespeed_modifier(/datum/movespeed_modifier/jetpack/fullspeed)
+
+/obj/item/mod/module/jetpack/on_deactivation(display_message = TRUE, deleting = FALSE)
+	. = ..()
+	if(full_speed)
+		mod.wearer.remove_movespeed_modifier(/datum/movespeed_modifier/jetpack/fullspeed)
 
 /obj/item/mod/module/jetpack/get_configuration()
 	. = ..()
@@ -166,29 +165,10 @@
 
 /obj/item/mod/module/jetpack/proc/allow_thrust(use_fuel = TRUE)
 	if(!use_fuel)
-		return check_power(use_energy_cost)
-	if(!drain_power(use_energy_cost))
+		return check_power(use_power_cost)
+	if(!drain_power(use_power_cost))
 		return FALSE
 	return TRUE
-
-/obj/item/mod/module/jetpack/on_activation()
-	mod.wearer.add_movespeed_modifier(/datum/movespeed_modifier/jetpack/full_speed)
-	if (!stabilize)
-		ADD_TRAIT(mod.wearer, TRAIT_NOGRAV_ALWAYS_DRIFT, REF(src))
-
-/obj/item/mod/module/jetpack/on_deactivation(display_message = TRUE, deleting = FALSE)
-	mod.wearer.remove_movespeed_modifier(/datum/movespeed_modifier/jetpack/full_speed)
-	REMOVE_TRAIT(mod.wearer, TRAIT_NOGRAV_ALWAYS_DRIFT, REF(src))
-
-/obj/item/mod/module/jetpack/advanced
-	name = "MOD advanced ion jetpack module"
-	desc = "An improvement on the previous model of electric thrusters. This one achieves higher precision \
-		and spartial stability through mounting of more jets and application of red paint."
-	icon_state = "jetpack_advanced"
-	overlay_state_inactive = "module_jetpackadv"
-	overlay_state_active = "module_jetpackadv_on"
-	drift_force = 2 NEWTONS
-	stabilizer_force = 2 NEWTONS
 
 /// Cooldown to use if we didn't actually launch a jump jet
 #define FAILED_ACTIVATION_COOLDOWN 3 SECONDS
@@ -202,18 +182,19 @@
 	module_type = MODULE_USABLE
 	complexity = 3
 	cooldown_time = 30 SECONDS
-	use_energy_cost = DEFAULT_CHARGE_DRAIN * 5
+	use_power_cost = DEFAULT_CHARGE_DRAIN * 5
 	incompatible_modules = list(/obj/item/mod/module/jump_jet)
-	required_slots = list(ITEM_SLOT_BACK)
 
 /obj/item/mod/module/jump_jet/on_use()
+	. = ..()
+	if(!.)
+		return
 	if (DOING_INTERACTION(mod.wearer, mod.wearer))
 		balloon_alert(mod.wearer, "busy!")
 		return
 	balloon_alert(mod.wearer, "launching...")
 	mod.wearer.Shake(duration = 1 SECONDS)
 	if (!do_after(mod.wearer, 1 SECONDS, target = mod.wearer))
-		start_cooldown(FAILED_ACTIVATION_COOLDOWN) // Don't go on full cooldown if we failed to launch
 		return FALSE
 	playsound(mod.wearer, 'sound/vehicles/rocketlaunch.ogg', 100, TRUE)
 	mod.wearer.apply_status_effect(/datum/status_effect/jump_jet)
@@ -228,6 +209,15 @@
 	return TRUE
 
 #undef FAILED_ACTIVATION_COOLDOWN
+
+/obj/item/mod/module/jetpack/advanced
+	name = "MOD advanced ion jetpack module"
+	desc = "An improvement on the previous model of electric thrusters. This one achieves higher speeds through \
+		mounting of more jets and a red paint applied on it."
+	icon_state = "jetpack_advanced"
+	overlay_state_inactive = "module_jetpackadv"
+	overlay_state_active = "module_jetpackadv_on"
+	full_speed = TRUE
 
 ///Status Readout - Puts a lot of information including health, nutrition, fingerprints, temperature to the suit TGUI.
 /obj/item/mod/module/status_readout

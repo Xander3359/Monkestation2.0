@@ -9,8 +9,7 @@
 	armor_type= /datum/armor/mod_theme_waffles
 	charge_drain = DEFAULT_CHARGE_DRAIN * 0
 	siemens_coefficient = 0
-	slowdown_inactive = 0
-	slowdown_active = 0
+	slowdown_deployed = 0
 	ui_theme = "wizard"
 	inbuilt_modules = list(/obj/item/mod/module/anti_magic/wizard)
 	allowed_suit_storage = list(

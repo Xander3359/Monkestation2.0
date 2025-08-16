@@ -249,16 +249,6 @@ See the examinemore module for information.
 #define WOUND_ARMOR_STANDARD 20
 #define WOUND_ARMOR_HIGH 30
 
-//Default text for different messages for the user.
-#define HELMET_UNSEAL_MESSAGE "hisses open"
-#define HELMET_SEAL_MESSAGE "hisses closed"
-#define CHESTPLATE_UNSEAL_MESSAGE "releases your chest"
-#define CHESTPLATE_SEAL_MESSAGE "cinches tightly around your chest"
-#define GAUNTLET_UNSEAL_MESSAGE "become loose around your fingers"
-#define GAUNTLET_SEAL_MESSAGE "tighten around your fingers and wrists"
-#define BOOT_UNSEAL_MESSAGE "relax their grip on your legs"
-#define BOOT_SEAL_MESSAGE "seal around your feet"
-
 /// Trait that changes the ending effects of twitch leaving your system
 #define TRAIT_TWITCH_ADAPTED "twitch_adapted"
 

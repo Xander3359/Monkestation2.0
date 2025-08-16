@@ -13,8 +13,7 @@
 	max_heat_protection_temperature = FIRE_IMMUNITY_MAX_TEMP_PROTECT
 	default_skin = "brigadegen"
 	siemens_coefficient = 0
-	slowdown_inactive = 1
-	slowdown_active = 0.5
+	slowdown_deployed = 0.5
 	ui_theme = "ntos"
 	inbuilt_modules = list(/obj/item/mod/module/armor_booster)
 	allowed_suit_storage = list(
