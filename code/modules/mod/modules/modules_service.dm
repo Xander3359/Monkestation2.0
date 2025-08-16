@@ -8,15 +8,12 @@
 	icon_state = "bikehorn"
 	module_type = MODULE_USABLE
 	complexity = 1
-	use_power_cost = DEFAULT_CHARGE_DRAIN
+	use_energy_cost = DEFAULT_CHARGE_DRAIN
 	incompatible_modules = list(/obj/item/mod/module/bikehorn)
 	cooldown_time = 1 SECONDS
 
 /obj/item/mod/module/bikehorn/on_use()
 	playsound(src, 'sound/items/bikehorn.ogg', 100, FALSE)
-<<<<<<< HEAD
-	drain_power(use_power_cost)
-=======
 	drain_power(use_energy_cost)
 
 ///Advanced Balloon Blower - Blows a long balloon.
@@ -27,7 +24,6 @@
 	cooldown_time = 20 SECONDS
 	balloon_path = /obj/item/toy/balloon/long
 	blowing_time = 15 SECONDS
->>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
 
 ///Microwave Beam - Microwaves items instantly.
 /obj/item/mod/module/microwave_beam
@@ -38,9 +34,9 @@
 	icon_state = "microwave_beam"
 	module_type = MODULE_ACTIVE
 	complexity = 1
-	use_power_cost = DEFAULT_CHARGE_DRAIN * 5
-	incompatible_modules = list(/obj/item/mod/module/microwave_beam, /obj/item/mod/module/organ_thrower)
-	cooldown_time = 10 SECONDS
+	use_energy_cost = DEFAULT_CHARGE_DRAIN * 5
+	incompatible_modules = list(/obj/item/mod/module/microwave_beam, /obj/item/mod/module/organizer)
+	cooldown_time = 4 SECONDS
 	required_slots = list(ITEM_SLOT_GLOVES)
 
 /obj/item/mod/module/microwave_beam/on_select_use(atom/target)
@@ -50,7 +46,7 @@
 	if(!isitem(target))
 		return
 	if(!isturf(target.loc))
-		balloon_alert(mod.wearer, "must be on the floor!")
+		balloon_alert(mod.wearer, "not in storage!")
 		return
 	var/obj/item/microwave_target = target
 	var/datum/effect_system/spark_spread/spark_effect = new()
@@ -64,7 +60,7 @@
 	var/datum/effect_system/spark_spread/spark_effect_two = new()
 	spark_effect_two.set_up(2, 1, microwave_target)
 	spark_effect_two.start()
-	drain_power(use_power_cost)
+	drain_power(use_energy_cost)
 
 //Waddle - Makes you waddle and squeak.
 /obj/item/mod/module/waddle
@@ -80,37 +76,26 @@
 	incompatible_modules = list(/obj/item/mod/module/waddle)
 	required_slots = list(ITEM_SLOT_FEET)
 
-/obj/item/mod/module/waddle/on_suit_activation()
-<<<<<<< HEAD
-	mod.boots.AddComponent(/datum/component/squeak, list('sound/effects/footstep/clownstep1.ogg'=1,'sound/effects/footstep/clownstep2.ogg'=1), 50, falloff_exponent = 20) //die off quick please
-	mod.wearer.AddElement(/datum/element/waddling)
-=======
+/obj/item/mod/module/waddle/on_part_activation()
 	var/obj/item/shoes = mod.get_part_from_slot(ITEM_SLOT_FEET)
 	if(shoes)
 		shoes.AddComponent(/datum/component/squeak, list('sound/effects/footstep/clownstep1.ogg'=1,'sound/effects/footstep/clownstep2.ogg'=1), 50, falloff_exponent = 20) //die off quick please
-	mod.wearer.AddElementTrait(TRAIT_WADDLING, MOD_TRAIT, /datum/element/waddling)
->>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
+	mod.wearer.AddElementTrait(TRAIT_WADDLING, REF(src), /datum/element/waddling)
 	if(is_clown_job(mod.wearer.mind?.assigned_role))
 		mod.wearer.add_mood_event("clownshoes", /datum/mood_event/clownshoes)
 
-/obj/item/mod/module/waddle/on_suit_deactivation(deleting = FALSE)
-<<<<<<< HEAD
-	if(!deleting)
-		qdel(mod.boots.GetComponent(/datum/component/squeak))
-	mod.wearer.RemoveElement(/datum/element/waddling)
-=======
+/obj/item/mod/module/waddle/on_part_deactivation(deleting = FALSE)
 	var/obj/item/shoes = mod.get_part_from_slot(ITEM_SLOT_FEET)
 	if(shoes && !deleting)
 		qdel(shoes.GetComponent(/datum/component/squeak))
-	REMOVE_TRAIT(mod.wearer, TRAIT_WADDLING, MOD_TRAIT)
->>>>>>> 49dccad3a0d (unhardcodes modsuit parts (#82905))
+	REMOVE_TRAIT(mod.wearer, TRAIT_WADDLING, REF(src))
 	if(is_clown_job(mod.wearer.mind?.assigned_role))
 		mod.wearer.clear_mood_event("clownshoes")
 
 // recharging cleaner spray module
 /obj/item/mod/module/mister/cleaner
 	name = "MOD janitorial mister module"
-	desc = "An space cleaner mister, able to clean up messes quickly. Synthesizes its own supply over time (if active)."
+	desc = "A space cleaner mister, able to clean up messes quickly. Synthesizes its own supply over time (if active)."
 	device = /obj/item/reagent_containers/spray/mister/janitor
 	volume = 100
 	active_power_cost = DEFAULT_CHARGE_DRAIN
