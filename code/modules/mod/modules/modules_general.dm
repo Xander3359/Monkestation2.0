@@ -103,7 +103,7 @@
 	module_type = MODULE_TOGGLE
 	complexity = 3
 	active_power_cost = DEFAULT_CHARGE_DRAIN * 0.5
-	use_power_cost = DEFAULT_CHARGE_DRAIN
+	use_energy_cost = DEFAULT_CHARGE_DRAIN
 	incompatible_modules = list(/obj/item/mod/module/jetpack)
 	cooldown_time = 0.5 SECONDS
 	overlay_state_inactive = "module_jetpack"
@@ -164,8 +164,8 @@
 
 /obj/item/mod/module/jetpack/proc/allow_thrust(use_fuel = TRUE)
 	if(!use_fuel)
-		return check_power(use_power_cost)
-	if(!drain_power(use_power_cost))
+		return check_power(use_energy_cost)
+	if(!drain_power(use_energy_cost))
 		return FALSE
 	return TRUE
 
@@ -181,7 +181,7 @@
 	module_type = MODULE_USABLE
 	complexity = 3
 	cooldown_time = 30 SECONDS
-	use_power_cost = DEFAULT_CHARGE_DRAIN * 5
+	use_energy_cost = DEFAULT_CHARGE_DRAIN * 5
 	incompatible_modules = list(/obj/item/mod/module/jump_jet)
 
 /obj/item/mod/module/jump_jet/on_use()
