@@ -438,7 +438,12 @@
 	. = ..()
 	UnregisterSignal(mod, COMSIG_ATOM_ITEM_INTERACTION)
 
-/obj/item/mod/module/adrenaline_boost/proc/try_boost(source, mob/user, obj/item/attacking_item)
+/obj/item/mod/module/adrenaline_boost/attackby(obj/item/attacking_item, mob/user, list/modifiers, list/attack_modifiers)
+	if(charge_boost(attacking_item, user))
+		return TRUE
+	return ..()
+
+/obj/item/mod/module/adrenaline_boost/proc/on_attackby(datum/source, obj/item/attacking_item, mob/user)
 	SIGNAL_HANDLER
 	if(charge_boost(attacking_item))
 		return COMPONENT_NO_AFTERATTACK
