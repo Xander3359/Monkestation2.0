@@ -1,108 +1,9 @@
 // /obj/item signals
 
-///from base of obj/item/equipped(): (mob/equipper, slot)
-#define COMSIG_ITEM_EQUIPPED "item_equip"
-///From base of obj/item/on_equipped() (mob/equipped, slot)
-#define COMSIG_ITEM_POST_EQUIPPED "item_post_equipped"
-	/// This will make the on_equipped proc return FALSE.
-	#define COMPONENT_EQUIPPED_FAILED (1<<0)
-/// A mob has just equipped an item. Called on [/mob] from base of [/obj/item/equipped()]: (/obj/item/equipped_item, slot)
-#define COMSIG_MOB_EQUIPPED_ITEM "mob_equipped_item"
-/// A mob has just unequipped an item.
-#define COMSIG_MOB_UNEQUIPPED_ITEM "mob_unequipped_item"
-///called on [/obj/item] before unequip from base of [mob/proc/doUnEquip]: (force, atom/newloc, no_move, invdrop, silent)
-#define COMSIG_ITEM_PRE_UNEQUIP "item_pre_unequip"
-	///only the pre unequip can be cancelled
-	#define COMPONENT_ITEM_BLOCK_UNEQUIP (1<<0)
-///called on [/obj/item] AFTER unequip from base of [mob/proc/doUnEquip]: (force, atom/newloc, no_move, invdrop, silent)
-#define COMSIG_ITEM_POST_UNEQUIP "item_post_unequip"
-///from base of obj/item/on_grind(): ())
-#define COMSIG_ITEM_ON_GRIND "on_grind"
-///from base of obj/item/on_juice(): ()
-#define COMSIG_ITEM_ON_JUICE "on_juice"
-///from /obj/machinery/hydroponics/attackby(obj/item/O, mob/user, params) when an object is used as compost: (mob/user)
-#define COMSIG_ITEM_ON_COMPOSTED "on_composted"
-///Called when an item is dried by a drying rack:
-#define COMSIG_ITEM_DRIED "item_dried"
-///from base of obj/item/dropped(): (mob/user)
-#define COMSIG_ITEM_DROPPED "item_drop"
-///from base of obj/item/pickup(): (/mob/taker)
-#define COMSIG_ITEM_PICKUP "item_pickup"
-///from base of obj/item/on_outfit_equip(): (mob/equipper, visuals_only, slot)
-#define COMSIG_ITEM_EQUIPPED_AS_OUTFIT "item_equip_as_outfit"
-///from base of datum/storage/attempt_insert(): ()
-#define COMSIG_ITEM_STORED "item_stored"
-///from base of datum/storage/handle_exit(): (datum/storage/storage)
-#define COMSIG_ITEM_UNSTORED "item_unstored"
-
-///from base of obj/item/apply_fantasy_bonuses(): (bonus)
-#define COMSIG_ITEM_APPLY_FANTASY_BONUSES "item_apply_fantasy_bonuses"
-///from base of obj/item/remove_fantasy_bonuses(): (bonus)
-#define COMSIG_ITEM_REMOVE_FANTASY_BONUSES "item_remove_fantasy_bonuses"
-
-/// Sebt from obj/item/ui_action_click(): (mob/user, datum/action)
-#define COMSIG_ITEM_UI_ACTION_CLICK "item_action_click"
-	/// Return to prevent the default behavior (attack_selfing) from ocurring.
-	#define COMPONENT_ACTION_HANDLED (1<<0)
-
-#define COMSIG_ITEM_UI_ACTION_SLOT_CHECKED "item_action_slot_checked"
-	/// Return to prevent the default behavior (attack_selfing) from occurring.
-	#define COMPONENT_ITEM_ACTION_SLOT_INVALID (1<<0)
-
-///from base of mob/living/carbon/attacked_by(): (mob/living/carbon/target, mob/living/user, hit_zone)
-#define COMSIG_ITEM_ATTACK_ZONE "item_attack_zone"
-
 /// from /datum/component/cleave_attack/perform_sweep(): (atom/target, obj/item/item, mob/living/user, params)
 #define COMSIG_ATOM_CLEAVE_ATTACK "atom_cleave_attack"
 	/// allows cleave attack to hit things it normally wouldn't
 	#define ATOM_ALLOW_CLEAVE_ATTACK (1<<0)
-
-///from base of obj/item/hit_reaction(): (list/args)
-#define COMSIG_ITEM_HIT_REACT "item_hit_react"
-	#define COMPONENT_HIT_REACTION_BLOCK (1<<0)
-///from base of item/sharpener/attackby(): (amount, max)
-#define COMSIG_ITEM_SHARPEN_ACT "sharpen_act"
-	#define COMPONENT_BLOCK_SHARPEN_APPLIED (1<<0)
-	#define COMPONENT_BLOCK_SHARPEN_BLOCKED (1<<1)
-	#define COMPONENT_BLOCK_SHARPEN_ALREADY (1<<2)
-	#define COMPONENT_BLOCK_SHARPEN_MAXED (1<<3)
-
-///Called when an armor plate is successfully applied to an object
-#define COMSIG_ARMOR_PLATED "armor_plated"
-///Called when an item gets recharged by the ammo powerup
-#define COMSIG_ITEM_RECHARGED "item_recharged"
-///Called when an item is being offered, from [/obj/item/proc/on_offered(mob/living/carbon/offerer)]
-#define COMSIG_ITEM_OFFERING "item_offering"
-	///Interrupts the offer proc
-	#define COMPONENT_OFFER_INTERRUPT (1<<0)
-///Called when an someone tries accepting an offered item, from [/obj/item/proc/on_offer_taken(mob/living/carbon/offerer, mob/living/carbon/taker)]
-#define COMSIG_ITEM_OFFER_TAKEN "item_offer_taken"
-	///Interrupts the offer acceptance
-	#define COMPONENT_OFFER_TAKE_INTERRUPT (1<<0)
-/// sent from obj/effect/attackby(): (/obj/effect/hit_effect, /mob/living/attacker, params)
-#define COMSIG_ITEM_ATTACK_EFFECT "item_effect_attacked"
-/// Called by /obj/item/proc/worn_overlays(list/overlays, mutable_appearance/standing, isinhands, icon_file)
-#define COMSIG_ITEM_GET_WORN_OVERLAYS "item_get_worn_overlays"
-
-///from base of [/obj/item/proc/tool_check_callback]: (mob/living/user)
-#define COMSIG_TOOL_IN_USE "tool_in_use"
-///from base of [/obj/item/proc/tool_start_check]: (mob/living/user)
-#define COMSIG_TOOL_START_USE "tool_start_use"
-///from [/obj/item/proc/disableEmbedding]:
-#define COMSIG_ITEM_DISABLE_EMBED "item_disable_embed"
-///from [/obj/effect/mine/proc/triggermine]:
-#define COMSIG_MINE_TRIGGERED "minegoboom"
-///from [/obj/structure/closet/supplypod/proc/preOpen]:
-#define COMSIG_SUPPLYPOD_LANDED "supplypodgoboom"
-
-/// from [/obj/item/stack/proc/can_merge]: (obj/item/stack/merge_with, in_hand)
-#define COMSIG_STACK_CAN_MERGE "stack_can_merge"
-	#define CANCEL_STACK_MERGE (1<<0)
-
-///from /obj/item/book/bible/interact_with_atom(): (mob/user)
-#define COMSIG_BIBLE_SMACKED "bible_smacked"
-	///stops the bible chain from continuing. When all of the effects of the bible smacking have been moved to a signal we can kill this
-	#define COMSIG_END_BIBLE_CHAIN (1<<0)
 
 // /obj/item/implant signals
 ///from base of /obj/item/implant/proc/activate(): ()
@@ -267,9 +168,6 @@
 
 ///Sent from /obj/item/skillchip/on_remove()
 #define COMSIG_SKILLCHIP_REMOVED "skillchip_removed"
-
-/// from /obj/item/toy/crayon/spraycan/use_on: (user, spraycan, color_is_dark)
-#define COMSIG_OBJ_PAINTED "obj_painted"
 
 /// from /obj/item/use: (used, ...)
 #define COMSIG_ITEM_USED "item_used"
