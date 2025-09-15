@@ -56,6 +56,7 @@
 		"welding_goggles",
 		"teg",
 		"teg-circ",
+		"marker_beacon",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_5_POINTS)
 	discount_experiments = list(/datum/experiment/scanning/random/material/easy = TECHWEB_TIER_3_POINTS)
@@ -137,6 +138,7 @@
 		"tray_goggles",
 		"holopad",
 		"vendatray",
+		"station_map",
 	)
 	research_costs = list(TECHWEB_POINT_TYPE_GENERIC = TECHWEB_TIER_1_POINTS)
 	announce_channels = list(RADIO_CHANNEL_ENGINEERING)
@@ -145,7 +147,7 @@
 	id = "emp_adv"
 	display_name = "Advanced Electromagnetic Theory"
 	description = "Determining whether reversing the polarity will actually help in a given situation."
-	prereq_ids = list("emp_basic")
+	prereq_ids = list("emp_basic", "base")
 	design_ids = list(
 		"ultra_micro_laser",
 	)

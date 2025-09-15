@@ -81,6 +81,7 @@
 
 	var/mob/living/carbon/carbon_target = target
 	carbon_target.adjust_silence(10 SECONDS)
+	carbon_target.adjust_emote_mute(10 SECONDS)
 	carbon_target.apply_status_effect(/datum/status_effect/void_chill, 2)
 
 /datum/heretic_knowledge/spell/void_phase
@@ -250,6 +251,7 @@
 				close_carbon.apply_status_effect(/datum/status_effect/void_conduit)
 				continue
 			close_carbon.adjust_silence_up_to(2 SECONDS, 20 SECONDS)
+			close_carbon.adjust_emote_mute_up_to(2 SECONDS, 20 SECONDS)
 			close_carbon.apply_status_effect(/datum/status_effect/void_chill, 1)
 			close_carbon.adjust_eye_blur(rand(0 SECONDS, 2 SECONDS))
 			close_carbon.adjust_bodytemperature(-30 * TEMPERATURE_DAMAGE_COEFFICIENT)

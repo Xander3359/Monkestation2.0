@@ -44,6 +44,12 @@
 	/// Can't use tools on the machine
 	#define COMPONENT_CANT_USE_MACHINE_TOOLS (1<<1)
 
+#define COMSIG_ORE_SILO_PERMISSION_CHECKED "ore_silo_permission_checked"
+	/// The ore silo is not allowed to be used
+	#define COMPONENT_ORE_SILO_DENY (1<<0)
+	/// The ore silo is allowed to be used
+	#define COMPONENT_ORE_SILO_ALLOW (1<<1)
+
 ///from obj/machinery/iv_drip/IV_attach(target, usr) : (attachee)
 #define COMSIG_IV_ATTACH "iv_attach"
 ///from obj/machinery/iv_drip/IV_detach() : (detachee)
@@ -216,6 +222,12 @@
 ///From open: (forced)
 #define COMSIG_CLOSET_POST_OPEN "closet_post_open"
 
+///From close
+#define COMSIG_CLOSET_PRE_CLOSE "closet_pre_close"
+	#define BLOCK_CLOSE (1<<1)
+///From close
+#define COMSIG_CLOSET_POST_CLOSE "closet_post_close"
+
 ///a deliver_first element closet was successfully delivered
 #define COMSIG_CLOSET_DELIVERED "crate_delivered"
 
@@ -256,111 +268,6 @@
 ///from [/mob/living/carbon/human/Move]: ()
 #define COMSIG_SHOES_STEP_ACTION "shoes_step_action"
 
-// /obj/item/implant signals
-///from base of /obj/item/implant/proc/activate(): ()
-#define COMSIG_IMPLANT_ACTIVATED "implant_activated"
-///from base of /obj/item/implant/proc/implant(): (list/args)
-#define COMSIG_IMPLANT_IMPLANTING "implant_implanting"
-	#define COMPONENT_STOP_IMPLANTING (1<<0)
-///called on already installed implants when a new one is being added in /obj/item/implant/proc/implant(): (list/args, obj/item/implant/new_implant)
-#define COMSIG_IMPLANT_OTHER "implant_other"
-	//#define COMPONENT_STOP_IMPLANTING (1<<0) //The name makes sense for both
-	#define COMPONENT_DELETE_NEW_IMPLANT (1<<1)
-	#define COMPONENT_DELETE_OLD_IMPLANT (1<<2)
-
-/// called on implants, after a successful implantation: (mob/living/target, mob/user, silent, force)
-#define COMSIG_IMPLANT_IMPLANTED "implant_implanted"
-
-/// called on implants, after an implant has been removed: (mob/living/source, silent, special)
-#define COMSIG_IMPLANT_REMOVED "implant_removed"
-
-/// called as a mindshield is implanted: (mob/user)
-#define COMSIG_PRE_MINDSHIELD_IMPLANT "pre_mindshield_implant"
-	/// Did they successfully get mindshielded?
-	#define COMPONENT_MINDSHIELD_PASSED (NONE)
-	/// Did they resist the mindshield?
-	#define COMPONENT_MINDSHIELD_RESISTED (1<<0)
-
-/// called once a mindshield is implanted: (mob/user)
-#define COMSIG_MINDSHIELD_IMPLANTED "mindshield_implanted"
-	/// Are we the reason for deconversion?
-	#define COMPONENT_MINDSHIELD_DECONVERTED (1<<0)
-
-///called on implants being implanted into someone with an uplink implant: (datum/component/uplink)
-#define COMSIG_IMPLANT_EXISTING_UPLINK "implant_uplink_exists"
-	//This uses all return values of COMSIG_IMPLANT_OTHER
-
-// /obj/item/pda signals
-
-///called on pda when the user changes the ringtone: (mob/living/user, new_ringtone)
-#define COMSIG_TABLET_CHANGE_ID "comsig_tablet_change_id"
-	#define COMPONENT_STOP_RINGTONE_CHANGE (1<<0)
-#define COMSIG_TABLET_CHECK_DETONATE "pda_check_detonate"
-	#define COMPONENT_TABLET_NO_DETONATE (1<<0)
-
-// /obj/item/radio signals
-
-///called from base of /obj/item/radio/proc/set_frequency(): (list/args)
-#define COMSIG_RADIO_NEW_FREQUENCY "radio_new_frequency"
-///called from base of /obj/item/radio/proc/talk_into(): (atom/movable/M, message, channel)
-#define COMSIG_RADIO_NEW_MESSAGE "radio_new_message"
-///called from base of /obj/item/radio/proc/on_receive_messgae(): (list/data)
-#define COMSIG_RADIO_RECEIVE_MESSAGE "radio_receive_message"
-
-// /obj/item/pen signals
-
-///called after rotation in /obj/item/pen/attack_self(): (rotation, mob/living/carbon/user)
-#define COMSIG_PEN_ROTATED "pen_rotated"
-
-// /obj/item/gun signals
-
-///called in /obj/item/gun/fire_gun (user, target, flag, params)
-#define COMSIG_GUN_TRY_FIRE "gun_try_fire"
-	#define COMPONENT_CANCEL_GUN_FIRE (1<<0)
-///called in /obj/item/gun/process_fire (src, target, params, zone_override)
-#define COMSIG_MOB_FIRED_GUN "mob_fired_gun"
-///called in /obj/item/gun/process_fire (user, target, params, zone_override)
-#define COMSIG_GUN_FIRED "gun_fired"
-///called in /obj/item/gun/process_chamber (src)
-#define COMSIG_GUN_CHAMBER_PROCESSED "gun_chamber_processed"
-///called in /obj/item/gun/ballistic/process_chamber (casing)
-#define COMSIG_CASING_EJECTED "casing_ejected"
-///sent to targets during the process_hit proc of projectiles
-#define COMSIG_FIRE_CASING "fire_casing"
-///from the base of /obj/item/ammo_casing/ready_proj() : (atom/target, mob/living/user, quiet, zone_override, atom/fired_from)
-#define COMSIG_CASING_READY_PROJECTILE "casing_ready_projectile"
-///sent to the projectile after an item is spawned by the projectile_drop element: (new_item)
-#define COMSIG_PROJECTILE_ON_SPAWN_DROP "projectile_on_spawn_drop"
-
-// Jetpack things
-// Please kill me
-
-//called in /obj/item/tank/jetpack/proc/turn_on() : ()
-#define COMSIG_JETPACK_ACTIVATED "jetpack_activated"
-	#define JETPACK_ACTIVATION_FAILED (1<<0)
-//called in /obj/item/tank/jetpack/proc/turn_off() : ()
-#define COMSIG_JETPACK_DEACTIVATED "jetpack_deactivated"
-
-//called in /obj/item/organ/internal/cyberimp/chest/thrusters/proc/toggle() : ()
-#define COMSIG_THRUSTER_ACTIVATED "jetmodule_activated"
-	#define THRUSTER_ACTIVATION_FAILED (1<<0)
-//called in /obj/item/organ/internal/cyberimp/chest/thrusters/proc/toggle() : ()
-#define COMSIG_THRUSTER_DEACTIVATED "jetmodule_deactivated"
-
-// /obj/item/camera signals
-
-///from /obj/item/camera/captureimage(): (atom/target, mob/user)
-#define COMSIG_CAMERA_IMAGE_CAPTURED "camera_image_captured"
-
-// /obj/item/grenade signals
-
-///called in /obj/item/gun/process_fire (user, target, params, zone_override)
-#define COMSIG_GRENADE_DETONATE "grenade_prime"
-//called from many places in grenade code (armed_by, nade, det_time, delayoverride)
-#define COMSIG_MOB_GRENADE_ARMED "grenade_mob_armed"
-///called in /obj/item/gun/process_fire (user, target, params, zone_override)
-#define COMSIG_GRENADE_ARMED "grenade_armed"
-
 // /obj/projectile signals (sent to the firer)
 
 ///from base of /obj/projectile/proc/on_hit(), like COMSIG_PROJECTILE_ON_HIT but on the projectile itself and with the hit limb (if any): (atom/movable/firer, atom/target, angle, hit_limb)
@@ -380,11 +287,6 @@
 #define COMSIG_PROJECTILE_RANGE "projectile_range"
 ///from the base of /obj/projectile/on_range(): ()
 #define COMSIG_PROJECTILE_RANGE_OUT "projectile_range_out"
-///from [/obj/item/proc/tryEmbed] sent when trying to force an embed (mainly for projectiles and eating glass)
-#define COMSIG_EMBED_TRY_FORCE "item_try_embed"
-	#define COMPONENT_EMBED_SUCCESS (1<<1)
-// FROM [/obj/item/proc/updateEmbedding] sent when an item's embedding properties are changed : ()
-#define COMSIG_ITEM_EMBEDDING_UPDATE "item_embedding_update"
 
 ///sent to targets during the process_hit proc of projectiles
 #define COMSIG_PELLET_CLOUD_INIT "pellet_cloud_init"
@@ -419,48 +321,8 @@
 	/// Prevents click from happening.
 	#define COMPONENT_CANCEL_EQUIPMENT_CLICK (1<<0)
 
-#define COMSIG_ITEM_ATTACK "item_attack"
-///from base of obj/item/attack_self(): (/mob)
-#define COMSIG_ITEM_ATTACK_SELF "item_attack_self"
-//from base of obj/item/attack_self_secondary(): (/mob)
-#define COMSIG_ITEM_ATTACK_SELF_SECONDARY "item_attack_self_secondary"
-///from base of obj/item/attack_atom(): (/obj, /mob)
-#define COMSIG_ITEM_ATTACK_OBJ "item_attack_obj"
-///from base of obj/item/pre_attack(): (atom/target, mob/user, params)
-#define COMSIG_ITEM_PRE_ATTACK "item_pre_attack"
-/// From base of [/obj/item/proc/pre_attack_secondary()]: (atom/target, mob/user, params)
-#define COMSIG_ITEM_PRE_ATTACK_SECONDARY "item_pre_attack_secondary"
-	#define COMPONENT_SECONDARY_CANCEL_ATTACK_CHAIN (1<<0)
-	#define COMPONENT_SECONDARY_CONTINUE_ATTACK_CHAIN (1<<1)
-	#define COMPONENT_SECONDARY_CALL_NORMAL_ATTACK_CHAIN (1<<2)
-/// From base of [/obj/item/proc/attack_secondary()]: (atom/target, mob/user, params)
-#define COMSIG_ITEM_ATTACK_SECONDARY "item_pre_attack_secondary"
-///from base of obj/item/afterattack(): (atom/target, mob/user, proximity_flag, click_parameters)
-#define COMSIG_ITEM_AFTERATTACK "item_afterattack"
-	/// Flag for when /afterattack potentially acts on an item.
-	/// Used for the swap hands/drop tutorials to know when you might just be trying to do something normally.
-	/// Does not necessarily imply success, or even that it did hit an item, just intent.
-	#define COMPONENT_AFTERATTACK_PROCESSED_ITEM (1<<0)
-///from base of obj/item/afterattack_secondary(): (atom/target, mob/user, proximity_flag, click_parameters)
-#define COMSIG_ITEM_AFTERATTACK_SECONDARY "item_afterattack_secondary"
-///from base of obj/item/attack_qdeleted(): (atom/target, mob/user, params)
-#define COMSIG_ITEM_ATTACK_QDELETED "item_attack_qdeleted"
-
-///from /obj/item/assembly/proc/pulsed(mob/pulser)
-#define COMSIG_ASSEMBLY_PULSED "assembly_pulsed"
-
-///from base of /obj/item/mmi/set_brainmob(): (mob/living/brain/new_brainmob)
-#define COMSIG_MMI_SET_BRAINMOB "mmi_set_brainmob"
-
-/// from base of /obj/item/slimepotion/speed/afterattack(): (obj/target, /obj/src, mob/user)
-#define COMSIG_SPEED_POTION_APPLIED "speed_potion"
-	#define SPEED_POTION_STOP (1<<0)
-
 /// from /obj/structure/sign/poster/trap_succeeded() : (mob/user)
 #define COMSIG_POSTER_TRAP_SUCCEED "poster_trap_succeed"
-
-/// from /obj/item/detective_scanner/scan(): (mob/user, list/extra_data)
-#define COMSIG_DETECTIVE_SCANNED "det_scanned"
 
 /// from /obj/machinery/mineral/ore_redemption/pickup_item when it successfully picks something up
 #define COMSIG_ORM_COLLECTED_ORE "orm_collected_ore"
@@ -479,14 +341,3 @@
 
 /// from /obj/structure/cursed_slot_machine/determine_victor() when someone finally wins.
 #define COMSIG_GLOB_CURSED_SLOT_MACHINE_WON "cursed_slot_machine_won"
-
-/// Sent from /obj/item/update_weight_class(). (old_w_class, new_w_class)
-#define COMSIG_ITEM_WEIGHT_CLASS_CHANGED "item_weight_class_changed"
-/// Sent from /obj/item/update_weight_class(), to its loc. (obj/item/changed_item, old_w_class, new_w_class)
-#define COMSIG_ATOM_CONTENTS_WEIGHT_CLASS_CHANGED "atom_contents_weight_class_changed"
-
-///Sent from /obj/item/skillchip/on_implant()
-#define COMSIG_SKILLCHIP_IMPLANTED "skillchip_implanted"
-
-///Sent from /obj/item/skillchip/on_remove()
-#define COMSIG_SKILLCHIP_REMOVED "skillchip_removed"

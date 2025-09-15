@@ -16,6 +16,9 @@
 
 	SET_BASE_PIXEL(-8, 0)
 
+/obj/item/gun/ballistic/rifle/boltaction/lionhunter/give_manufacturer_examine()
+	return
+
 /obj/item/gun/ballistic/rifle/lionhunter/Initialize(mapload)
 	. = ..()
 	AddComponent(/datum/component/scope, range_modifier = 3.2)

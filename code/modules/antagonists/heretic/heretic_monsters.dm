@@ -8,7 +8,8 @@
 	antag_hud_name = "heretic_beast"
 	suicide_cry = "MY MASTER SMILES UPON ME!!"
 	show_in_antagpanel = FALSE
-	stinger_sound = 'sound/music/antag/heretic/heretic_gain.ogg'
+	antag_flags = parent_type::antag_flags | FLAG_ANTAG_CAP_IGNORE // monkestation addition
+	stinger_sound = 'sound/ambience/antag/heretic/heretic_gain.ogg'
 	/// Our master (a heretic)'s mind.
 	var/datum/mind/master
 
