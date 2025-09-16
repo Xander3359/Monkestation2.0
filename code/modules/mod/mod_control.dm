@@ -243,7 +243,7 @@
 			balloon_alert(wearer, "parts extended!")
 			playsound(src, 'sound/machines/scanner/scanbuzz.ogg', 25, FALSE, SILENCED_SOUND_EXTRARANGE)
 			return
-	if(!wearer.incapacitated)
+	if(!wearer.incapacitated())
 		var/atom/movable/screen/inventory/hand/ui_hand = over_object
 		if(wearer.putItemFromInventoryInHandIfPossible(src, ui_hand.held_index))
 			add_fingerprint(user)
