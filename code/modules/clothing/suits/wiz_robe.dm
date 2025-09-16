@@ -210,27 +210,64 @@
 	desc = "An outfit designed exclusively from duct tape. It was hard to put on."
 	armor_type = /datum/armor/none
 	resistance_flags = FLAMMABLE
+/*
+/obj/item/clothing/suit/wizrobe/durathread
+	name = "durathread robe"
+	desc = "A rather dull durathread robe; not quite as protective as a proper piece of armour, but much more stylish."
+	icon_state = "durathread-fake"
+	inhand_icon_state = null
+	armor_type = /datum/armor/robe_durathread
+	allowed = /obj/item/clothing/suit/apron::allowed
+	fishing_modifier = -6
 
+/datum/armor/robe_durathread
+	melee = 15
+	bullet = 5
+	laser = 25
+	energy = 30
+	bomb = 10
+	fire = 30
+	acid = 40
+
+/obj/item/clothing/suit/wizrobe/durathread/fire
+	name = "pyromancer robe"
+	desc = "A rather dull durathread robe; not quite as protective as woven armour, but much more stylish."
+	icon_state = "durathread-fire"
+
+/obj/item/clothing/suit/wizrobe/durathread/ice
+	name = "pyromancer robe"
+	desc = "A rather dull durathread robe; not quite as protective as woven armour, but much more stylish."
+	icon_state = "durathread-ice"
+
+/obj/item/clothing/suit/wizrobe/durathread/electric
+	name = "electromancer robe"
+	desc = "Doesn't actually conduit or isolate from electricity. Though it does have some durability on account of being made from durathread."
+	icon_state = "durathread-electric"
+
+/obj/item/clothing/suit/wizrobe/durathread/earth
+	name = "geomancer robe"
+	desc = "A rather dull durathread robe; not quite as protective as woven armour, but much more stylish."
+	icon_state = "durathread-earth"
+
+/obj/item/clothing/suit/wizrobe/durathread/necro
+	name = "necromancer robe"
+	desc = "A rather dull durathread robe; not quite as protective as woven armour, but much more stylish."
+	icon_state = "durathread-necro"
+*/ // MONKE EDIT: Sprites not currently implemented
 /obj/item/clothing/suit/wizrobe/paper
 	name = "papier-mache robe" // no non-latin characters!
 	desc = "A robe held together by various bits of clear-tape and paste."
 	icon_state = "wizard-paper"
 	inhand_icon_state = null
-	var/robe_charge = TRUE
+	COOLDOWN_DECLARE(summoning_cooldown)
 	actions_types = list(/datum/action/item_action/stickmen)
 
-
 /obj/item/clothing/suit/wizrobe/paper/ui_action_click(mob/user, action)
-	stickmen()
-
-
-/obj/item/clothing/suit/wizrobe/paper/verb/stickmen()
-	set category = "Object"
-	set name = "Summon Stick Minions"
-	if(!isliving(usr))
+	if(!ishuman(user))
 		return
-	if(!robe_charge)
-		to_chat(usr, span_warning("The robe's internal magic supply is still recharging!"))
+
+	if(!COOLDOWN_FINISHED(src, summoning_cooldown))
+		user.balloon_alert(user, "robe recharging!")
 		return
 
 	conjure_stickmen(user)
