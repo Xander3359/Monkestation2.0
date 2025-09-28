@@ -229,8 +229,6 @@
 			playsound(src, 'sound/machines/scanner/scanbuzz.ogg', 25, FALSE, SILENCED_SOUND_EXTRARANGE)
 			return FALSE
 
-	return ..()
-
 /obj/item/mod/control/mouse_drop_dragged(atom/over_object, mob/user)
 	if(user != wearer || !istype(over_object, /atom/movable/screen/inventory/hand))
 		return
@@ -375,7 +373,9 @@
 	return ..()
 
 /obj/item/mod/control/get_cell()
-	var/obj/item/stock_parts/power_store/cell = get_charge_source()
+	if(!open)
+		return
+	var/obj/item/stock_parts/power_store/cell/cell = get_charge_source()
 	if(!istype(cell))
 		return null
 	return cell

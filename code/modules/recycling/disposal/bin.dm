@@ -161,7 +161,7 @@
 	user.visible_message(span_notice("[user.name] places \the [I] into \the [src]."), span_notice("You place \the [I] into \the [src]."))
 
 /// Mouse drop another mob or self
-/obj/machinery/disposal/MouseDrop_T(mob/living/target, mob/living/user)
+/obj/machinery/disposal/mouse_drop_receive(mob/living/target, mob/living/user, params)
 	if(istype(target))
 		stuff_mob_in(target, user)
 
@@ -336,6 +336,7 @@
 	name = "disposal unit"
 	desc = "A pneumatic waste disposal unit."
 	icon_state = "disposal"
+	interaction_flags_atom = parent_type::interaction_flags_atom | INTERACT_ATOM_IGNORE_MOBILITY
 
 // attack by item places it in to disposal
 /obj/machinery/disposal/bin/attackby(obj/item/attacking_item, mob/user, list/modifiers, list/attack_modifiers)
@@ -370,7 +371,7 @@
 	data["isai"] = isAI(user)
 	return data
 
-/obj/machinery/disposal/bin/ui_act(action, params)
+/obj/machinery/disposal/bin/ui_act(action, list/params, datum/tgui/ui, datum/ui_state/state)
 	. = ..()
 	if(.)
 		return
@@ -478,13 +479,13 @@
 	if(machine_stat & NOPOWER) // won't charge if no power
 		return
 
-	use_power(idle_power_usage) // base power usage
+	use_energy(idle_power_usage) // base power usage
 
 	if(!pressure_charging) // if off or ready, no need to charge
 		return
 
 	// otherwise charge
-	use_power(idle_power_usage) // charging power usage
+	use_energy(idle_power_usage) // charging power usage
 
 	var/atom/L = loc //recharging from loc turf
 

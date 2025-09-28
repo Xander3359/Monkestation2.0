@@ -207,7 +207,7 @@
 /obj/item/mod/control/pre_equipped/moonlight/knight_commander
 	starting_frequency = MODLINK_FREQ_MOONLIGHT
 	theme = /datum/mod_theme/moonlight/knight_commander
-	applied_cell = /obj/item/stock_parts/cell/super
+	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/storage/large_capacity,
 		/obj/item/mod/module/magnetic_harness,
@@ -230,7 +230,7 @@
 /obj/item/mod/control/pre_equipped/moonlight/security_knight
 	starting_frequency = MODLINK_FREQ_MOONLIGHT
 	theme = /datum/mod_theme/moonlight/knight
-	applied_cell = /obj/item/stock_parts/cell/super
+	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/storage/large_capacity,
 		/obj/item/mod/module/magnetic_harness,
@@ -248,7 +248,7 @@
 /obj/item/mod/control/pre_equipped/moonlight/medical_cleric
 	starting_frequency = MODLINK_FREQ_MOONLIGHT
 	theme = /datum/mod_theme/moonlight/cleric
-	applied_cell = /obj/item/stock_parts/cell/super
+	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/storage/large_capacity,
 		/obj/item/mod/module/magnetic_harness,
@@ -265,7 +265,7 @@
 /obj/item/mod/control/pre_equipped/moonlight/engineering_artificer
 	starting_frequency = MODLINK_FREQ_MOONLIGHT
 	theme = /datum/mod_theme/moonlight/artificer
-	applied_cell = /obj/item/stock_parts/cell/super
+	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/storage/large_capacity,
 		/obj/item/mod/module/magnetic_harness,
@@ -283,7 +283,7 @@
 /obj/item/mod/control/pre_equipped/moonlight/stealth_rogue
 	starting_frequency = MODLINK_FREQ_MOONLIGHT
 	theme = /datum/mod_theme/moonlight/rogue
-	applied_cell = /obj/item/stock_parts/cell/super
+	applied_cell = /obj/item/stock_parts/power_store/cell/super
 	applied_modules = list(
 		/obj/item/mod/module/storage/large_capacity,
 		/obj/item/mod/module/magnetic_harness,

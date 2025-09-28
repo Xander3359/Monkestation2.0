@@ -106,7 +106,7 @@
 		Which one you have in your suit is unclear, but either way, \
 		it's been repurposed to be an internal power source for a Modular Outerwear Device."
 	/// Installed cell.
-	var/obj/item/stock_parts/power_store/cell
+	var/obj/item/stock_parts/power_store/cell/cell
 
 /obj/item/mod/core/standard/Destroy()
 	QDEL_NULL(cell)
@@ -140,16 +140,16 @@
 	return cell
 
 /obj/item/mod/core/standard/charge_amount()
-	var/obj/item/stock_parts/power_store/charge_source = charge_source()
+	var/obj/item/stock_parts/power_store/cell/charge_source = charge_source()
 	return charge_source?.charge || 0
 
 /obj/item/mod/core/standard/max_charge_amount(amount)
-	var/obj/item/stock_parts/power_store/charge_source = charge_source()
+	var/obj/item/stock_parts/power_store/cell/charge_source = charge_source()
 	return charge_source?.maxcharge || 1
 
 /obj/item/mod/core/standard/add_charge(amount)
-	var/obj/item/stock_parts/power_store/charge_source = charge_source()
-	if(isnull(charge_source))
+	var/obj/item/stock_parts/power_store/cell/charge_source = charge_source()
+	if(!charge_source)
 		return FALSE
 	. = charge_source.give(amount)
 	if(.)
@@ -157,8 +157,8 @@
 	return .
 
 /obj/item/mod/core/standard/subtract_charge(amount)
-	var/obj/item/stock_parts/power_store/charge_source = charge_source()
-	if(isnull(charge_source))
+	var/obj/item/stock_parts/power_store/cell/charge_source = charge_source()
+	if(!charge_source)
 		return FALSE
 	. = charge_source.use(amount, TRUE)
 	if(.)
@@ -168,11 +168,13 @@
 /obj/item/mod/core/standard/check_charge(amount)
 	return charge_amount() >= amount
 
-/obj/item/mod/core/standard/get_charge_icon_state()
-	if(isnull(charge_source()))
-		return "missing"
-
-	switch(round(charge_amount() / max_charge_amount(), 0.01))
+/obj/item/mod/core/standard/update_charge_alert()
+	var/obj/item/stock_parts/power_store/cell/charge_source = charge_source()
+	if(!charge_source)
+		mod.wearer.throw_alert(ALERT_MODSUIT_CHARGE, /atom/movable/screen/alert/nocell)
+		return
+	var/remaining_cell = charge_amount() / max_charge_amount()
+	switch(remaining_cell)
 		if(0.75 to INFINITY)
 			return "high"
 		if(0.5 to 0.75)
@@ -327,7 +329,7 @@
 	var/obj/item/organ/stomach/ethereal/charge_source = charge_source()
 	if(isnull(charge_source))
 		return FALSE
-	return -charge_source.adjust_charge(-amount * charge_modifier)
+	return -charge_source.adjust_charge(-amount*charge_modifier)
 
 /obj/item/mod/core/ethereal/check_charge(amount)
 	return charge_amount() >= amount * charge_modifier
