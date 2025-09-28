@@ -262,11 +262,11 @@
 		return FALSE
 	if(!mod.open)
 		mod.balloon_alert(user, "cover closed!")
-		playsound(mod, 'sound/machines/scanner/scanbuzz.ogg', 25, TRUE, SILENCED_SOUND_EXTRARANGE)
+		playsound(mod, 'sound/machines/scanbuzz.ogg', 25, TRUE, SILENCED_SOUND_EXTRARANGE)
 		return FALSE
 	if(cell)
 		mod.balloon_alert(user, "already has cell!")
-		playsound(mod, 'sound/machines/scanner/scanbuzz.ogg', 25, TRUE, SILENCED_SOUND_EXTRARANGE)
+		playsound(mod, 'sound/machines/scanbuzz.ogg', 25, TRUE, SILENCED_SOUND_EXTRARANGE)
 		return FALSE
 	install_cell(attacking_item)
 	mod.balloon_alert(user, "cell installed")
@@ -306,27 +306,27 @@
 	var/charge_modifier = 0.1
 
 /obj/item/mod/core/ethereal/charge_source()
-	var/obj/item/organ/stomach/ethereal/ethereal_stomach = mod.wearer.get_organ_slot(ORGAN_SLOT_STOMACH)
+	var/obj/item/organ/internal/stomach/ethereal/ethereal_stomach = mod.wearer.get_organ_slot(ORGAN_SLOT_STOMACH)
 	if(!istype(ethereal_stomach))
 		return
 	return ethereal_stomach
 
 /obj/item/mod/core/ethereal/charge_amount()
-	var/obj/item/organ/stomach/ethereal/charge_source = charge_source()
+	var/obj/item/organ/internal/stomach/ethereal/charge_source = charge_source()
 	return charge_source?.cell.charge() || ETHEREAL_CHARGE_NONE
 
 /obj/item/mod/core/ethereal/max_charge_amount()
 	return ETHEREAL_CHARGE_FULL
 
 /obj/item/mod/core/ethereal/add_charge(amount)
-	var/obj/item/organ/stomach/ethereal/charge_source = charge_source()
+	var/obj/item/organ/internal/stomach/ethereal/charge_source = charge_source()
 	if(isnull(charge_source))
 		return FALSE
 	charge_source.adjust_charge(amount * charge_modifier)
 	return TRUE
 
 /obj/item/mod/core/ethereal/subtract_charge(amount)
-	var/obj/item/organ/stomach/ethereal/charge_source = charge_source()
+	var/obj/item/organ/internal/stomach/ethereal/charge_source = charge_source()
 	if(isnull(charge_source))
 		return FALSE
 	return -charge_source.adjust_charge(-amount*charge_modifier)
@@ -351,7 +351,7 @@
 			return "teal"
 
 /obj/item/mod/core/ethereal/get_chargebar_string()
-	var/obj/item/organ/stomach/ethereal/charge_source = charge_source()
+	var/obj/item/organ/internal/stomach/ethereal/charge_source = charge_source()
 	if(isnull(charge_source()) || isnull(charge_source.cell))
 		return "Biological Battery Missing"
 	return ..()

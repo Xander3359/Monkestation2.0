@@ -476,7 +476,8 @@
 		return
 	var/obj/item/mod/module/hat_stabilizer/hat_holder = locate() in mod.modules
 	var/obj/item/clothing/head/helmet/space/beret/beret = new(hat_holder)
-	hat_holder.attached_hat = beret
+	var/datum/component/hat_stabilizer/component = helmet.GetComponent(/datum/component/hat_stabilizer)
+	component.attach_hat(beret)
 	squaddie.update_clothing(mod.slot_flags)
 
 /datum/outfit/centcom/ert/marine
