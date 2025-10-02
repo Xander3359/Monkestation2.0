@@ -91,13 +91,13 @@
 /obj/item/organ/internal/cyberimp/arm/item_set/mantis/l
 	zone = BODY_ZONE_L_ARM
 
-
-/obj/item/organ/internal/cyberimp/arm/item_set/mantis/shield
+/obj/item/organ/internal/cyberimp/arm/item_set/shield
 	name = "S.A.Y.A. arm defense system implants"
 	desc = "Shield blade implants that allow user to block upcoming attacks at the cost of mobility and offense."
-	items_to_create = list(/obj/item/mantis_blade/shield)
+	items_to_create = list(/obj/item/arm_shield)
+	zone = BODY_ZONE_R_ARM
 
-/obj/item/organ/internal/cyberimp/arm/item_set/mantis/shield/l
+/obj/item/organ/internal/cyberimp/arm/item_set/shield/l
 	zone = BODY_ZONE_L_ARM
 
 /obj/item/organ/internal/cyberimp/arm/item_set/syndie_mantis

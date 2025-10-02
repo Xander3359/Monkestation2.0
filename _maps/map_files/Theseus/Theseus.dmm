@@ -21598,6 +21598,11 @@
 /obj/machinery/power/apc/auto_name/directional/south,
 /obj/structure/cable,
 /obj/machinery/light/directional/south,
+/obj/item/clothing/suit/armor/riot,
+/obj/item/clothing/head/helmet/toggleable/riot{
+	pixel_y = 6;
+	pixel_x = 7
+	},
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/blueshield)
 "gvQ" = (
@@ -35504,10 +35509,6 @@
 /area/station/service/hydroponics)
 "kvB" = (
 /obj/structure/table/reinforced,
-/obj/item/gun_maintenance_supplies{
-	pixel_x = -4;
-	pixel_y = 10
-	},
 /obj/machinery/recharger{
 	pixel_y = 6;
 	pixel_x = 7
@@ -46197,17 +46198,12 @@
 /turf/open/floor/iron/dark,
 /area/station/science/ordnance)
 "nvb" = (
-/obj/structure/closet/secure_closet/tac,
-/obj/item/clothing/head/helmet/toggleable/riot{
-	pixel_y = 6;
-	pixel_x = 7
-	},
-/obj/item/clothing/suit/armor/riot,
 /obj/machinery/firealarm/directional/east,
 /obj/machinery/camera/autoname/directional/east,
 /obj/machinery/light_switch/directional/east{
 	pixel_y = 9
 	},
+/obj/item/kirbyplants/random,
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/blueshield)
 "nvc" = (

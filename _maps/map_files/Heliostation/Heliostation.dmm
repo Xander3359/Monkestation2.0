@@ -26820,7 +26820,6 @@
 /turf/open/floor/iron,
 /area/station/maintenance/department/science/xenobiology)
 "ddq" = (
-/obj/structure/closet/secure_closet/tac,
 /obj/effect/turf_decal/trimline/neutral/line{
 	dir = 1
 	},
@@ -26832,6 +26831,7 @@
 	req_one_access = list("nt_rep", "blueshield");
 	name = "privacy blinds"
 	},
+/obj/structure/closet/secure_closet/blueshield,
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/blueshield)
 "ddr" = (
@@ -29845,10 +29845,6 @@
 "eqZ" = (
 /obj/structure/table/reinforced,
 /obj/machinery/computer/records/medical/laptop,
-/obj/item/gun_maintenance_supplies{
-	pixel_x = -4;
-	pixel_y = 10
-	},
 /obj/effect/turf_decal/trimline/neutral/line{
 	dir = 1
 	},
@@ -68257,12 +68253,12 @@
 /turf/open/floor/iron,
 /area/station/hallway/secondary/service)
 "sUY" = (
-/obj/structure/closet/secure_closet/blueshield,
 /obj/effect/turf_decal/trimline/neutral/line{
 	dir = 1
 	},
 /obj/structure/cable,
 /obj/structure/reagent_dispensers/wall/peppertank/directional/north,
+/obj/item/kirbyplants/random,
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/blueshield)
 "sVb" = (

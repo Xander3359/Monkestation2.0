@@ -4905,7 +4905,7 @@
 /area/station/security/medical)
 "buK" = (
 /obj/machinery/light_switch/directional/north,
-/obj/structure/closet/secure_closet/tac,
+/obj/item/kirbyplants/random,
 /turf/open/floor/wood/large,
 /area/station/command/heads_quarters/blueshield)
 "buM" = (

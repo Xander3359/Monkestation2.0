@@ -21330,9 +21330,6 @@
 /obj/machinery/recharger{
 	pixel_x = 5
 	},
-/obj/item/gun_maintenance_supplies{
-	pixel_y = 10
-	},
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/blueshield)
 "gOS" = (
@@ -37663,7 +37660,7 @@
 	normaldoorcontrol = 1;
 	specialfunctions = 4
 	},
-/obj/structure/closet/secure_closet/blueshield,
+/obj/item/kirbyplants/random,
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/blueshield)
 "maL" = (
@@ -46712,7 +46709,7 @@
 /area/station/science/lab)
 "oYJ" = (
 /obj/machinery/keycard_auth/directional/east,
-/obj/structure/closet/secure_closet/tac,
+/obj/structure/closet/secure_closet/blueshield,
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/blueshield)
 "oYQ" = (

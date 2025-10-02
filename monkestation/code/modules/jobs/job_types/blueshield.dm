@@ -64,6 +64,7 @@
 	jobtype = /datum/job/blueshield
 	uniform = /obj/item/clothing/under/rank/blueshield
 	suit = /obj/item/clothing/suit/armor/vest/blueshield/jacket
+	suit_store = /obj/item/gun/energy/e_gun
 	gloves = /obj/item/clothing/gloves/tackler/combat
 	id = /obj/item/card/id/advanced/centcom
 	shoes = /obj/item/clothing/shoes/jackboots
@@ -72,7 +73,8 @@
 
 	implants = list(/obj/item/implant/mindshield)
 	backpack_contents = list(
-		/obj/item/choice_beacon/blueshield = 1,
+		/obj/item/choice_beacon/blueshield/armament = 1,
+		/obj/item/choice_beacon/blueshield/utility = 1,
 	)
 	backpack = /obj/item/storage/backpack/blueshield
 	satchel = /obj/item/storage/backpack/satchel/blueshield

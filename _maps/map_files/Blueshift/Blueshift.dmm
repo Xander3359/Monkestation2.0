@@ -10999,9 +10999,6 @@
 /turf/open/floor/iron/dark,
 /area/station/hallway/primary/central)
 "cfa" = (
-/obj/item/storage/backpack/blueshield,
-/obj/item/storage/backpack/duffelbag/blueshield,
-/obj/item/storage/backpack/satchel/blueshield,
 /obj/machinery/atmospherics/components/unary/vent_pump/on/layer4{
 	dir = 4
 	},
@@ -17632,7 +17629,6 @@
 "drc" = (
 /obj/effect/turf_decal/delivery/red,
 /obj/structure/window/spawner/directional/north,
-/obj/structure/closet/secure_closet/tac,
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/blueshield)
 "dri" = (
@@ -49779,15 +49775,11 @@
 	},
 /area/station/hallway/primary/port)
 "jFZ" = (
-/obj/structure/table/reinforced,
-/obj/item/gun_maintenance_supplies{
-	pixel_x = -4;
-	pixel_y = 10
-	},
 /obj/machinery/camera/directional/south{
 	c_tag = "Blueshield's Gear Room";
 	name = "command camera"
 	},
+/obj/item/kirbyplants/random,
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/blueshield)
 "jGa" = (

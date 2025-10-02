@@ -29335,7 +29335,7 @@
 /turf/open/floor/carpet/blue,
 /area/station/command/heads_quarters/cmo)
 "luw" = (
-/obj/structure/closet/secure_closet/tac,
+/obj/item/kirbyplants/random,
 /turf/open/floor/carpet/cyan,
 /area/station/command/heads_quarters/blueshield)
 "luA" = (

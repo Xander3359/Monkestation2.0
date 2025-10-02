@@ -31850,10 +31850,6 @@
 /area/station/hallway/primary/tram/right)
 "iUN" = (
 /obj/structure/table/reinforced,
-/obj/item/gun_maintenance_supplies{
-	pixel_x = -4;
-	pixel_y = 10
-	},
 /obj/machinery/light/directional/south,
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/blueshield)
@@ -48549,8 +48545,8 @@
 /turf/open/floor/iron,
 /area/station/hallway/primary/tram/center)
 "oda" = (
-/obj/structure/closet/secure_closet/tac,
 /obj/effect/turf_decal/box/blue,
+/obj/item/kirbyplants/random,
 /turf/open/floor/iron/dark,
 /area/station/command/heads_quarters/blueshield)
 "odb" = (

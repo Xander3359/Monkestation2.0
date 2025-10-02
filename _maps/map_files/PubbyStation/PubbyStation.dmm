@@ -54140,7 +54140,7 @@
 /area/station/engineering/supermatter/room)
 "xfZ" = (
 /obj/structure/cable,
-/obj/structure/closet/secure_closet/tac,
+/obj/item/kirbyplants/random,
 /turf/open/floor/wood,
 /area/station/command/heads_quarters/blueshield)
 "xga" = (
