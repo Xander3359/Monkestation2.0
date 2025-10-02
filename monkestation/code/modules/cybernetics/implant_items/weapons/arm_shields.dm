@@ -25,6 +25,10 @@
 	var/shield_stance = FALSE
 	/// Cooldown before we can parry again
 	COOLDOWN_DECLARE(parry_cooldown)
+	/// Boolean, used to update the worn icon
+	var/parrying = FALSE
+	/// Color of the shield outline when parrying
+	var/static/parry_color = "#dd1122"
 
 /obj/item/arm_shield/Initialize(mapload)
 	. = ..()
@@ -62,9 +66,18 @@
 		other_shield.shield_stance = FALSE
 		other_shield.block_chance = initial(block_chance)
 
-	if(!user.has_status_effect(/datum/status_effect/shield_stance))
-		return
-	user.remove_status_effect(/datum/status_effect/shield_stance)
+	if(user.has_status_effect(/datum/status_effect/shield_stance))
+		user.remove_status_effect(/datum/status_effect/shield_stance)
+	if(user.has_status_effect(/datum/status_effect/parry_stance))
+		user.remove_status_effect(/datum/status_effect/parry_stance)
+
+/obj/item/arm_shield/build_worn_icon(default_layer, default_icon_file, isinhands, female_uniform, override_state, override_file)
+	var/mutable_appearance/standing = ..()
+	if(parrying)
+		standing.add_filter("outline", 1, list("type" = "outline", "color" = parry_color, "size" = 1))
+		return standing
+	standing.remove_filter("outline", 1, list("type" = "outline", "color" = parry_color, "size" = 1))
+	return standing
 
 /obj/item/arm_shield/attack(mob/living/target_mob, mob/living/user, list/modifiers, list/attack_modifiers)
 	. = ..()
@@ -124,6 +137,7 @@
 	desc = "You are blocking attacks and projectiles with your shields. During this you will be slowed down."
 	icon_state = "shield_arm"
 
+//---- Short parry window when you have both arms active and use in hand
 /datum/status_effect/parry_stance
 	id = "parry_stance"
 	alert_type = /atom/movable/screen/alert/status_effect/shield_arm_parry
@@ -141,9 +155,11 @@
 	ADD_TRAIT(owner, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT(id))
 	RegisterSignal(left_shield, COMSIG_ITEM_HIT_REACT, PROC_REF(on_hit_react))
 	RegisterSignal(right_shield, COMSIG_ITEM_HIT_REACT, PROC_REF(on_hit_react))
-	var/shield_color = "#dd1122"
-	left_shield.add_filter("outline", 1, list("type" = "outline", "color" = shield_color, "size" = 1))
-	right_shield.add_filter("outline", 1, list("type" = "outline", "color" = shield_color, "size" = 1))
+	left_shield.add_filter("outline", 1, list("type" = "outline", "color" = left_shield.parry_color, "size" = 1))
+	left_shield.parrying = TRUE
+	right_shield.add_filter("outline", 1, list("type" = "outline", "color" = right_shield.parry_color, "size" = 1))
+	right_shield.parrying = TRUE
+	owner.update_held_items()
 
 /datum/status_effect/parry_stance/on_remove()
 	. = ..()
@@ -151,7 +167,10 @@
 	UnregisterSignal(left_shield, COMSIG_ITEM_HIT_REACT)
 	UnregisterSignal(right_shield, COMSIG_ITEM_HIT_REACT)
 	left_shield.remove_filter("outline")
+	left_shield.parrying = FALSE
 	right_shield.remove_filter("outline")
+	right_shield.parrying = FALSE
+	owner.update_held_items()
 
 /datum/status_effect/parry_stance/proc/on_hit_react(datum/source, mob/living/carbon/human/owner, atom/movable/hitby, attack_text, final_block_chance, damage, attack_type)
 	SIGNAL_HANDLER
