@@ -20,8 +20,11 @@
 	block_chance = 50
 	attack_verb_continuous = list("bashes", "bonks", "whacks", "smacks", "domes", "thumps", "knocks")
 	attack_verb_simple = list("bash", "bonk", "whack", "smack", "dome", "thump", "knock")
+	hitsound = 'sound/items/pillow_hit2.ogg'
 	/// If both arms are deployed, we enter shield stance
 	var/shield_stance = FALSE
+	/// Cooldown before we can parry again
+	COOLDOWN_DECLARE(parry_cooldown)
 
 /obj/item/arm_shield/Initialize(mapload)
 	. = ..()
@@ -54,6 +57,10 @@
 	. = ..()
 	shield_stance = FALSE
 	block_chance = initial(block_chance)
+	var/obj/item/arm_shield/other_shield = user.get_inactive_held_item()
+	if(istype(other_shield))
+		other_shield.shield_stance = FALSE
+		other_shield.block_chance = initial(block_chance)
 
 	if(!user.has_status_effect(/datum/status_effect/shield_stance))
 		return
@@ -71,10 +78,14 @@
 		return
 	user.disarm(victim)
 	victim.Knockdown(0.1 SECONDS)
+	playsound(src, 'sound/items/pillow_hit.ogg', get_clamped_volume(), TRUE, extrarange = -1, falloff_distance = 0)
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/item/arm_shield/attack_self(mob/living/user)
 	if(!shield_stance)
+		return
+	if(COOLDOWN_FINISHED(src, parry_cooldown))
+		balloon_alert(user, "on cooldown")
 		return
 
 	var/obj/item/arm_shield/left_shield = user.get_held_items_for_side(LEFT_HANDS, FALSE)
@@ -94,9 +105,10 @@
 	to_chat(user, span_notice("You stop blocking with your blades."))
 	*/
 
+//---- Applies a status effect that gives you slowdown. Active when you have both shields deployed
 /datum/status_effect/shield_stance
-	id = "mantis_defensive"
-	alert_type =  /atom/movable/screen/alert/status_effect/shield_mantis_defense
+	id = "shield_stance"
+	alert_type =  /atom/movable/screen/alert/status_effect/shield_arm_stance
 	tick_interval = -1
 
 /datum/status_effect/shield_stance/on_apply()
@@ -109,11 +121,10 @@
 	owner.remove_movespeed_modifier(/datum/movespeed_modifier/arm_shield_slowdown)
 	owner.balloon_alert_to_viewers("stops blocking!")
 
-//blocking with blades slow you down
 /datum/movespeed_modifier/arm_shield_slowdown
-	multiplicative_slowdown = 0.25
+	multiplicative_slowdown = 1
 
-/atom/movable/screen/alert/status_effect/shield_mantis_defense
+/atom/movable/screen/alert/status_effect/shield_arm_stance
 	name = "Defensive stance"
 	desc = "You are blocking attacks and projectiles with your shields. During this you will be slowed down."
 	icon_state = "shield_arm"
