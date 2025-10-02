@@ -13,7 +13,7 @@
 		fires, electrical shocks, and contempt from the rest of the crew."
 
 	default_skin = "praetorian"
-	armor_type = /datum/armor/mod_theme_security
+	armor_type = /datum/armor/mod_theme_blueshield
 	atom_flags = PREVENT_CONTENTS_EXPLOSION_1
 	slowdown_inactive = 1
 	slowdown_active = 0.5
@@ -60,3 +60,14 @@
 			),
 		),
 	)
+
+/datum/armor/mod_theme_blueshield
+	melee = 35
+	bullet = 30
+	laser = 30
+	energy = 40
+	bomb = 25
+	bio = 100
+	fire = 75
+	acid = 75
+	wound = 15

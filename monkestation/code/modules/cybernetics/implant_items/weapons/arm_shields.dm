@@ -70,7 +70,7 @@
 	. = ..()
 	if(!shield_stance)
 		return
-	// TODO Add double-hit
+	// XANTODO Add double-hit
 
 /obj/item/arm_shield/attack_secondary(mob/living/victim, mob/living/user, list/modifiers, list/attack_modifiers)
 	. = ..()
@@ -84,7 +84,7 @@
 /obj/item/arm_shield/attack_self(mob/living/user)
 	if(!shield_stance)
 		return
-	if(COOLDOWN_FINISHED(src, parry_cooldown))
+	if(!COOLDOWN_FINISHED(src, parry_cooldown))
 		balloon_alert(user, "on cooldown")
 		return
 
@@ -94,16 +94,11 @@
 		to_chat(user, span_warning("Need both shields deployed to parry."))
 		return
 
-	if(!do_after(user, 0.5 SECONDS, user, IGNORE_USER_LOC_CHANGE, extra_checks = !CALLBACK(left_shield, PROC_REF(dropped)) || !CALLBACK(right_shield, PROC_REF(dropped))))
-		to_chat(user, span_warning("You were interrupted!"))
+	if(!do_after(user, 0.5 SECONDS, user, IGNORE_USER_LOC_CHANGE, extra_checks = !CALLBACK(left_shield, PROC_REF(dropped)) || !CALLBACK(right_shield, PROC_REF(dropped)), hidden = TRUE))
+		COOLDOWN_START(src, parry_cooldown, 5 SECONDS)
 		return
-	/* XANTODO: Parry :)
-	user.apply_status_effect(/datum/status_effect/shield_mantis_defense)
-	to_chat(user, span_notice("You enter defensive stance with your mantis blades."))
-	return
-	user.remove_status_effect(/datum/status_effect/shield_mantis_defense)
-	to_chat(user, span_notice("You stop blocking with your blades."))
-	*/
+	user.apply_status_effect(/datum/status_effect/parry_stance)
+	to_chat(user, span_notice("You attempt to parry."))
 
 //---- Applies a status effect that gives you slowdown. Active when you have both shields deployed
 /datum/status_effect/shield_stance
@@ -128,3 +123,40 @@
 	name = "Defensive stance"
 	desc = "You are blocking attacks and projectiles with your shields. During this you will be slowed down."
 	icon_state = "shield_arm"
+
+/datum/status_effect/parry_stance
+	id = "parry_stance"
+	alert_type = /atom/movable/screen/alert/status_effect/shield_arm_parry
+	duration = 1 SECONDS
+	var/obj/item/arm_shield/left_shield
+	var/obj/item/arm_shield/right_shield
+
+/datum/status_effect/parry_stance/on_apply()
+	. = ..()
+	left_shield = owner.get_held_items_for_side(LEFT_HANDS, FALSE)
+	right_shield = owner.get_held_items_for_side(RIGHT_HANDS, FALSE)
+	if(!istype(left_shield) || !istype(right_shield))
+		return FALSE // Can't parry if we lose a shield
+
+	ADD_TRAIT(owner, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT(id))
+	RegisterSignal(left_shield, COMSIG_ITEM_HIT_REACT, PROC_REF(on_hit_react))
+	RegisterSignal(right_shield, COMSIG_ITEM_HIT_REACT, PROC_REF(on_hit_react))
+	var/shield_color = "#dd1122"
+	left_shield.add_filter("outline", 1, list("type" = "outline", "color" = shield_color, "size" = 1))
+	right_shield.add_filter("outline", 1, list("type" = "outline", "color" = shield_color, "size" = 1))
+
+/datum/status_effect/parry_stance/on_remove()
+	. = ..()
+	REMOVE_TRAIT(owner, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT(id))
+	UnregisterSignal(left_shield, COMSIG_ITEM_HIT_REACT)
+	UnregisterSignal(right_shield, COMSIG_ITEM_HIT_REACT)
+	left_shield.remove_filter("outline")
+	right_shield.remove_filter("outline")
+
+/datum/status_effect/parry_stance/proc/on_hit_react(datum/source, mob/living/carbon/human/owner, atom/movable/hitby, attack_text, final_block_chance, damage, attack_type)
+	SIGNAL_HANDLER
+
+/atom/movable/screen/alert/status_effect/shield_arm_parry
+	name = "Parry stance"
+	desc = "You are preparing to parry an attack..."
+	icon_state = "shield_arm_parry"
