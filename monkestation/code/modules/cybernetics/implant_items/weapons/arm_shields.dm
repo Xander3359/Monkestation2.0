@@ -79,11 +79,26 @@
 	standing.remove_filter("outline", 1, list("type" = "outline", "color" = parry_color, "size" = 1))
 	return standing
 
-/obj/item/arm_shield/attack(mob/living/target_mob, mob/living/user, list/modifiers, list/attack_modifiers)
+/obj/item/arm_shield/afterattack(atom/target, mob/user, list/modifiers, list/attack_modifiers)
 	. = ..()
 	if(!shield_stance)
 		return
-	// XANTODO Add double-hit
+	var/obj/item/arm_shield/off_hand = user.get_inactive_held_item()
+	if(QDELETED(off_hand) || !istype(off_hand))
+		return
+	if(off_hand == src)
+		return // Don't add another strike if we're attacking with our offhand (preventing infinite attacks)
+	addtimer(CALLBACK(src, PROC_REF(double_strike), target, user, user.get_inactive_held_item()), 0.2 SECONDS)
+
+/// Performs a second attack, after a delay
+/obj/item/arm_shield/proc/double_strike(mob/living/target_mob, mob/living/user, obj/item/arm_shield/weapon)
+	if(QDELETED(target_mob) || QDELETED(user) || QDELETED(weapon))
+		return
+	if(weapon != user.get_inactive_held_item())
+		return
+	if(!user.Adjacent(target_mob))
+		return
+	weapon.melee_attack_chain(user, target_mob, null)
 
 /obj/item/arm_shield/attack_secondary(mob/living/victim, mob/living/user, list/modifiers, list/attack_modifiers)
 	. = ..()
@@ -95,7 +110,7 @@
 	return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
 
 /obj/item/arm_shield/attack_self(mob/living/user)
-	if(!shield_stance)
+	if(!shield_stance || parrying)
 		return
 	if(!COOLDOWN_FINISHED(src, parry_cooldown))
 		balloon_alert(user, "on cooldown")
@@ -112,6 +127,11 @@
 		return
 	user.apply_status_effect(/datum/status_effect/parry_stance)
 	to_chat(user, span_notice("You attempt to parry."))
+
+/obj/item/arm_shield/IsReflect(def_zone)
+	if(parrying)
+		return TRUE
+	return FALSE
 
 //---- Applies a status effect that gives you slowdown. Active when you have both shields deployed
 /datum/status_effect/shield_stance
@@ -164,16 +184,38 @@
 /datum/status_effect/parry_stance/on_remove()
 	. = ..()
 	REMOVE_TRAIT(owner, TRAIT_IMMOBILIZED, TRAIT_STATUS_EFFECT(id))
-	UnregisterSignal(left_shield, COMSIG_ITEM_HIT_REACT)
-	UnregisterSignal(right_shield, COMSIG_ITEM_HIT_REACT)
+	UnregisterSignal(left_shield, list(COMSIG_ITEM_HIT_REACT))
+	UnregisterSignal(right_shield, list(COMSIG_ITEM_HIT_REACT))
 	left_shield.remove_filter("outline")
 	left_shield.parrying = FALSE
 	right_shield.remove_filter("outline")
 	right_shield.parrying = FALSE
 	owner.update_held_items()
 
-/datum/status_effect/parry_stance/proc/on_hit_react(datum/source, mob/living/carbon/human/owner, atom/movable/hitby, attack_text, final_block_chance, damage, attack_type)
+/datum/status_effect/parry_stance/proc/on_hit_react(obj/item/arm_shield, mob/living/carbon/human/owner, atom/movable/hitby, attack_text, final_block_chance, damage, attack_type)
 	SIGNAL_HANDLER
+	if(isnull(hitby))
+		return
+	// Reflectable projectiles bounce back towards the shooter, this is handled by a snowflake has_status_effect(/datum/status_effect/parry_stance)
+	if(isprojectile(hitby))
+		return
+	// Checks that we've been attacked by a person
+	var/mob/living/attacker = get(hitby, /mob/living)
+	if(!istype(attacker))
+		return
+
+	//XANTODO: Custom parry effect/sound
+	var/owner_turf = get_turf(owner)
+	new arm_shield.block_effect(owner_turf, COLOR_YELLOW)
+	playsound(src, arm_shield.block_sound, BLOCK_SOUND_VOLUME, vary = TRUE)
+	//XANTODO: Custom parry effect/sound
+
+	attacker.Paralyze(1 SECONDS)
+	owner.disarm(attacker)
+	attacker.Knockdown(3 SECONDS)
+	qdel(src)
+
+	return COMPONENT_HIT_REACTION_BLOCK
 
 /atom/movable/screen/alert/status_effect/shield_arm_parry
 	name = "Parry stance"

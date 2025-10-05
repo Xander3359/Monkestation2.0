@@ -72,15 +72,19 @@
 				var/turf/curloc = get_turf(src)
 
 				// redirect the projectile
+				var/projectile_angle
+				if(has_status_effect(/datum/status_effect/parry_stance))
+					projectile_angle = get_angle(src, P.firer) // This has to be set before firer changes
 				P.original = locate(new_x, new_y, P.z)
 				P.starting = curloc
 				P.firer = src
 				P.yo = new_y - curloc.y
 				P.xo = new_x - curloc.x
-				var/new_angle_s = P.Angle + rand(120,240)
-				while(new_angle_s > 180) // Translate to regular projectile degrees
-					new_angle_s -= 360
-				P.set_angle(new_angle_s)
+				if(isnull(projectile_angle))
+					projectile_angle = P.Angle + rand(120,240)
+				while(projectile_angle > 180) // Translate to regular projectile degrees
+					projectile_angle -= 360
+				P.set_angle(projectile_angle)
 
 			return BULLET_ACT_FORCE_PIERCE // complete projectile permutation
 
