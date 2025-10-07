@@ -94,6 +94,7 @@
 /obj/item/organ/internal/cyberimp/arm/item_set/shield
 	name = "S.A.Y.A. arm defense system implants"
 	desc = "Shield blade implants that allow user to block upcoming attacks at the cost of mobility and offense."
+	icon_state = "toolkit_blueshield"
 	items_to_create = list(/obj/item/arm_shield)
 	zone = BODY_ZONE_R_ARM
 
