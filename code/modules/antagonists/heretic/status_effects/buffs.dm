@@ -243,6 +243,8 @@
 
 	qdel(to_remove)
 
+	addtimer(TRAIT_CALLBACK_REMOVE(source, TRAIT_BEING_BLADE_SHIELDED, TRAIT_STATUS_EFFECT(id)), 1)
+
 	return SUCCESSFUL_BLOCK
 
 /// Remove deleted blades from our blades list properly.

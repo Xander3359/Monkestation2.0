@@ -7,6 +7,7 @@
 	suicide_cry = ",r For Ratvar!!!"
 	ui_name = "AntagInfoClock"
 	show_to_ghosts = TRUE
+	antag_flags = parent_type::antag_flags | FLAG_ANTAG_CAP_TEAM
 	antag_hud_name = "clockwork"
 	stinger_sound = 'sound/magic/clockwork/scripture_tier_up.ogg'
 	/// Ref to the cultist's communication ability
@@ -71,7 +72,7 @@
 	. = ..()
 	var/mob/living/current = owner.current
 	current.faction |= FACTION_CLOCK
-	current.grant_language(/datum/language/ratvar, TRUE, TRUE, LANGUAGE_CULTIST)
+	current.grant_language(/datum/language/ratvar, source = LANGUAGE_CULTIST)
 	current.throw_alert("clockinfo", /atom/movable/screen/alert/clockwork/clocksense)
 	if(!iseminence(current))
 		add_team_hud(current)
@@ -88,7 +89,7 @@
 	. = ..()
 	var/mob/living/current = owner.current
 	current.faction -= FACTION_CLOCK
-	current.remove_language(/datum/language/ratvar, TRUE, TRUE, LANGUAGE_CULTIST)
+	current.remove_language(/datum/language/ratvar, source = LANGUAGE_CULTIST)
 	current.clear_alert("clockinfo")
 	current.remove_filter("forbearance")
 	if(!iseminence(current))
