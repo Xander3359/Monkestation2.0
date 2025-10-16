@@ -16,7 +16,7 @@
 	return ..()
 
 /datum/status_effect/eldritch/Destroy()
-	marked_underlay = null
+	QDEL_NULL(marked_underlay)
 	return ..()
 
 /datum/status_effect/eldritch/on_apply()
@@ -111,7 +111,6 @@
 /datum/status_effect/eldritch/void/on_effect()
 	owner.apply_status_effect(/datum/status_effect/void_chill, 3)
 	owner.adjust_silence(10 SECONDS)
-	owner.adjust_emote_mute(10 SECONDS)
 	return ..()
 
 // MARK OF BLADES
@@ -259,7 +258,7 @@
 
 /datum/status_effect/eldritch/moon/on_apply()
 	. = ..()
-	if(owner.can_block_magic(MAGIC_RESISTANCE_MIND))
+	if(owner.can_block_magic(MAGIC_RESISTANCE_MOON))
 		return FALSE
 	ADD_TRAIT(owner, TRAIT_PACIFISM, TRAIT_STATUS_EFFECT(id))
 	owner.emote(pick("giggle", "laugh"))

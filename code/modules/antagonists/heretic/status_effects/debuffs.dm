@@ -2,6 +2,7 @@
 /datum/status_effect/amok
 	id = "amok"
 	status_type = STATUS_EFFECT_REPLACE
+	remove_on_fullheal = TRUE
 	alert_type = null
 	duration = 10 SECONDS
 	tick_interval = 1 SECONDS
@@ -33,6 +34,7 @@
 /datum/status_effect/cloudstruck
 	id = "cloudstruck"
 	status_type = STATUS_EFFECT_REPLACE
+	remove_on_fullheal = TRUE
 	alert_type = null
 	duration = 3 SECONDS
 	on_remove_on_mob_delete = TRUE
@@ -103,6 +105,7 @@
 /datum/status_effect/star_mark
 	id = "star_mark"
 	alert_type = /atom/movable/screen/alert/status_effect/star_mark
+	remove_on_fullheal = TRUE
 	duration = 30 SECONDS
 	status_type = STATUS_EFFECT_REPLACE
 	///overlay used to indicate that someone is marked
@@ -126,7 +129,7 @@
 	return ..()
 
 /datum/status_effect/star_mark/Destroy()
-	cosmic_overlay = null
+	QDEL_NULL(cosmic_overlay)
 	return ..()
 
 /datum/status_effect/star_mark/on_apply()
@@ -154,28 +157,7 @@
 
 /datum/status_effect/star_mark/extended
 	duration = 3 MINUTES
-
-// Last Resort
-/datum/status_effect/heretic_lastresort
-	id = "heretic_lastresort"
-	alert_type = /atom/movable/screen/alert/status_effect/heretic_lastresort
-	duration = 12 SECONDS
-	status_type = STATUS_EFFECT_REPLACE
-	tick_interval = STATUS_EFFECT_NO_TICK
-
-/atom/movable/screen/alert/status_effect/heretic_lastresort
-	name = "Last Resort"
-	desc = "Your head spins, heart pumping as fast as it can, losing the fight with the ground. Run to safety!"
-	icon_state = "lastresort"
-
-/datum/status_effect/heretic_lastresort/on_apply()
-	ADD_TRAIT(owner, TRAIT_IGNORESLOWDOWN, TRAIT_STATUS_EFFECT(id))
-	to_chat(owner, span_userdanger("You are on the brink of losing consciousness, run!"))
-	return TRUE
-
-/datum/status_effect/heretic_lastresort/on_remove()
-	REMOVE_TRAIT(owner, TRAIT_IGNORESLOWDOWN, TRAIT_STATUS_EFFECT(id))
-	owner.AdjustUnconscious(5 SECONDS, ignore_canstun = TRUE)
+f
 
 /// Used by moon heretics to make people mad
 /datum/status_effect/moon_converted
@@ -183,6 +165,8 @@
 	alert_type = /atom/movable/screen/alert/status_effect/moon_converted
 	duration = STATUS_EFFECT_PERMANENT
 	status_type = STATUS_EFFECT_REPLACE
+	remove_on_fullheal = TRUE
+	heal_flag_necessary = HEAL_ADMIN
 	///used to track damage
 	var/damage_sustained = 0
 	///overlay used to indicate that someone is marked
@@ -202,7 +186,7 @@
 	moon_insanity_overlay = mutable_appearance(effect_icon, effect_icon_state, ABOVE_MOB_LAYER)
 
 /datum/status_effect/moon_converted/Destroy()
-	moon_insanity_overlay = null
+	QDEL_NULL(moon_insanity_overlay)
 	return ..()
 
 /datum/status_effect/moon_converted/on_apply()
@@ -240,7 +224,7 @@
 
 /datum/status_effect/moon_converted/on_remove()
 	// Span warning and unconscious so they realize they aren't evil anymore
-	to_chat(owner, span_warning("Your mind is cleared from the effects of The Mansus, your alligiences are as they were before."))
+	to_chat(owner, span_warning("Your mind is cleared from the effect of the mansus, your alligiences are as they were before"))
 	REMOVE_TRAIT(owner, TRAIT_MUTE, TRAIT_STATUS_EFFECT(id))
 	owner.AdjustUnconscious(5 SECONDS, ignore_canstun = FALSE)
 	owner.log_message("[owner] is no longer insane.", LOG_GAME)
@@ -249,6 +233,20 @@
 	owner.update_appearance(UPDATE_OVERLAYS)
 	return ..()
 
+// exists to apply sleep and deny adding duplicates
+/datum/status_effect/moon_slept
+	id = "moon slept"
+	duration = 2 MINUTES
+	status_type = STATUS_EFFECT_UNIQUE
+	remove_on_fullheal = TRUE
+	alert_type = null
+
+/datum/status_effect/moon_slept/on_apply()
+	. = owner.SetUnconscious(duration * 0.5, ignore_canstun = FALSE)
+	if(!.)
+		owner.balloon_alert(owner, "sleep resisted!")
+	to_chat(owner, span_hypnophrase(("THE MOON SHOWS YOU THE TRUTH AND THE LIARS WISH TO COVER IT, w-wait no that's not right</span>")))
+	owner.balloon_alert(owner, "they lie..wait-what are they lying about?")
 
 /atom/movable/screen/alert/status_effect/moon_converted
 	name = "Moon Converted"
@@ -262,6 +260,7 @@
 	alert_type = /atom/movable/screen/alert/status_effect/eldritch_painting
 	duration = 10 MINUTES
 	status_type = STATUS_EFFECT_UNIQUE
+	remove_on_fullheal = TRUE
 
 /datum/status_effect/eldritch_painting/on_apply()
 	if(IS_HERETIC_OR_MONSTER(owner))
@@ -398,6 +397,7 @@
 
 /datum/status_effect/moon_parade
 	id = "moon_parade"
+	remove_on_fullheal = TRUE
 	alert_type = /atom/movable/screen/alert/status_effect/eldritch_parade
 	duration = 20 SECONDS
 	tick_interval = -1

@@ -18,7 +18,7 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
  */
 /datum/heretic_knowledge/spell/basic
 	name = "Break of Dawn"
-	desc = "Starts your journey into The Mansus. \
+	desc = "Starts your journey into the Mansus. \
 		Grants you the Mansus Grasp, a powerful and upgradable \
 		disabling spell that can be cast regardless of having a focus."
 	action_to_add = /datum/action/cooldown/spell/touch/mansus_grasp
@@ -215,7 +215,7 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 		The Codex Cicatrix can be used when draining influences to gain additional knowledge, but comes at greater risk of being noticed. \
 		It can also be used to draw and remove transmutation runes easier, and as a spell focus in a pinch."
 	gain_text = "The occult leaves fragments of knowledge and power anywhere and everywhere. The Codex Cicatrix is one such example. \
-		Within the leather-bound faces and age old pages, a path into The Mansus is revealed."
+		Within the leather-bound faces and age old pages, a path into the Mansus is revealed."
 	required_atoms = list(
 		list(/obj/item/toy/eldritch_book, /obj/item/book) = 1,
 		/obj/item/pen = 1,
@@ -362,46 +362,4 @@ GLOBAL_LIST_INIT(heretic_start_knowledge, initialize_starting_knowledge())
 	var/obj/item/card/id/improved_id = locate() in selected_atoms
 	improved_id.add_access(list(ACCESS_MAINT_TUNNELS, ACCESS_EXTERNAL_AIRLOCKS), mode = FORCE_ADD_ALL)
 	selected_atoms -= improved_id
-	return TRUE
-
-/datum/heretic_knowledge/reroll_targets
-	name = "The Relentless Heartbeat"
-	desc = "Allows you transmute a harebell, a book, and a jumpsuit while standing over a rune \
-		to reroll your sacrifice targets."
-	gain_text = "The heart is the principle that continues and preserves."
-	required_atoms = list(
-		/obj/item/food/grown/harebell = 1,
-		/obj/item/book = 1,
-		/obj/item/clothing/under = 1,
-	)
-	cost = 1
-	research_tree_icon_path = 'icons/mob/actions/actions_animal.dmi'
-	research_tree_icon_state = "gaze"
-	is_shop_only = TRUE
-	drafting_tier = 2
-
-/datum/heretic_knowledge/reroll_targets/recipe_snowflake_check(mob/living/user, list/atoms, list/selected_atoms, turf/loc)
-	var/datum/antagonist/heretic/heretic_datum = GET_HERETIC(user)
-	// Check first if they have a Living Heart. If it's missing, we should
-	// throw a fail to show the heretic that there's no point in rerolling
-	// if you don't have a heart to track the targets in the first place.
-	if(heretic_datum.has_living_heart() != HERETIC_HAS_LIVING_HEART)
-		loc.balloon_alert(user, "ritual failed, no living heart!")
-		return FALSE
-
-	return TRUE
-
-/datum/heretic_knowledge/reroll_targets/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
-	var/datum/antagonist/heretic/heretic_datum = GET_HERETIC(user)
-	for(var/mob/living/carbon/human/target as anything in heretic_datum.sac_targets)
-		heretic_datum.remove_sacrifice_target(target)
-
-	var/datum/heretic_knowledge/hunt_and_sacrifice/target_finder = heretic_datum.get_knowledge(/datum/heretic_knowledge/hunt_and_sacrifice)
-	if(!target_finder)
-		CRASH("Heretic datum didn't have a hunt_and_sacrifice knowledge learned, what?")
-
-	if(!target_finder.obtain_targets(user, heretic_datum = heretic_datum))
-		loc.balloon_alert(user, "ritual failed, no targets found!")
-		return FALSE
-
 	return TRUE

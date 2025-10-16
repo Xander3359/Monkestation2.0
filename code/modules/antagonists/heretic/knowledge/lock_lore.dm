@@ -106,7 +106,11 @@
 	SEND_SOUND(source, 'sound/effects/magic/hereticknock.ogg')
 
 	if(HAS_TRAIT(source, TRAIT_LOCK_GRASP_UPGRADED))
-		return SECONDARY_ATTACK_CANCEL_ATTACK_CHAIN
+		var/datum/action/cooldown/spell/touch/mansus_grasp/grasp = locate() in source.actions
+		if(grasp)
+			grasp.next_use_time -= round(grasp.cooldown_time*0.75)
+			grasp.build_all_button_icons()
+		return
 
 	return COMPONENT_USE_HAND
 
@@ -144,7 +148,7 @@
 /datum/heretic_knowledge/limited_amount/concierge_rite
 	name = "Concierge's Rite"
 	desc = "Allows you to transmute a crayon, a wooden plank, and a multitool to create a Labyrinth Handbook. \
-		It can materialize a barricade at range that only you and people resistant to magic can pass. 5 charges which regerate over time."
+		It can materialize a barricade at range that only you and people resistant to magic can pass. Has 5 charges which regenerate over time."
 	gain_text = "The Concierge scribbled my name into the Handbook. \"Welcome to your new home, fellow Steward.\""
 	required_atoms = list(
 		/obj/item/toy/crayon = 1,

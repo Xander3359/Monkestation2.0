@@ -81,7 +81,6 @@
 
 	var/mob/living/carbon/carbon_target = target
 	carbon_target.adjust_silence(10 SECONDS)
-	carbon_target.adjust_emote_mute(10 SECONDS)
 	carbon_target.apply_status_effect(/datum/status_effect/void_chill, 2)
 
 /datum/heretic_knowledge/spell/void_phase
@@ -96,7 +95,7 @@
 
 /datum/heretic_knowledge/spell/void_prison
 	name = "Void Prison"
-	desc = "Grants you Void Prison, a spell that places your victim into ball, making them unable to do anything or speak. \
+	desc = "Grants you Void Prison, a spell that places your victim into a ball, making them unable to do anything or speak. \
 		Applies void chill afterwards."
 	gain_text = "At first, I see myself, waltzing along a snow-laden street. \
 		I try to yell, grab hold of this fool and tell them to run. \
@@ -109,7 +108,7 @@
 
 /datum/heretic_knowledge/armor/void
 	name = "Hollow Weave"
-	desc = "Allows you to transmute a table (or a suit) and a mask in sub-zero temperatures to create a Hollow Weave, this armor will periodicall nullify attacks and grant you a short stealth camo to reposition yourself. \
+	desc = "Allows you to transmute a table (or a suit) and a mask in sub-zero temperatures to create a Hollow Weave, this armor will periodically nullify attacks and grant you a short stealth camoflage to reposition yourself. \
 			Acts as a focus while hooded."
 	gain_text = "Stepping through the cold air, I am shocked by a new sensation. \
 				Thousands of almost imperceivable threads cling to my form. \
@@ -251,7 +250,6 @@
 				close_carbon.apply_status_effect(/datum/status_effect/void_conduit)
 				continue
 			close_carbon.adjust_silence_up_to(2 SECONDS, 20 SECONDS)
-			close_carbon.adjust_emote_mute_up_to(2 SECONDS, 20 SECONDS)
 			close_carbon.apply_status_effect(/datum/status_effect/void_chill, 1)
 			close_carbon.adjust_eye_blur(rand(0 SECONDS, 2 SECONDS))
 			close_carbon.adjust_bodytemperature(-30 * TEMPERATURE_DAMAGE_COEFFICIENT)

@@ -29,6 +29,7 @@
 	default_custom_objective = "Turn a department into a testament for your dark knowledge."
 	hardcore_random_bonus = TRUE
 	stinger_sound = 'sound/music/antag/heretic/heretic_gain.ogg'
+	antag_flags = parent_type::antag_flags | ANTAG_OBSERVER_VISIBLE_PANEL
 
 	/// Contains multiple separate heretic shops so you can choose between multiple when buying.
 	var/list/heretic_shops = list(
@@ -216,7 +217,11 @@
 
 		// Final knowledge can't be learned until all objectives are complete.
 		if(ispath(knowledge_path, /datum/heretic_knowledge/ultimate))
-			knowledge_data["disabled"] ||= !can_ascend()
+			var/ascension_check = can_ascend()
+			if(ascension_check != HERETIC_CAN_ASCEND)
+				knowledge_data["disabled"] = TRUE
+				knowledge_data["tooltip"] = ascension_check
+
 
 		var/depth = knowledge_data[HKT_DEPTH]
 
@@ -245,7 +250,7 @@
 
 	data["knowledge_tiers"] = tree_data
 	var/list/shop = heretic_shops[HERETIC_KNOWLEDGE_SHOP]
-	for(var/knowledge_path as anything in shop)
+	for(var/knowledge_path in shop)
 		var/list/knowledge_info = shop[knowledge_path]
 		if(!(knowledge_info[HKT_ID] in researchable_knowledges))
 			continue
@@ -271,7 +276,7 @@
 			if(!researchable_knowledge(researched_path, shop_category))
 				message_admins("Heretic [key_name(owner)] potentially attempted to href exploit to learn knowledge they can't learn!")
 				CRASH("Heretic attempted to learn knowledge they can't learn! (Got: [researched_path])")
-			if(ispath(researched_path, /datum/heretic_knowledge/ultimate) & !can_ascend())
+			if(ispath(researched_path, /datum/heretic_knowledge/ultimate) & can_ascend() != HERETIC_CAN_ASCEND)
 				message_admins("Heretic [key_name(owner)] potentially attempted to href exploit to learn ascension knowledge without completing objectives!")
 				CRASH("Heretic attempted to learn a final knowledge despite not being able to ascend!")
 
@@ -302,8 +307,8 @@
 	return ..()
 
 /datum/antagonist/heretic/ui_status(mob/user, datum/ui_state/state)
-	if(user.stat == DEAD)
-		return UI_CLOSE
+	if(isnull(owner.current) || owner.current.stat == DEAD) // If the owner is dead, we can't show the UI.
+		return UI_UPDATE
 	return ..()
 
 /datum/antagonist/heretic/get_preview_icon()
@@ -333,7 +338,7 @@
 	return ..()
 
 /datum/antagonist/heretic/on_gain()
-	generate_starting_knowledge()
+	generate_heretic_starting_knowledge(heretic_shops[HERETIC_KNOWLEDGE_START])
 	if(!length(path_info))
 		for(var/datum/heretic_knowledge_tree_column/path as anything in subtypesof(/datum/heretic_knowledge_tree_column))
 			path = new path()
@@ -362,7 +367,7 @@
 	REMOVE_TRAIT(owner, TRAIT_SEE_BLESSED_TILES, REF(src))
 	owner.current.RemoveElement(/datum/element/leeching_walk/minor)
 	QDEL_NULL(heretic_path)
-
+	owner.current.cut_overlay(eldritch_overlay)
 	return ..()
 
 /datum/antagonist/heretic/apply_innate_effects(mob/living/mob_override)
@@ -377,8 +382,8 @@
 	RegisterSignal(our_mob, COMSIG_LIVING_CULT_SACRIFICED, PROC_REF(on_cult_sacrificed))
 	RegisterSignals(our_mob, list(COMSIG_MOB_BEFORE_SPELL_CAST, COMSIG_MOB_SPELL_ACTIVATED), PROC_REF(on_spell_cast))
 	RegisterSignal(our_mob, COMSIG_USER_ITEM_INTERACTION, PROC_REF(on_item_use))
-	RegisterSignal(our_mob, COMSIG_USER_ITEM_INTERACTION, PROC_REF(on_item_use))
 	RegisterSignal(our_mob, COMSIG_LIVING_POST_FULLY_HEAL, PROC_REF(after_fully_healed))
+	RegisterSignal(our_mob, COMSIG_ATOM_EXAMINE, PROC_REF(on_heretic_examine))
 
 	RegisterSignals(
 		our_mob,
@@ -403,11 +408,13 @@
 			COMSIG_USER_ITEM_INTERACTION,
 			COMSIG_LIVING_POST_FULLY_HEAL,
 			COMSIG_LIVING_CULT_SACRIFICED,
+			COMSIG_ATOM_EXAMINE,
 			SIGNAL_ADDTRAIT(TRAIT_HERETIC_AURA_HIDDEN),
 			SIGNAL_REMOVETRAIT(TRAIT_HERETIC_AURA_HIDDEN)
 		)
 	)
 
+/// Removes the ability to blade break, removes cloak of shadows and removes the cap on how many blades you can craft
 /datum/antagonist/heretic/proc/disable_blade_breaking()
 	if(unlimited_blades)
 		return
@@ -416,6 +423,8 @@
 	to_chat(heretic_mob, span_boldwarning("You have gained a lot of power, the mansus will no longer allow you to break your blades, but you can now make as many as you wish."))
 	heretic_mob.balloon_alert(heretic_mob, "blade breaking disabled!")
 	update_heretic_aura()
+	var/datum/action/cooldown/spell/shadow_cloak/cloak_spell = locate() in heretic_mob.actions
+	cloak_spell.Remove(heretic_mob)
 
 /// Adds an overlay to the heretic
 /datum/antagonist/heretic/proc/update_heretic_aura()
@@ -423,15 +432,32 @@
 	var/mob/heretic_mob = owner.current
 	heretic_mob.cut_overlay(eldritch_overlay)
 
-	if(!unlimited_blades || HAS_TRAIT(heretic_mob, TRAIT_HERETIC_AURA_HIDDEN))
-		return FALSE // No aura if we don't have the trait
+	if(!should_show_aura())
+		return FALSE
+
+	heretic_mob.add_overlay(eldritch_overlay)
+	return TRUE
+
+/datum/antagonist/heretic/proc/should_show_aura()
+	if(!can_assign_self_objectives)
+		return FALSE // We spurned the offer of the Mansus :(
+	if(!unlimited_blades || HAS_TRAIT(owner.current, TRAIT_HERETIC_AURA_HIDDEN))
+		return FALSE // No aura if we have the trait or is too early still
 	if(feast_of_owls)
 		return FALSE // No use in giving the aura to a heretic that can't ascend
 	if(heretic_path?.route == PATH_LOCK)
 		return FALSE // Lock heretics never get this aura
-
-	heretic_mob.add_overlay(eldritch_overlay)
 	return TRUE
+
+/datum/antagonist/heretic/proc/on_heretic_examine(datum/source, mob/user, text)
+	SIGNAL_HANDLER
+	if(!should_show_aura())
+		return
+	var/mob/heretic_mob = owner.current
+	var/potential_string = "[heretic_mob.p_They()] [heretic_mob.p_are()] crackling with a swirling green vortex of energy."
+	if(can_ascend() == HERETIC_CAN_ASCEND)
+		potential_string += " [heretic_mob.p_They()] [heretic_mob.p_are()] shedding [heretic_mob.p_their()] mortal shell!"
+	text += span_green(potential_string)
 
 /datum/antagonist/heretic/on_body_transfer(mob/living/old_body, mob/living/new_body)
 	. = ..()
@@ -470,7 +496,6 @@
 
 /*
  * Signal proc for [COMSIG_USER_ITEM_INTERACTION].
- * Signal proc for [COMSIG_USER_ITEM_INTERACTION].
  *
  * If a heretic is holding a pen in their main hand,
  * and have mansus grasp active in their offhand,
@@ -482,17 +507,12 @@
 		return NONE
 	if(!isturf(target) || !isliving(source))
 		return NONE
-		return NONE
-	if(!isturf(target) || !isliving(source))
-		return NONE
 
 	var/obj/item/offhand = source.get_inactive_held_item()
 	if(QDELETED(offhand) || !istype(offhand, /obj/item/melee/touch_attack/mansus_fist))
 		return NONE
-		return NONE
 
 	try_draw_rune(source, target, additional_checks = CALLBACK(src, PROC_REF(check_mansus_grasp_offhand), source))
-	return ITEM_INTERACT_SUCCESS
 	return ITEM_INTERACT_SUCCESS
 
 /**
@@ -571,7 +591,6 @@
 		var/datum/heretic_knowledge/living_heart/heart_knowledge = get_knowledge(/datum/heretic_knowledge/living_heart)
 		heart_knowledge.on_research(source, src)
 
-/* //HERETICTODO Consider porting the cult v heretic interactions
 /// Signal proc for [COMSIG_LIVING_CULT_SACRIFICED] to reward cultists for sacrificing a heretic
 /datum/antagonist/heretic/proc/on_cult_sacrificed(mob/living/source, list/invokers)
 	SIGNAL_HANDLER
@@ -625,7 +644,6 @@
 				to_chat(mind.current, span_cult_large(span_warning("Arcane and forbidden knowledge floods your forges and archives. The cult has learned how to create the ")) + span_cult_large(span_hypnophrase("[result]!")))
 
 	return SILENCE_SACRIFICE_MESSAGE|DUST_SACRIFICE
-*/
 
 /**
  * Creates an animation of the item slowly lifting up from the floor with a colored outline, then slowly drifting back down.
@@ -1034,14 +1052,19 @@
  * Returns FALSE if not all of our objectives are complete, or TRUE otherwise.
  */
 /datum/antagonist/heretic/proc/can_ascend()
-	if(!can_assign_self_objectives)
-		return FALSE // We spurned the offer of the Mansus :(
 	if(feast_of_owls)
-		return FALSE // We sold our ambition for immediate power :/
+		return "The owls have taken your right of ascension (denied ascension)." // We sold our ambition for immediate power :/
+	if(!can_assign_self_objectives)
+		return "The mansus has spurned you (denied ascension)."
 	for(var/datum/objective/must_be_done as anything in objectives)
 		if(!must_be_done.check_completion())
-			return FALSE
-	return TRUE
+			return "Must complete all objectives before ascending."
+	var/config_time = CONFIG_GET(number/minimum_ascension_time) MINUTES
+
+	var/time_passed = STATION_TIME_PASSED()
+	if(config_time >= time_passed)
+		return "Too early, must wait [DisplayTimeText(config_time - time_passed)] before ascending."
+	return HERETIC_CAN_ASCEND
 
 /**
  * Helper to determine if a Heretic

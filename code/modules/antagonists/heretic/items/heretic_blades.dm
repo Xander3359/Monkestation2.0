@@ -47,9 +47,9 @@
 		return .
 	if(!check_usability(user))
 		to_chat(user, span_danger("You feel a pulse of alien intellect lash out at your mind!"))
-		user.AdjustParalyzed(5 SECONDS)
+		var/mob/living/carbon/human/human_user = user
+		human_user.AdjustParalyzed(5 SECONDS)
 		return TRUE
-	return .
 
 	return .
 
@@ -233,7 +233,6 @@
 	icon_state = "moon_blade"
 	inhand_icon_state = "moon_blade"
 	after_use_message = "The Moon hears your call..."
-	item_flags = BYPASSES_PACIFISM // Moon robes will pacify you
 
 // Path of Nar'Sie's blade
 // What!? This blade is given to cultists as an altar item when they sacrifice a heretic.

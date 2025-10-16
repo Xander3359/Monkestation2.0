@@ -159,8 +159,8 @@
 
 	for(var/result in result_atoms)
 		var/atom/result_item = new result(loc)
-		//if(isitem(result_item)) // Consider porting https://github.com/tgstation/tgstation/pull/84003
-		//	ADD_TRAIT(result_item, TRAIT_CONTRABAND, INNATE_TRAIT)
+		if(isitem(result_item))
+			ADD_TRAIT(result_item, TRAIT_CONTRABAND, INNATE_TRAIT)
 	return TRUE
 
 /**
@@ -285,7 +285,14 @@
 	SSblackbox.record_feedback("tally", "heretic_path_taken", 1, our_heretic.heretic_path.route)
 	our_heretic.update_heretic_aura()
 	our_heretic.generate_heretic_research_tree()
-	our_heretic.determine_drafted_knowledge()
+	determine_drafted_knowledge(
+		our_heretic.heretic_path.route,
+		our_heretic.heretic_shops[HERETIC_KNOWLEDGE_TREE],
+		our_heretic.heretic_shops[HERETIC_KNOWLEDGE_SHOP],
+		our_heretic.heretic_shops[HERETIC_KNOWLEDGE_DRAFT],
+	)
+	SEND_SIGNAL(src, COMSIG_HERETIC_SHOP_SETUP)
+
 
 /datum/heretic_knowledge/limited_amount/starting/on_gain(mob/user, datum/antagonist/heretic/our_heretic)
 	RegisterSignals(user, list(COMSIG_HERETIC_MANSUS_GRASP_ATTACK, COMSIG_LIONHUNTER_ON_HIT), PROC_REF(on_mansus_grasp))
@@ -585,7 +592,7 @@
 	if(invoker.ascended)
 		return FALSE
 
-	if(!invoker.can_ascend())
+	if(invoker.can_ascend() != HERETIC_CAN_ASCEND)
 		return FALSE
 
 	return TRUE
@@ -612,8 +619,6 @@
 	return (sacrifice.stat == DEAD) && !ismonkey(sacrifice)
 
 /datum/heretic_knowledge/ultimate/on_finished_recipe(mob/living/user, list/selected_atoms, turf/loc)
-	SSshuttle.call_evac_shuttle("[user] has ascended!")
-	SSshuttle.emergency_no_recall = TRUE
 
 	var/datum/antagonist/heretic/heretic_datum = GET_HERETIC(user)
 	heretic_datum.ascended = TRUE
@@ -628,7 +633,7 @@
 		human_user.physiology.brute_mod *= 0.5
 		human_user.physiology.burn_mod *= 0.5
 
-	SSblackbox.record_feedback("tally", "heretic_ascended", 1, heretic_datum.researched_knowledge[type][HKT_ROUTE])
+	SSblackbox.record_feedback("tally", "heretic_ascended", 1, heretic_datum.heretic_path.route)
 	log_heretic_knowledge("[key_name(user)] completed their final ritual at [gameTimestamp()].")
 	notify_ghosts(
 		"[user.real_name] has completed an ascension ritual!",
@@ -642,14 +647,19 @@
 		color_override = "pink",
 	)
 
+	if(EMERGENCY_IDLE_OR_RECALLED)
+		SSshuttle.call_evac_shuttle("Critical reality rupture detected on supranatural casuality long-range scanners. Mass crew casualty and possible station destruction determined to be beyond acceptable probability. Priority evacuation shuttle dispatched.")
+	SSshuttle.emergency_no_recall = TRUE
+
 	if(!isnull(ascension_achievement))
 		user.client?.give_award(ascension_achievement, user)
 	heretic_datum.rust_strength = 4 // Ascended heretics can rust whatever they want (below RUST_RESISTANCE_ABSOLUTE)
+	ADD_TRAIT(user, TRAIT_DESENSITIZED, type)
 	return TRUE
 
 /datum/heretic_knowledge/ultimate/cleanup_atoms(list/selected_atoms)
 	for(var/mob/living/carbon/human/sacrifice in selected_atoms)
 		selected_atoms -= sacrifice
-		sacrifice.gib() // Gib refactor https://github.com/tgstation/tgstation/pull/78754
+		sacrifice.gib(DROP_ALL_REMAINS)
 
 	return ..()
