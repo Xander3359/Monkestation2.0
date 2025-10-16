@@ -90,13 +90,15 @@
 #define HKT_ROUTE "route"
 #define HKT_UI_BGR "ui_bgr"
 #define HKT_COST "cost"
+#define HKT_CATEGORY "category"
 /// Only present for already researched knowledge.
 #define HKT_INSTANCE "instance"
-#define HKT_CATEGORY "category"
 /// unique identifier most commonly used for identifying what knowledge is researchable
 #define HKT_ID "id"
 
 #define BGR_SIDE "node_side"
+
+#define MAGIC_RESISTANCE_MOON (MAGIC_RESISTANCE|MAGIC_RESISTANCE_MIND)
 
 /// Defines are used in /proc/has_living_heart() to report if the heretic has no heart period, no living heart, or has a living heart.
 #define HERETIC_NO_HEART_ORGAN -1
@@ -127,6 +129,8 @@
 #define HKT_DEPTH_TIER_4 11
 #define HKT_DEPTH_DRAFT_4 12
 #define HKT_DEPTH_ASCENSION 13
+
+#define HERETIC_CAN_ASCEND "can_ascend"
 
 
 /// A define used in ritual priority for heretics.
